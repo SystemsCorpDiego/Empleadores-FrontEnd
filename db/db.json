@@ -1,0 +1,4876 @@
+{
+  "ospim-contacto": [
+    {
+      "email": "ospim@gmail.com",
+      "telefono": "15-5988-2246",
+      "whasap": "15-5555-8000"
+    }
+  ],
+  "entidad": [
+    {
+      "codigo": "UOMA",
+      "descripcion": "Union Obrera Molinera Argentina"
+    },
+    {
+      "codigo": "AMTIMA",
+      "descripcion": "Asociación Mutual de los Trabajadores de la Industria Molinera"
+    },
+    {
+      "codigo": "OSPIM",
+      "descripcion": "Obra Social del Personal de la Industria Molinera"
+    }
+  ],
+  "entidad-aporte": [
+    {
+      "entidad_codigo": "UOMA",
+      "codigo": "CS",
+      "decripcion": "Cuota Social UOMA",
+      "calculo": "%"
+    },
+    {
+      "entidad_codigo": "UOMA",
+      "codigo": "AS",
+      "decripcion": "Aporte Solidario",
+      "calculo": "%"
+    },
+    {
+      "entidad_codigo": "UOMA",
+      "codigo": "CU",
+      "decripcion": "Cuota Usufructo",
+      "calculo": "%"
+    },
+    {
+      "entidad_codigo": "UOMA",
+      "codigo": "A46",
+      "decripcion": "Artículo 46",
+      "calculo": "%"
+    },
+    {
+      "entidad_codigo": "AMTIMA",
+      "codigo": "CF",
+      "decripcion": "Cuota Fija",
+      "calculo": "$"
+    }
+  ],
+  "login-dfa": [
+    {
+      "valor": true
+    }
+  ],
+  "usuario-loguedo-habilitado": [
+    {
+      "valor": true
+    }
+  ],
+  "usuario-empresa-alta": [
+    {
+      "razonsocial": "Empresas de Agro Nro1",
+      "cuit": "20949118682",
+      "clave": "123",
+      "email": "AgroNro1@gmail.com",
+      "telefono": "123456787",
+      "telefono_prefijo": "011",
+      "whatsapp": "1234567876",
+      "whatsapp_prefijo": "011",
+      "telefonosAlternativos": [
+        {
+          "prefijo": "",
+          "nro": "4333-7777"
+        },
+        {
+          "prefijo": "",
+          "nro": "4333-8888"
+        }
+      ],
+      "emailAlternativos": [
+        {
+          "email": "AgroNro2@gmail.com",
+          "id": "2c12d0da-9196-4aec-acde-7a4ce02d56b2"
+        },
+        {
+          "email": "AgroNro3@gmail.com",
+          "id": "bdb1c373-66a5-40ba-af2e-4028cd9f5bc1"
+        }
+      ],
+      "domicilios": [
+        {
+          "tipo": "Fiscal",
+          "provinciaId": 3,
+          "localidadId": 265,
+          "calle": "ancun",
+          "piso": "2",
+          "depto": "3",
+          "oficina": "12",
+          "cp": "1234",
+          "planta": "Planta 1"
+        },
+        {
+          "tipo": "Fiscal",
+          "provinciaId": 3,
+          "localidadId": 265,
+          "calle": "gdffgfd",
+          "piso": "5",
+          "depto": "3",
+          "oficina": "10",
+          "cp": "3445",
+          "planta": "Planta 2"
+        }
+      ],
+      "id": 1
+    }
+  ],
+  "rol": [
+    {
+      "id": 1,
+      "descripcion": "ROOT"
+    },
+    {
+      "id": 2,
+      "descripcion": "ADMINISTRATIVO"
+    },
+    {
+      "descripcion": "CONTADURIA",
+      "id": 3
+    },
+    {
+      "descripcion": "PRUEBA III",
+      "id": 4
+    }
+  ],
+  "rolFuncionalidades": [
+    {
+      "descripcion": "ROOT",
+      "funcionalidades": [
+        {
+          "id": 1,
+          "descripcion": "PUBLICACIONES",
+          "activo": true
+        },
+        {
+          "id": 2,
+          "descripcion": "FERIADOS",
+          "activo": true
+        },
+        {
+          "id": 3,
+          "descripcion": "DDJJ",
+          "activo": true
+        },
+        {
+          "id": 4,
+          "descripcion": "DDJJ_CONSULTA",
+          "activo": true
+        },
+        {
+          "id": 5,
+          "descripcion": "BOLETAS",
+          "activo": true
+        },
+        {
+          "id": 6,
+          "descripcion": "PAGOS",
+          "activo": true
+        },
+        {
+          "id": 7,
+          "descripcion": "DATOS_EMPRESA",
+          "activo": true
+        },
+        {
+          "id": 8,
+          "descripcion": "BOLETA_BLANCA",
+          "activo": true
+        },
+        {
+          "id": 9,
+          "descripcion": "GESTION_ROLES",
+          "activo": true
+        },
+        {
+          "id": 10,
+          "descripcion": "CUITS_RESTRINGIDOS",
+          "activo": true
+        },
+        {
+          "id": 11,
+          "descripcion": "ROLES",
+          "activo": true
+        },
+        {
+          "id": 12,
+          "descripcion": "USUARIO_INTERNO",
+          "activo": true
+        },
+        {
+          "id": 13,
+          "descripcion": "INTERESES_AFIP",
+          "activo": true
+        },
+        {
+          "id": 14,
+          "descripcion": "AJUSTES",
+          "activo": true
+        }
+      ],
+      "id": 1
+    },
+    {
+      "descripcion": "ADMINISTRATIVO",
+      "funcionalidades": [
+        {
+          "id": 1,
+          "descripcion": "PUBLICACIONES",
+          "activo": true
+        },
+        {
+          "id": 2,
+          "descripcion": "FERIADOS",
+          "activo": true
+        },
+        {
+          "id": 3,
+          "descripcion": "DDJJ",
+          "activo": true
+        },
+        {
+          "id": 4,
+          "descripcion": "DDJJ_CONSULTA",
+          "activo": true
+        },
+        {
+          "id": 5,
+          "descripcion": "BOLETAS",
+          "activo": true
+        },
+        {
+          "id": 6,
+          "descripcion": "PAGOS",
+          "activo": true
+        },
+        {
+          "id": 7,
+          "descripcion": "DATOS_EMPRESA",
+          "activo": true
+        },
+        {
+          "id": 8,
+          "descripcion": "BOLETA_BLANCA",
+          "activo": true
+        },
+        {
+          "id": 9,
+          "descripcion": "GESTION_ROLES",
+          "activo": true
+        },
+        {
+          "id": 10,
+          "descripcion": "CUITS_RESTRINGIDOS",
+          "activo": true
+        },
+        {
+          "id": 11,
+          "descripcion": "ROLES",
+          "activo": true
+        },
+        {
+          "id": 12,
+          "descripcion": "USUARIO_INTERNO",
+          "activo": true
+        },
+        {
+          "id": 13,
+          "descripcion": "INTERESES_AFIP",
+          "activo": true
+        },
+        {
+          "id": 14,
+          "descripcion": "AJUSTES",
+          "activo": true
+        }
+      ],
+      "id": 2
+    },
+    {
+      "descripcion": "EJECUTIVO",
+      "funcionalidades": [
+        {
+          "id": 1,
+          "descripcion": "PUBLICACIONES",
+          "activo": true
+        },
+        {
+          "id": 2,
+          "descripcion": "FERIADOS",
+          "activo": true
+        },
+        {
+          "id": 3,
+          "descripcion": "DDJJ",
+          "activo": true
+        },
+        {
+          "id": 4,
+          "descripcion": "DDJJ_CONSULTA",
+          "activo": true
+        },
+        {
+          "id": 5,
+          "descripcion": "BOLETAS",
+          "activo": true
+        },
+        {
+          "id": 6,
+          "descripcion": "PAGOS",
+          "activo": true
+        },
+        {
+          "id": 7,
+          "descripcion": "DATOS_EMPRESA",
+          "activo": true
+        },
+        {
+          "id": 8,
+          "descripcion": "BOLETA_BLANCA",
+          "activo": true
+        },
+        {
+          "id": 9,
+          "descripcion": "GESTION_ROLES",
+          "activo": true
+        },
+        {
+          "id": 10,
+          "descripcion": "CUITS_RESTRINGIDOS",
+          "activo": true
+        },
+        {
+          "id": 11,
+          "descripcion": "ROLES",
+          "activo": true
+        },
+        {
+          "id": 12,
+          "descripcion": "USUARIO_INTERNO",
+          "activo": true
+        },
+        {
+          "id": 13,
+          "descripcion": "INTERESES_AFIP",
+          "activo": true
+        },
+        {
+          "id": 14,
+          "descripcion": "AJUSTES",
+          "activo": true
+        }
+      ],
+      "id": 3
+    },
+    {
+      "descripcion": "EMPLEADOR",
+      "funcionalidades": [
+        {
+          "id": 1,
+          "descripcion": "PUBLICACIONES",
+          "activo": true
+        },
+        {
+          "id": 2,
+          "descripcion": "FERIADOS",
+          "activo": true
+        },
+        {
+          "id": 3,
+          "descripcion": "DDJJ",
+          "activo": true
+        },
+        {
+          "id": 4,
+          "descripcion": "BOLETAS",
+          "activo": true
+        },
+        {
+          "id": 5,
+          "descripcion": "PAGOS",
+          "activo": true
+        },
+        {
+          "id": 6,
+          "descripcion": "DATOS_EMPRESA",
+          "activo": true
+        },
+        {
+          "id": 7,
+          "descripcion": "BOLETA_BLANCA",
+          "activo": true
+        },
+        {
+          "id": 8,
+          "descripcion": "GESTION_ROLES",
+          "activo": true
+        },
+        {
+          "id": 9,
+          "descripcion": "CUITS_RESTRINGIDOS",
+          "activo": true
+        },
+        {
+          "id": 10,
+          "descripcion": "ROLES",
+          "activo": true
+        },
+        {
+          "id": 11,
+          "descripcion": "USUARIO_INTERNO",
+          "activo": true
+        },
+        {
+          "id": 12,
+          "descripcion": "INTERESES_AFIP",
+          "activo": true
+        },
+        {
+          "id": 13,
+          "descripcion": "AJUSTES",
+          "activo": true
+        },
+        {
+          "id": 14,
+          "descripcion": "APORTES",
+          "activo": true
+        }
+      ],
+      "id": 4
+    },
+    {
+      "descripcion": "EMPLEADO",
+      "funcionalidades": [
+        {
+          "id": 1,
+          "descripcion": "PUBLICACIONES",
+          "activo": true
+        },
+        {
+          "id": 2,
+          "descripcion": "FERIADOS",
+          "activo": true
+        },
+        {
+          "id": 3,
+          "descripcion": "DDJJ_CONSULTA",
+          "activo": true
+        },
+        {
+          "id": 4,
+          "descripcion": "CUITS_RESTRINGIDOS",
+          "activo": true
+        },
+        {
+          "id": 5,
+          "descripcion": "INTERESES_AFIP",
+          "activo": true
+        }
+      ],
+      "id": 5
+    }
+  ],
+  "funcionalidades": [
+    {
+      "id": 1,
+      "descripcion": "FERIADOS"
+    },
+    {
+      "id": 2,
+      "descripcion": "AJUSTES"
+    },
+    {
+      "id": 3,
+      "descripcion": "ROLES"
+    },
+    {
+      "id": 4,
+      "descripcion": "INTERESES"
+    }
+  ],
+  "feriados": [
+    {
+      "fecha": "2024-01-11T03:00:00.000Z",
+      "id": 5
+    },
+    {
+      "fecha": "2024-01-17T03:00:00.000Z",
+      "id": 6
+    },
+    {
+      "fecha": "2024-01-27T03:00:00.000Z",
+      "id": 13
+    },
+    {
+      "fecha": "2024-01-25T03:00:00.000Z",
+      "id": 14
+    },
+    {
+      "fecha": "2024-01-03T03:00:00.000Z",
+      "id": 7
+    },
+    {
+      "fecha": "2024-01-27T03:00:00.000Z",
+      "id": 8
+    },
+    {
+      "fecha": "2024-01-09T03:00:00.000Z",
+      "id": 9
+    },
+    {
+      "fecha": "2024-01-26T03:00:00.000Z",
+      "id": 10
+    },
+    {
+      "fecha": "2024-01-18T03:00:00.000Z",
+      "id": 11
+    },
+    {
+      "fecha": "2024-01-09T03:00:00.000Z",
+      "id": 12
+    },
+    {
+      "fecha": "2024-01-03T03:00:00.000Z",
+      "id": 13
+    },
+    {
+      "fecha": "2024-01-18T03:00:00.000Z",
+      "id": 14
+    },
+    {
+      "fecha": "2024-01-09T03:00:00.000Z",
+      "id": 15
+    },
+    {
+      "fecha": "2024-01-30T03:00:00.000Z",
+      "id": 16
+    },
+    {
+      "fecha": "2024-01-17T03:00:00.000Z",
+      "id": 17
+    },
+    {
+      "fecha": "2024-01-25T03:00:00.000Z",
+      "id": 18
+    },
+    {
+      "fecha": "2024-01-25T03:00:00.000Z",
+      "id": 19
+    },
+    {
+      "fecha": "2024-01-27T03:00:00.000Z",
+      "id": 20
+    },
+    {
+      "fecha": "2024-01-10T03:00:00.000Z",
+      "id": 21
+    },
+    {
+      "fecha": "2024-02-22T03:00:00.000Z",
+      "id": 22
+    },
+    {
+      "fecha": "2024-02-21T03:00:00.000Z",
+      "id": 23
+    },
+    {
+      "fecha": "2024-01-01T03:00:00.000Z",
+      "id": 24
+    },
+    {
+      "fecha": "2024-02-07T03:00:00.000Z",
+      "id": 25
+    },
+    {
+      "fecha": "2024-02-07T03:00:00.000Z",
+      "id": 26
+    },
+    {
+      "fecha": "2024-02-07T03:00:00.000Z",
+      "id": 27
+    },
+    {
+      "fecha": "2024-02-24T03:00:00.000Z",
+      "id": 28
+    },
+    {
+      "fecha": "2023-12-05T03:00:00.000Z",
+      "id": 29
+    },
+    {
+      "fecha": "2024-02-21T03:00:00.000Z",
+      "id": 30
+    },
+    {
+      "fecha": "2024-01-01T03:00:00.000Z",
+      "id": 31
+    },
+    {
+      "fecha": "2024-02-21T03:00:00.000Z",
+      "id": 32
+    },
+    {
+      "fecha": "2024-01-01T03:00:00.000Z",
+      "id": 33
+    },
+    {
+      "fecha": "2024-02-07T03:00:00.000Z",
+      "id": 34
+    },
+    {
+      "fecha": "2024-02-07T03:00:00.000Z",
+      "id": 35
+    },
+    {
+      "fecha": "2024-02-07T03:00:00.000Z",
+      "id": 36
+    },
+    {
+      "fecha": "2024-02-24T03:00:00.000Z",
+      "id": 37
+    },
+    {
+      "fecha": "2023-12-05T03:00:00.000Z",
+      "id": 38
+    },
+    {
+      "fecha": "2024-02-21T03:00:00.000Z",
+      "id": 39
+    },
+    {
+      "fecha": "2024-01-01T03:00:00.000Z",
+      "id": 40
+    },
+    {
+      "fecha": "2024-02-21T03:00:00.000Z",
+      "id": 41
+    },
+    {
+      "fecha": "2024-01-01T03:00:00.000Z",
+      "id": 42
+    },
+    {
+      "fecha": "2024-02-07T03:00:00.000Z",
+      "id": 43
+    },
+    {
+      "fecha": "2024-02-07T03:00:00.000Z",
+      "id": 44
+    },
+    {
+      "fecha": "2024-02-07T03:00:00.000Z",
+      "id": 45
+    },
+    {
+      "fecha": "2024-02-24T03:00:00.000Z",
+      "id": 46
+    },
+    {
+      "fecha": "2023-12-05T03:00:00.000Z",
+      "id": 47
+    },
+    {
+      "fecha": "2024-02-21T03:00:00.000Z",
+      "id": 48
+    },
+    {
+      "fecha": "2024-01-01T03:00:00.000",
+      "id": 49
+    },
+    {
+      "fecha": "2024-02-21T03:00:00.000Z",
+      "id": 50
+    },
+    {
+      "fecha": "2024-01-01T03:00:00.000Z",
+      "id": 51
+    },
+    {
+      "fecha": "2024-02-07T03:00:00.000Z",
+      "id": 52
+    },
+    {
+      "fecha": "2024-02-07T03:00:00.000Z",
+      "id": 53
+    },
+    {
+      "fecha": "2024-02-07T03:00:00.000Z",
+      "id": 54
+    },
+    {
+      "fecha": "2024-02-24T03:00:00.000Z",
+      "id": 55
+    },
+    {
+      "fecha": "2023-12-05T03:00:00.000Z",
+      "id": 56
+    },
+    {
+      "fecha": "2024-02-21T03:00:00.000Z",
+      "id": 57
+    },
+    {
+      "fecha": "2024-01-01T03:00:00.000Z",
+      "id": 58
+    },
+    {
+      "fecha": "2024-02-21T03:00:00.000Z",
+      "id": 59
+    },
+    {
+      "fecha": "2024-01-01T03:00:00.000Z",
+      "id": 60
+    },
+    {
+      "fecha": "2024-02-07T03:00:00.000Z",
+      "id": 61
+    },
+    {
+      "fecha": "2024-02-07T03:00:00.000Z",
+      "id": 62
+    },
+    {
+      "fecha": "2024-02-07T03:00:00.000Z",
+      "id": 63
+    },
+    {
+      "fecha": "2024-02-24T03:00:00.000Z",
+      "id": 64
+    },
+    {
+      "fecha": "2024-03-21T03:00:00.000Z",
+      "id": 65
+    },
+    {
+      "fecha": "2024-03-29T03:00:00.000Z",
+      "id": 66
+    },
+    {
+      "fecha": "2024-03-22T03:00:00.000Z",
+      "id": 67
+    },
+    {
+      "fecha": "2024-04-05T03:00:00.000Z",
+      "id": 68
+    },
+    {
+      "fecha": "2024-04-06T03:00:00.000Z",
+      "id": 69
+    },
+    {
+      "fecha": "2024-04-06T03:00:00.000Z",
+      "id": 70
+    },
+    {
+      "fecha": "2024-04-06T03:00:00.000Z",
+      "id": 71
+    },
+    {
+      "fecha": "2024-04-06T03:00:00.000Z",
+      "id": 72
+    },
+    {
+      "fecha": "2024-04-06T03:00:00.000Z",
+      "id": 73
+    }
+  ],
+  "afip-intereses": [
+    {
+      "vigenciaDesde": "2021-04-04T03:00:00.000Z",
+      "vigenciaHasta": "2024-04-06T03:00:00.000Z",
+      "indice": 10,
+      "id": 2
+    },
+    {
+      "vigenciaDesde": "2024-04-17T03:00:00.000Z",
+      "vigenciaHasta": "2024-04-16T03:00:00.000Z",
+      "indice": 3,
+      "id": 3
+    },
+    {
+      "vigenciaDesde": "2024-04-24T03:00:00.000Z",
+      "vigenciaHasta": "2024-04-20T03:00:00.000Z",
+      "indice": 5,
+      "id": 4
+    },
+    {
+      "vigenciaDesde": "2024-04-04T03:00:00.000Z",
+      "vigenciaHasta": "2024-04-06T03:00:00.000Z",
+      "indice": 10,
+      "id": 10
+    },
+    {
+      "vigenciaDesde": "2024-04-01T03:00:00.000Z",
+      "vigenciaHasta": "2024-04-07T03:00:00.000Z",
+      "indice": 8,
+      "id": 11
+    }
+  ],
+  "usuario-interno": [
+    {
+      "descripcion": "admin",
+      "clave": "Prueba1234",
+      "rolId": 1,
+      "nombre": "Jose",
+      "apellido": "Suarez",
+      "email": "prueba@gmail.com",
+      "notificaciones": true,
+      "habilitado": false,
+      "id": 1
+    },
+    {
+      "descripcion": "usuario1",
+      "clave": "Prueba123",
+      "rolId": 7,
+      "habilitado": false,
+      "nombre": "Francisco",
+      "apellido": "Moreno",
+      "email": "prueba2@gmail.com",
+      "notificaciones": false,
+      "id": 2
+    },
+    {
+      "descripcion": "usuauro4",
+      "clave": "Prueba123",
+      "rolId": 2,
+      "nombre": "Carlos",
+      "apellido": "Fuente",
+      "email": "usuario@gmail.com",
+      "notificaciones": true,
+      "habilitado": false,
+      "id": 4
+    },
+    {
+      "descripcion": "cccc",
+      "clave": "cccc",
+      "rolId": 7,
+      "nombre": "Rocio",
+      "apellido": "Gomez",
+      "email": "cccc@gmail.com",
+      "notificaciones": true,
+      "habilitado": false,
+      "id": 5
+    },
+    {
+      "descripcion": "ccccjjj",
+      "clave": "cccc jjj",
+      "rolId": 77,
+      "nombre": "Federico",
+      "apellido": "Castro",
+      "notificaciones": true,
+      "email": "cccc@gmail.com",
+      "id": 6
+    },
+    {
+      "descripcion": "usuario-2",
+      "clave": "Prueba123",
+      "rolId": 7,
+      "nombre": "Marcelo",
+      "apellido": "Perez",
+      "email": "usuario-2@gmail.com",
+      "id": 7,
+      "notificaciones": true,
+      "habilitado": false
+    },
+    {
+      "descripcion": "luig33",
+      "clave": "123",
+      "rolId": 7,
+      "nombre": "Luis",
+      "apellido": "Salinas",
+      "email": "luis@gmail.com",
+      "id": 8
+    },
+    {
+      "apellido": "das",
+      "nombre": "",
+      "descripcion": "",
+      "email": "",
+      "clave": "",
+      "rolId": "",
+      "habilitado": null,
+      "id": 9
+    },
+    {
+      "apellido": "p",
+      "nombre": "z",
+      "descripcion": "pz",
+      "email": "pz@gmail.com",
+      "clave": "",
+      "rolId": 2,
+      "notificaciones": true,
+      "habilitado": null,
+      "id": 10
+    },
+    {
+      "apellido": "f",
+      "nombre": "p",
+      "descripcion": "pz",
+      "email": "dsa@gmail.com",
+      "clave": "",
+      "rolId": 2,
+      "notificaciones": true,
+      "habilitado": null,
+      "id": 11
+    }
+  ],
+  "publicaciones": [
+    {
+      "titulo": "Titulo Pabada 1",
+      "cuerpo": "Cuerpo Pabada 1",
+      "vigenciaDesde": "2023-12-05T03:00:00.000Z",
+      "vigenciaHasta": "2023-12-30T03:00:00.000Z",
+      "id": 28
+    },
+    {
+      "titulo": "publi",
+      "cuerpo": "xdfsdfds",
+      "vigenciaDesde": "2024-02-22T03:00:00.000Z",
+      "vigenciaHasta": "2024-02-24T03:00:00.000Z",
+      "id": 30
+    },
+    {
+      "titulo": "Titulo Pabada 1",
+      "cuerpo": "Cuerpo Pabada 1",
+      "vigenciaDesde": "2023-12-05T03:00:00.000Z",
+      "vigenciaHasta": "2023-12-30T03:00:00.000Z",
+      "id": 31
+    },
+    {
+      "titulo": "sdfsdfd",
+      "cuerpo": "sdfsdf",
+      "vigenciaDesde": "2024-02-21T03:00:00.000Z",
+      "vigenciaHasta": "2024-02-21T03:00:00.000Z",
+      "id": 32
+    },
+    {
+      "titulo": "titulo II",
+      "cuerpo": "Cuerpo de titulo II",
+      "vigenciaDesde": "2024-01-01T03:00:00.000Z",
+      "vigenciaHasta": "2025-02-14T03:00:00.000Z",
+      "id": 33
+    },
+    {
+      "titulo": "asdasdasd",
+      "cuerpo": "asdasdsa",
+      "vigenciaDesde": "2024-04-12T03:00:00.000Z",
+      "vigenciaHasta": "2024-04-12T03:00:00.000Z",
+      "id": 34
+    },
+    {
+      "titulo": "fdsfdsfds",
+      "cuerpo": "sdfsdfdsfsdf",
+      "vigenciaDesde": "2024-04-10T03:00:00.000Z",
+      "vigenciaHasta": "2024-04-17T03:00:00.000Z",
+      "id": 35
+    },
+    {
+      "titulo": "fgsdffd",
+      "cuerpo": "sdfdsf",
+      "vigenciaDesde": "2024-04-04T03:00:00.000Z",
+      "vigenciaHasta": "2024-04-11T03:00:00.000Z",
+      "id": 36
+    },
+    {
+      "titulo": "zzzzzzzzz",
+      "cuerpo": "sdfsdfdsfdsf",
+      "vigenciaDesde": "2024-04-17T03:00:00.000Z",
+      "vigenciaHasta": "2024-04-25T03:00:00.000Z",
+      "id": 37
+    }
+  ],
+  "publicacionesVigentes": [
+    {
+      "titulo": "Nuevos Contratos",
+      "cuerpo": "Nuevos Contratos dice: kjlfdh fjkds fkljd hgfjkd ghfjdk gkjfd hgjkfd sghjkfd sghjkfds ghkjfds hgjkfd hhgjkfds kjhgfd gkfds FIN.-"
+    },
+    {
+      "titulo": "Nota II",
+      "cuerpo": "Nota II dice: kjlfdh fjkds fkljd hgfjkd ghfjdk gkjfd hgjkfd sghjkfd sghjkfds ghkjfds hgjkfd hhgjkfds kjhgfd gkfds FIN.-"
+    },
+    {
+      "titulo": "Titulo Pabada 1",
+      "cuerpo": "Cuerpo Pabada 1"
+    }
+  ],
+  "camara": [
+    {
+      "codigo": "FAIM-XXXX",
+      "descripcion": "FAIM - Prueba error"
+    },
+    {
+      "codigo": "FAIM",
+      "descripcion": "FAIM"
+    },
+    {
+      "codigo": "CAENA",
+      "descripcion": "CAENA"
+    },
+    {
+      "codigo": "CEPA",
+      "descripcion": "CEPA"
+    }
+  ],
+  "categoria": [
+    {
+      "camara": "FAIM",
+      "categoria": "A"
+    },
+    {
+      "camara": "FAIM",
+      "categoria": "C"
+    },
+    {
+      "camara": "FAIM",
+      "categoria": "D"
+    },
+    {
+      "camara": "CEPA",
+      "categoria": "A"
+    },
+    {
+      "camara": "CEPA",
+      "categoria": "B"
+    },
+    {
+      "camara": "CEPA",
+      "categoria": "C"
+    },
+    {
+      "camara": "CEPA",
+      "categoria": "D"
+    },
+    {
+      "camara": "CEPA",
+      "categoria": "E"
+    },
+    {
+      "camara": "CAENA",
+      "categoria": "A"
+    },
+    {
+      "camara": "CAENA",
+      "categoria": "B"
+    },
+    {
+      "camara": "CAENA",
+      "categoria": "C"
+    },
+    {
+      "camara": "CAENA",
+      "categoria": "D"
+    },
+    {
+      "camara": "CAENA",
+      "categoria": "E"
+    },
+    {
+      "camara": "FAIM",
+      "categoria": "B"
+    }
+  ],
+  "empresa": [
+    {
+      "razonSocial": "Empresa Nro 1",
+      "ramoId": 1,
+      "id": 1
+    }
+  ],
+  "empresaDomicilio": [
+    {
+      "id": 10,
+      "tipo": "REAL",
+      "provincia": {
+        "id": 16,
+        "descripcion": "Neuquen"
+      },
+      "localidad": {
+        "provinciaId": 16,
+        "id": 242,
+        "descripcion": "Caminera San Martin"
+      },
+      "calle": "sdfg",
+      "piso": "5413",
+      "depto": "",
+      "oficina": "",
+      "cp": "",
+      "planta": "",
+      "valor": "",
+      "isNew": true,
+      "empresaId": "1"
+    },
+    {
+      "id": 11,
+      "tipo": "REAL",
+      "provincia": {
+        "id": 16,
+        "descripcion": "Neuquen"
+      },
+      "localidad": {
+        "provinciaId": 16,
+        "id": 242,
+        "descripcion": "Caminera San Martin"
+      },
+      "calle": "k",
+      "piso": "k",
+      "depto": "",
+      "oficina": "k",
+      "cp": "",
+      "planta": "",
+      "valor": "",
+      "isNew": true,
+      "empresaId": "1"
+    },
+    {
+      "id": 12,
+      "tipo": "REAL",
+      "provincia": {
+        "id": 16,
+        "descripcion": "Neuquen"
+      },
+      "localidad": {
+        "provinciaId": 16,
+        "id": 242,
+        "descripcion": "Caminera San Martin"
+      },
+      "calle": "54123",
+      "piso": "f23",
+      "depto": "s",
+      "oficina": "wd",
+      "cp": "a",
+      "planta": "f",
+      "valor": "",
+      "isNew": true,
+      "empresaId": "1"
+    },
+    {
+      "id": 13,
+      "tipo": "FISCAL",
+      "provincia": {
+        "id": 16,
+        "descripcion": "Neuquen"
+      },
+      "localidad": {
+        "provinciaId": 16,
+        "id": 242,
+        "descripcion": "Caminera San Martin"
+      },
+      "calle": "",
+      "piso": "",
+      "depto": "",
+      "oficina": "",
+      "cp": "",
+      "planta": "",
+      "valor": "",
+      "isNew": true,
+      "empresaId": "1"
+    },
+    {
+      "id": 15,
+      "tipo": "REAL",
+      "provincia": {
+        "id": 16,
+        "descripcion": "Neuquen"
+      },
+      "localidad": {
+        "provinciaId": 16,
+        "id": 242,
+        "descripcion": "Caminera San Martin"
+      },
+      "calle": "2",
+      "piso": "",
+      "depto": "1",
+      "oficina": "",
+      "cp": "",
+      "planta": "",
+      "valor": "",
+      "isNew": true,
+      "empresaId": "1"
+    },
+    {
+      "id": 16,
+      "tipo": "REAL",
+      "provincia": {
+        "id": 16,
+        "descripcion": "Neuquen"
+      },
+      "localidad": {
+        "provinciaId": 16,
+        "id": 242,
+        "descripcion": "Caminera San Martin"
+      },
+      "calle": "asdas",
+      "piso": "1",
+      "depto": "2",
+      "oficina": "3",
+      "cp": "1",
+      "planta": "1",
+      "valor": "",
+      "isNew": true,
+      "empresaId": "1"
+    },
+    {
+      "tipo": "FISCAL",
+      "calle": "6666666",
+      "calleNro": "6666666",
+      "piso": "6666",
+      "depto": "666",
+      "oficina": "6666",
+      "cp": "66",
+      "planta": "666",
+      "provinciaId": 3,
+      "localidadId": 265,
+      "empresaId": "1",
+      "id": 17
+    }
+  ],
+  "empresaContacto": [
+    {
+      "id": 5,
+      "tipo": "MAIL2",
+      "prefijo": null,
+      "valor": "direMailnro2@gmail.com"
+    },
+    {
+      "tipo": "TEL",
+      "prefijo": "012",
+      "valor": "3554-2025",
+      "id": 7
+    },
+    {
+      "tipo": "TEL2",
+      "prefijo": "018",
+      "valor": "4444-8889",
+      "id": 8
+    },
+    {
+      "tipo": "TEL",
+      "prefijo": "012",
+      "valor": "1231-2333",
+      "id": 9
+    },
+    {
+      "tipo": "TEL",
+      "prefijo": "013",
+      "valor": "3333-4444",
+      "id": 11
+    },
+    {
+      "tipo": "TEL",
+      "prefijo": "019",
+      "valor": "3234-0404",
+      "id": 12
+    },
+    {
+      "tipo": "MAIL",
+      "prefijo": "",
+      "valor": "system@fit.com.ar",
+      "id": 14
+    },
+    {
+      "tipo": "MAIL",
+      "prefijo": "",
+      "valor": "luis@systemscorp.com",
+      "id": 15
+    },
+    {
+      "tipo": "TEL2",
+      "prefijo": "011",
+      "valor": "1234-5678",
+      "id": 16
+    },
+    {
+      "tipo": "WHATSAP",
+      "prefijo": "014",
+      "valor": "3434-8080",
+      "id": 17
+    },
+    {
+      "tipo": "TEL",
+      "prefijo": "11",
+      "valor": "111111111111",
+      "id": 18
+    },
+    {
+      "tipo": "TEL",
+      "prefijo": "11",
+      "valor": "9999999999999",
+      "id": 19
+    }
+  ],
+  "empresaContactoTipo": [
+    {
+      "codigo": "TEL",
+      "descripcion": "Teléfono ppal."
+    },
+    {
+      "codigo": "TEL2",
+      "descripcion": "Teléfono"
+    },
+    {
+      "codigo": "MAIL",
+      "descripcion": "Mail ppal."
+    },
+    {
+      "codigo": "MAIL2",
+      "descripcion": "Mail"
+    },
+    {
+      "codigo": "WHATSAP",
+      "descripcion": "Whatsap"
+    }
+  ],
+  "empresaDomicilioTipo": [
+    {
+      "codigo": "FISCAL",
+      "descripcion": "Fiscal"
+    },
+    {
+      "codigo": "REAL",
+      "descripcion": "Real"
+    }
+  ],
+  "ramo": [
+    {
+      "id": 1,
+      "descripcion": "Nutrición Animal"
+    },
+    {
+      "id": 2,
+      "descripcion": "Avícola"
+    },
+    {
+      "id": 3,
+      "descripcion": "Molienda de Trigo"
+    },
+    {
+      "id": 4,
+      "descripcion": "Molienda de Maíz"
+    },
+    {
+      "id": 5,
+      "descripcion": "Personal Temporario"
+    },
+    {
+      "id": 6,
+      "descripcion": "Transporte y Distribución"
+    },
+    {
+      "id": 7,
+      "descripcion": "Otros"
+    }
+  ],
+  "auth-login-usuario": {
+    "usuario": {
+      "nombre": "20233725006",
+      "rol": [
+        {
+          "descripcion": "EMPLEADOR"
+        }
+      ]
+    },
+    "empresa": {
+      "id": 1,
+      "razonSocial": "Empresa Nro 1",
+      "cuit": "2023372500",
+      "ramoId": 1
+    }
+  },
+  "provincia": [
+    {
+      "id": 3,
+      "descripcion": "Capital Federal"
+    },
+    {
+      "id": 10,
+      "descripcion": "Formosa"
+    },
+    {
+      "id": 16,
+      "descripcion": "Neuquen"
+    }
+  ],
+  "localidad": [
+    {
+      "provinciaId": 3,
+      "id": 265,
+      "descripcion": "Capital Federal"
+    },
+    {
+      "provinciaId": 16,
+      "id": 193,
+      "descripcion": "Barrio Sarmiento"
+    },
+    {
+      "provinciaId": 16,
+      "id": 242,
+      "descripcion": "Caminera San Martin"
+    },
+    {
+      "provinciaId": 16,
+      "id": 83,
+      "descripcion": "Añelo"
+    },
+    {
+      "provinciaId": 10,
+      "id": 308,
+      "descripcion": "Clorinda"
+    },
+    {
+      "provinciaId": 10,
+      "id": 1893,
+      "descripcion": "El Colorado"
+    },
+    {
+      "provinciaId": 10,
+      "id": 477,
+      "descripcion": "Formosa"
+    }
+  ],
+  "DDJJ-V2-CONSUL": [
+    {
+      "id": 120,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2023-11-01T03:00:00.000Z",
+      "secuencia": 0,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 9725.75
+        },
+        {
+          "codigo": "ART46",
+          "importe": 5200.52
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 9725.75
+        }
+      ]
+    },
+    {
+      "id": 121,
+      "estado": "PE",
+      "empresaId": 1,
+      "periodo": "2023-11-01T03:00:00.000Z",
+      "secuencia": 0,
+      "aportes": [
+        {
+          "codigo": "UOMACS",
+          "importe": 299.99
+        },
+        {
+          "codigo": "AMTIMACS",
+          "importe": 15000
+        },
+        {
+          "codigo": "ART46",
+          "importe": 5200.52
+        },
+        {
+          "codigo": "UOMAAS",
+          "importe": 4000.02
+        }
+      ]
+    },
+    {
+      "id": 122,
+      "estado": "PE",
+      "empresaId": 1,
+      "periodo": "2023-12-01T03:00:00.000Z",
+      "secuencia": 1,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 10725.75
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 130800.25
+        },
+        {
+          "codigo": "ART46",
+          "importe": 7200.52
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 5725.75
+        }
+      ]
+    },
+    {
+      "id": 123,
+      "estado": "BG",
+      "empresaId": 1,
+      "periodo": "2023-09-01T03:00:00.000Z",
+      "secuencia": 0,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 12350.75
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 145850.25
+        },
+        {
+          "codigo": "ART46",
+          "importe": 9250.6
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 8975.75
+        }
+      ]
+    },
+    {
+      "id": 124,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2023-10-01T03:00:00.000Z",
+      "secuencia": 1,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 13500.5
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 150000
+        },
+        {
+          "codigo": "ART46",
+          "importe": 9500.75
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 9100.25
+        }
+      ]
+    },
+    {
+      "id": 125,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2023-11-01T03:00:00.000Z",
+      "secuencia": 2,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 14000
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 155000.5
+        },
+        {
+          "codigo": "ART46",
+          "importe": 9750.25
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 9200.75
+        }
+      ]
+    },
+    {
+      "id": 126,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2023-12-01T03:00:00.000Z",
+      "secuencia": 3,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 14250.75
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 160000.75
+        },
+        {
+          "codigo": "ART46",
+          "importe": 9900.5
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 9300.25
+        }
+      ]
+    },
+    {
+      "id": 127,
+      "estado": "PR",
+      "empresaId": 2,
+      "periodo": "2023-09-01T03:00:00.000Z",
+      "secuencia": 2,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 13000
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 145000.5
+        },
+        {
+          "codigo": "ART46",
+          "importe": 9250.25
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 9100.75
+        }
+      ]
+    },
+    {
+      "id": 128,
+      "estado": "PR",
+      "empresaId": 2,
+      "periodo": "2023-10-01T03:00:00.000Z",
+      "secuencia": 2,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 13500
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 150000.5
+        },
+        {
+          "codigo": "ART46",
+          "importe": 9500.25
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 9200.75
+        }
+      ]
+    },
+    {
+      "id": 129,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2024-01-01T03:00:00.000Z",
+      "secuencia": 4,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 14500.25
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 165000.25
+        },
+        {
+          "codigo": "ART46",
+          "importe": 10000.25
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 9500.75
+        }
+      ]
+    },
+    {
+      "id": 130,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2024-02-01T03:00:00.000Z",
+      "secuencia": 5,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 14750.5
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 170000.5
+        },
+        {
+          "codigo": "ART46",
+          "importe": 10250.5
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 9700
+        }
+      ]
+    },
+    {
+      "id": 131,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2024-03-01T03:00:00.000Z",
+      "secuencia": 6,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 15000
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 175000.75
+        },
+        {
+          "codigo": "ART46",
+          "importe": 10500.75
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 9900.25
+        }
+      ]
+    },
+    {
+      "id": 200,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2024-04-01T03:00:00.000Z",
+      "secuencia": 7,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 15250.25
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 180000.25
+        },
+        {
+          "codigo": "ART46",
+          "importe": 10750.25
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 10100.75
+        }
+      ]
+    },
+    {
+      "id": 201,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2024-05-01T03:00:00.000Z",
+      "secuencia": 8,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 15500.5
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 185000.5
+        },
+        {
+          "codigo": "ART46",
+          "importe": 11000.5
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 10400
+        }
+      ]
+    },
+    {
+      "id": 202,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2024-06-01T03:00:00.000Z",
+      "secuencia": 9,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 15750.75
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 190000.75
+        },
+        {
+          "codigo": "ART46",
+          "importe": 11250.75
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 10700.25
+        }
+      ]
+    },
+    {
+      "id": 203,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2024-07-01T03:00:00.000Z",
+      "secuencia": 10,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 16000
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 195000.5
+        },
+        {
+          "codigo": "ART46",
+          "importe": 11500.5
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 11000
+        }
+      ]
+    },
+    {
+      "periodo": "2023-10-01T03:00:00.000Z",
+      "id": 204,
+      "estado": "PE",
+      "empresaId": 2,
+      "secuencia": null,
+      "aportes": [
+        {
+          "aporte": "ART46",
+          "importe": 5200.52
+        },
+        {
+          "aporte": "UOMACS",
+          "importe": 3041.5
+        },
+        {
+          "aporte": "UOMAAS",
+          "importe": 3041.5
+        },
+        {
+          "aporte": "AMTIMACS",
+          "importe": 15000
+        }
+      ]
+    }
+  ],
+  "ddjjConsulta": [
+    {
+      "id": 120,
+      "cuit": "20233725006",
+      "razonSocial": "Empresa Nro 1",
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2023-01-01T03:00:00.000Z",
+      "secuencia": 0,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 9725.75
+        },
+        {
+          "codigo": "ART46",
+          "importe": 5200.52
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 9725.75
+        }
+      ]
+    },
+    {
+      "id": 121,
+      "cuit": "20233725007",
+      "razonSocial": "Empresa Nro 2",
+      "estado": "PE",
+      "empresaId": 1,
+      "periodo": "2023-02-01T03:00:00.000Z",
+      "secuencia": 1,
+      "aportes": [
+        {
+          "codigo": "UOMACS",
+          "importe": 299.99
+        },
+        {
+          "codigo": "AMTIMACS",
+          "importe": 15000
+        },
+        {
+          "codigo": "ART46",
+          "importe": 5200.52
+        },
+        {
+          "codigo": "UOMAAS",
+          "importe": 4000.02
+        }
+      ]
+    },
+    {
+      "id": 122,
+      "cuit": "20233725007",
+      "razonSocial": "Empresa Nro 3",
+      "estado": "PE",
+      "empresaId": 1,
+      "periodo": "2023-02-01T03:00:00.000Z",
+      "secuencia": 1,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 10725.75
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 130800.25
+        },
+        {
+          "codigo": "ART46",
+          "importe": 7200.52
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 5725.75
+        }
+      ]
+    },
+    {
+      "id": 123,
+      "cuit": "20233725008",
+      "razonSocial": "Empresa Nro 1",
+      "estado": "PR",
+      "empresaId": 2,
+      "periodo": "2023-01-01T03:00:00.000Z",
+      "secuencia": 0,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 12350.75
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 145850.25
+        },
+        {
+          "codigo": "ART46",
+          "importe": 9250.6
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 8975.75
+        }
+      ]
+    },
+    {
+      "id": 124,
+      "cuit": "20233725009",
+      "razonSocial": "Empresa Nro 2",
+      "estado": "PR",
+      "empresaId": 2,
+      "periodo": "2023-02-01T03:00:00.000Z",
+      "secuencia": 1,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 13500.5
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 150000
+        },
+        {
+          "codigo": "ART46",
+          "importe": 9500.75
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 9100.25
+        }
+      ]
+    },
+    {
+      "id": 125,
+      "cuit": "20233725010",
+      "razonSocial": "Empresa Nro 3",
+      "estado": "PR",
+      "empresaId": 2,
+      "periodo": "2023-02-01T03:00:00.000Z",
+      "secuencia": 2,
+      "aportes": [
+        {
+          "codigo": "UOMACU",
+          "importe": 14000
+        },
+        {
+          "codigo": "UOMACS",
+          "importe": 155000.5
+        },
+        {
+          "codigo": "ART46",
+          "importe": 9750.25
+        },
+        {
+          "codigo": "UOMACU",
+          "importe": 9200.75
+        }
+      ]
+    }
+  ],
+  "DDJJ": [
+    {
+      "periodo": "2023-11-01T03:00:00.000Z",
+      "secuencia": 2,
+      "afiliados": [
+        {
+          "cuil": "123123213213",
+          "inte": null,
+          "apellido": "sdasd",
+          "nombre": "asdas",
+          "fechaIngreso": null,
+          "empresaDomicilioId": null,
+          "camara": "FAIM-XXXX",
+          "categoria": null,
+          "remunerativo": null,
+          "noRemunerativo": null,
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 3
+        },
+        {
+          "cuil": "20949118682",
+          "inte": null,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2001-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 1
+        },
+        {
+          "cuil": "20294465996",
+          "inte": 1,
+          "apellido": "Carlos",
+          "nombre": "Sanchez",
+          "fechaIngreso": "2010-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 2
+        }
+      ],
+      "id": 120
+    },
+    {
+      "periodo": "2023-11-01T03:00:00.000Z",
+      "afiliados": [
+        {
+          "cuil": "20949118682",
+          "inte": null,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-04-10T03:00:00.000Z",
+          "empresaDomicilioId": 4,
+          "camara": "FAIM",
+          "categoria": "C",
+          "remunerativo": 1,
+          "noRemunerativo": 1,
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 5
+        },
+        {
+          "cuil": 20949118682,
+          "inte": null,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-02-15T03:00:00.000Z",
+          "empresaDomicilioId": 8,
+          "camara": "CAENA",
+          "categoria": "C",
+          "remunerativo": 1000,
+          "noRemunerativo": 2000,
+          "uomaSocio": null,
+          "amtimaSocio": null,
+          "id": 1
+        },
+        {
+          "cuil": 20949118782,
+          "inte": null,
+          "apellido": "Bueno",
+          "nombre": "Diego",
+          "fechaIngreso": "2024-03-15T03:00:00.000Z",
+          "empresaDomicilioId": 10,
+          "camara": "CAENA",
+          "categoria": "A",
+          "remunerativo": 3000,
+          "noRemunerativo": 6000,
+          "uomaSocio": null,
+          "amtimaSocio": null,
+          "id": 2
+        },
+        {
+          "cuil": 21345667676,
+          "inte": null,
+          "apellido": "Lopez",
+          "nombre": "Jose",
+          "fechaIngreso": "2024-04-18T03:00:00.000Z",
+          "empresaDomicilioId": 10,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 1,
+          "noRemunerativo": 1,
+          "uomaSocio": true,
+          "amtimaSocio": null,
+          "id": 3
+        },
+        {
+          "cuil": 93822767344,
+          "inte": null,
+          "apellido": "Stack",
+          "nombre": "Tony",
+          "fechaIngreso": "2024-05-19T03:00:00.000Z",
+          "empresaDomicilioId": 10,
+          "camara": "CAENA",
+          "categoria": "A",
+          "remunerativo": 6000,
+          "noRemunerativo": 5000,
+          "uomaSocio": null,
+          "amtimaSocio": null,
+          "id": 4
+        }
+      ],
+      "id": 121
+    },
+    {
+      "//": "DDJJ ********************************************************************************** 03",
+      "id": 122,
+      "estado": "PE",
+      "empresaId": 1,
+      "periodo": "2023-12-01T03:00:00.000Z",
+      "secuencia": 1,
+      "afiliados": [
+        {
+          "id": 1,
+          "cuil": "23279737229",
+          "inte": null,
+          "apellido": "Martínez",
+          "nombre": "Ana",
+          "fechaIngreso": "2001-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": true,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 1303.33
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 2000.01
+            },
+            {
+              "codigo": "AMTIMACS",
+              "importe": 7500
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "cuil": "20294465996",
+          "inte": 1,
+          "apellido": "López",
+          "nombre": "Laura",
+          "fechaIngreso": "2010-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": true,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 1303.33
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 2000.01
+            },
+            {
+              "codigo": "AMTIMACS",
+              "importe": 7500
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "//": "DDJJ ********************************************************************************** 04",
+      "id": 123,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2023-09-01T03:00:00.000Z",
+      "secuencia": 0,
+      "afiliados": [
+        {
+          "id": 1,
+          "cuil": "23279737229",
+          "inte": null,
+          "apellido": "García",
+          "nombre": "David",
+          "fechaIngreso": "2001-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "cuil": "20294465996",
+          "inte": 1,
+          "apellido": "Fernández",
+          "nombre": "",
+          "fechaIngreso": "2010-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 124,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2023-10-01T03:00:00.000Z",
+      "secuencia": 1,
+      "afiliados": [
+        {
+          "id": 1,
+          "cuil": "23279737229",
+          "inte": null,
+          "apellido": "García",
+          "nombre": "David",
+          "fechaIngreso": "2001-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "cuil": "20294465996",
+          "inte": 1,
+          "apellido": "Fernández",
+          "nombre": "Sofia",
+          "fechaIngreso": "2010-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 125,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2023-11-01T03:00:00.000Z",
+      "secuencia": 2,
+      "afiliados": [
+        {
+          "id": 1,
+          "cuil": "23279737229",
+          "inte": null,
+          "apellido": "Ruiz",
+          "nombre": "Alberto",
+          "fechaIngreso": "2001-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "cuil": "20294465996",
+          "inte": 1,
+          "apellido": "Romero",
+          "nombre": "Sergio",
+          "fechaIngreso": "2010-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 126,
+      "estado": "PR",
+      "empresaId": 3,
+      "periodo": "2023-12-01T03:00:00.000Z",
+      "secuencia": 3,
+      "afiliados": [
+        {
+          "id": 1,
+          "cuil": "23279737229",
+          "inte": null,
+          "apellido": "Garcia",
+          "nombre": "Juan",
+          "fechaIngreso": "2001-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "cuil": "20294465996",
+          "inte": 1,
+          "apellido": "Flores",
+          "nombre": "Pablo",
+          "fechaIngreso": "2010-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 127,
+      "estado": "PR",
+      "empresaId": 2,
+      "periodo": "2023-09-01T03:00:00.000Z",
+      "secuencia": 2,
+      "afiliados": [
+        {
+          "id": 1,
+          "cuil": "23279737229",
+          "inte": null,
+          "apellido": "Torres",
+          "nombre": "Isabel",
+          "fechaIngreso": "2001-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "cuil": "20294465996",
+          "inte": 1,
+          "apellido": "Moreno",
+          "nombre": "Manuel",
+          "fechaIngreso": "2010-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 128,
+      "estado": "PR",
+      "empresaId": 2,
+      "periodo": "2023-10-01T03:00:00.000Z",
+      "secuencia": 1,
+      "afiliados": [
+        {
+          "id": 1,
+          "cuil": "23279737229",
+          "inte": null,
+          "apellido": "Días",
+          "nombre": "Lucia",
+          "fechaIngreso": "2001-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "cuil": "20294465996",
+          "inte": 1,
+          "apellido": "Herrera",
+          "nombre": "Diego",
+          "fechaIngreso": "2010-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 129,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2024-01-01T03:00:00.000Z",
+      "secuencia": 4,
+      "afiliados": [
+        {
+          "id": 1,
+          "cuil": "23279737229",
+          "inte": null,
+          "apellido": "Castro",
+          "nombre": "Marta",
+          "fechaIngreso": "2001-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "cuil": "20294465996",
+          "inte": 1,
+          "apellido": "Ruiz",
+          "nombre": "Elena",
+          "fechaIngreso": "2010-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 130,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2024-02-01T03:00:00.000Z",
+      "secuencia": 5,
+      "afiliados": [
+        {
+          "id": 1,
+          "cuil": "23279737229",
+          "inte": null,
+          "apellido": "López",
+          "nombre": "Carla",
+          "fechaIngreso": "2001-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "cuil": "20294465996",
+          "inte": 1,
+          "apellido": "Martínez",
+          "nombre": "Andrés",
+          "fechaIngreso": "2010-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 131,
+      "estado": "PR",
+      "empresaId": 1,
+      "periodo": "2024-03-01T03:00:00.000Z",
+      "secuencia": 6,
+      "afiliados": [
+        {
+          "id": 1,
+          "cuil": "23279737229",
+          "inte": null,
+          "apellido": "Garcia",
+          "nombre": "valeria",
+          "fechaIngreso": "2001-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "cuil": "20294465996",
+          "inte": 1,
+          "apellido": "Castro",
+          "nombre": "Hugo",
+          "fechaIngreso": "2010-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 200,
+      "estado": "PR",
+      "empresaId": 2,
+      "periodo": "2023-09-01T03:00:00.000Z",
+      "secuencia": 7,
+      "afiliados": [
+        {
+          "id": 1,
+          "cuil": "23279737229",
+          "inte": null,
+          "apellido": "Vázquez",
+          "nombre": "Lot",
+          "fechaIngreso": "2001-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "cuil": "20294465996",
+          "inte": 1,
+          "apellido": "Querubín",
+          "nombre": "Tapia",
+          "fechaIngreso": "2010-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 201,
+      "estado": "PR",
+      "empresaId": 2,
+      "periodo": "2023-09-01T03:00:00.000Z",
+      "secuencia": 1,
+      "afiliados": [
+        {
+          "id": 1,
+          "cuil": "23279737229",
+          "inte": null,
+          "apellido": "Vázquez",
+          "nombre": "Lot",
+          "fechaIngreso": "2001-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "cuil": "20294465996",
+          "inte": 1,
+          "apellido": "Querubín",
+          "nombre": "Tapia",
+          "fechaIngreso": "2010-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 202,
+      "periodo": "2023-10-01T03:00:00.000Z",
+      "empresaId": "1",
+      "estado": "PE",
+      "secuencia": null,
+      "afiliados": [
+        {
+          "id": 1,
+          "cuil": "23279737229",
+          "inte": null,
+          "apellido": "Vázquez",
+          "nombre": "Lot",
+          "fechaIngreso": "2001-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "cuil": "20294465996",
+          "inte": 1,
+          "apellido": "Querubín",
+          "nombre": "Tapia",
+          "fechaIngreso": "2010-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 203,
+      "periodo": "2023-10-01T03:00:00.000Z",
+      "empresaId": "1",
+      "estado": "PE",
+      "secuencia": null,
+      "afiliados": [
+        {
+          "id": 1,
+          "cuil": "23279737229",
+          "inte": null,
+          "apellido": "Vázquez",
+          "nombre": "Lot",
+          "fechaIngreso": "2001-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "cuil": "20294465996",
+          "inte": 1,
+          "apellido": "Querubín",
+          "nombre": "Tapia",
+          "fechaIngreso": "2010-01-01T03:00:00.000Z",
+          "empresaDomicilioId": 3,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 545000.7,
+          "noRemunerativo": 25000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "aportes": [
+            {
+              "codigo": "UOMACS",
+              "importe": 3500.75
+            },
+            {
+              "codigo": "UOMAAS",
+              "importe": 1750.01
+            },
+            {
+              "codigo": "ART46",
+              "importe": 2600.26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "periodo": "2025-11-18T03:00:00.000Z",
+      "afiliados": [
+        {
+          "errores": false,
+          "cuil": 20949118682,
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-02-15",
+          "empresaDomicilioId": 8,
+          "camara": "FAIM",
+          "categoria": "C",
+          "remunerativo": 1000,
+          "noRemunerativo": 2000,
+          "uomaSocio": true,
+          "amtimaSocio": true,
+          "id": 1
+        },
+        {
+          "errores": false,
+          "cuil": 20949118782,
+          "inte": null,
+          "apellido": "Bueno",
+          "nombre": "Diego",
+          "fechaIngreso": "2024-03-15",
+          "empresaDomicilioId": 10,
+          "camara": "CAENA",
+          "categoria": "A",
+          "remunerativo": 3000,
+          "noRemunerativo": 6000,
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 2
+        },
+        {
+          "errores": false,
+          "cuil": 21345667876,
+          "inte": null,
+          "apellido": "Lopez",
+          "nombre": "Jose",
+          "fechaIngreso": "2024-04-18",
+          "empresaDomicilioId": 10,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 4000,
+          "noRemunerativo": 5000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "id": 3
+        }
+      ],
+      "empresaId": "1",
+      "id": 204
+    },
+    {
+      "periodo": null,
+      "afiliados": [
+        {
+          "errores": false,
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-03-13T03:00:00.000Z",
+          "empresaDomicilioId": 7,
+          "camara": "FAIM",
+          "categoria": "B",
+          "remunerativo": "1111",
+          "noRemunerativo": "1111",
+          "uomaSocio": true,
+          "amtimaSocio": true,
+          "id": 1
+        }
+      ],
+      "empresaId": "1",
+      "id": 205
+    },
+    {
+      "periodo": "2025-05-18T03:00:00.000Z",
+      "afiliados": [
+        {
+          "errores": false,
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-03-19T03:00:00.000Z",
+          "empresaDomicilioId": 11,
+          "camara": "FAIM",
+          "categoria": "C",
+          "remunerativo": "111",
+          "noRemunerativo": "111",
+          "uomaSocio": "",
+          "amtimaSocio": "",
+          "id": 1
+        }
+      ],
+      "empresaId": "1",
+      "id": 206
+    },
+    {
+      "periodo": "2025-08-18T03:00:00.000Z",
+      "afiliados": [
+        {
+          "errores": true,
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-03-20T03:00:00.000Z",
+          "empresaDomicilioId": 10,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": "1",
+          "noRemunerativo": "1",
+          "uomaSocio": true,
+          "amtimaSocio": null,
+          "id": 1
+        }
+      ],
+      "empresaId": "1",
+      "id": 207
+    },
+    {
+      "periodo": "2020-12-18T03:00:00.000Z",
+      "afiliados": [
+        {
+          "errores": true,
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": null,
+          "empresaDomicilioId": null,
+          "camara": "FAIM",
+          "categoria": "A",
+          "remunerativo": "1",
+          "noRemunerativo": "1",
+          "uomaSocio": null,
+          "amtimaSocio": null,
+          "id": 1
+        }
+      ],
+      "empresaId": "1",
+      "id": 208
+    },
+    {
+      "periodo": "2020-12-18T03:00:00.000Z",
+      "afiliados": [
+        {
+          "errores": true,
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": null,
+          "empresaDomicilioId": null,
+          "camara": "FAIM",
+          "categoria": "A",
+          "remunerativo": "1",
+          "noRemunerativo": "1",
+          "uomaSocio": null,
+          "amtimaSocio": null,
+          "id": 1
+        }
+      ],
+      "empresaId": "1",
+      "id": 209
+    },
+    {
+      "periodo": "2025-02-18T03:00:00.000Z",
+      "afiliados": [
+        {
+          "errores": true,
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": null,
+          "empresaDomicilioId": null,
+          "camara": "FAIM",
+          "categoria": "C",
+          "remunerativo": null,
+          "noRemunerativo": null,
+          "uomaSocio": null,
+          "amtimaSocio": null,
+          "id": 1
+        }
+      ],
+      "empresaId": "1",
+      "id": 210
+    },
+    {
+      "periodo": "2025-02-18T03:00:00.000Z",
+      "afiliados": [
+        {
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": null,
+          "empresaDomicilioId": null,
+          "camara": "FAIM",
+          "categoria": "C",
+          "remunerativo": null,
+          "noRemunerativo": null,
+          "uomaSocio": null,
+          "amtimaSocio": null,
+          "id": 1,
+          "errores": true
+        }
+      ],
+      "empresaId": "1",
+      "id": 211
+    },
+    {
+      "periodo": "2025-02-18T03:00:00.000Z",
+      "afiliados": [
+        {
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": null,
+          "empresaDomicilioId": null,
+          "camara": "FAIM",
+          "categoria": "C",
+          "remunerativo": null,
+          "noRemunerativo": null,
+          "uomaSocio": null,
+          "amtimaSocio": null,
+          "id": 1,
+          "errores": true
+        }
+      ],
+      "empresaId": "1",
+      "id": 212
+    },
+    {
+      "periodo": "2025-02-18T03:00:00.000Z",
+      "afiliados": [
+        {
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": null,
+          "empresaDomicilioId": null,
+          "camara": "FAIM",
+          "categoria": "C",
+          "remunerativo": null,
+          "noRemunerativo": null,
+          "uomaSocio": null,
+          "amtimaSocio": null,
+          "id": 1,
+          "errores": true
+        }
+      ],
+      "empresaId": "1",
+      "id": 213
+    },
+    {
+      "periodo": "2025-02-18T03:00:00.000Z",
+      "afiliados": [
+        {
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": null,
+          "empresaDomicilioId": null,
+          "camara": "FAIM",
+          "categoria": "D",
+          "remunerativo": null,
+          "noRemunerativo": null,
+          "uomaSocio": null,
+          "amtimaSocio": null,
+          "id": 1
+        }
+      ],
+      "empresaId": "1",
+      "id": 214
+    },
+    {
+      "periodo": "2017-05-19T03:00:00.000Z",
+      "afiliados": [
+        {
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-03-21T03:00:00.000Z",
+          "empresaDomicilioId": 9,
+          "camara": "FAIM",
+          "categoria": "D",
+          "remunerativo": "1",
+          "noRemunerativo": "1",
+          "uomaSocio": true,
+          "amtimaSocio": true,
+          "id": 1
+        }
+      ],
+      "empresaId": "1",
+      "id": 215
+    },
+    {
+      "periodo": "2024-04-02T03:00:00.000Z",
+      "afiliados": [
+        {
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-04-03T03:00:00.000Z",
+          "empresaDomicilioId": 10,
+          "camara": "CAENA",
+          "categoria": "C",
+          "remunerativo": "1",
+          "noRemunerativo": "1",
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 1
+        }
+      ],
+      "empresaId": "1",
+      "id": 216
+    },
+    {
+      "periodo": "2024-05-04T03:00:00.000Z",
+      "afiliados": [
+        {
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-04-18T03:00:00.000Z",
+          "empresaDomicilioId": 9,
+          "camara": "CAENA",
+          "categoria": "C",
+          "remunerativo": "1",
+          "noRemunerativo": "1",
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 1
+        }
+      ],
+      "empresaId": "1",
+      "id": 217
+    },
+    {
+      "periodo": "2024-05-04T03:00:00.000Z",
+      "afiliados": [
+        {
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-04-10T03:00:00.000Z",
+          "empresaDomicilioId": 10,
+          "camara": "CEPA",
+          "categoria": "D",
+          "remunerativo": "1",
+          "noRemunerativo": "1",
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 1
+        }
+      ],
+      "empresaId": "1",
+      "id": 218
+    },
+    {
+      "periodo": "2017-05-04T03:00:00.000Z",
+      "afiliados": [
+        {
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-04-11T03:00:00.000Z",
+          "empresaDomicilioId": 10,
+          "camara": "CAENA",
+          "categoria": "C",
+          "remunerativo": "1",
+          "noRemunerativo": "1",
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 1
+        }
+      ],
+      "empresaId": "1",
+      "id": 219
+    },
+    {
+      "periodo": null,
+      "afiliados": [
+        {
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-04-24T03:00:00.000Z",
+          "empresaDomicilioId": 4,
+          "camara": "FAIM",
+          "categoria": "D",
+          "remunerativo": "1",
+          "noRemunerativo": "1",
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 1
+        }
+      ],
+      "empresaId": "1",
+      "id": 220
+    },
+    {
+      "periodo": "2033-05-04T03:00:00.000Z",
+      "afiliados": [
+        {
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-04-18T03:00:00.000Z",
+          "empresaDomicilioId": 5,
+          "camara": "CAENA",
+          "categoria": "C",
+          "remunerativo": "1",
+          "noRemunerativo": "1",
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 1
+        }
+      ],
+      "empresaId": "1",
+      "id": 221
+    },
+    {
+      "periodo": null,
+      "afiliados": [
+        {
+          "cuil": 20949118682,
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-02-15",
+          "empresaDomicilioId": 8,
+          "camara": null,
+          "categoria": null,
+          "remunerativo": 1000,
+          "noRemunerativo": 2000,
+          "uomaSocio": true,
+          "amtimaSocio": true,
+          "id": 1
+        },
+        {
+          "cuil": 20949118782,
+          "inte": null,
+          "apellido": "Bueno",
+          "nombre": "Diego",
+          "fechaIngreso": "2024-03-15",
+          "empresaDomicilioId": 10,
+          "camara": null,
+          "categoria": null,
+          "remunerativo": 3000,
+          "noRemunerativo": 6000,
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 2
+        },
+        {
+          "cuil": 21345667676,
+          "apellido": "Lopez",
+          "nombre": "Jose",
+          "fechaIngreso": "2024-04-18",
+          "empresaDomicilioId": 10,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": null,
+          "noRemunerativo": null,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "id": 3
+        },
+        {
+          "cuil": 93822767344,
+          "apellido": "Stack",
+          "nombre": "Tony",
+          "fechaIngreso": "2024-05-19",
+          "empresaDomicilioId": 10,
+          "camara": "CAENA",
+          "categoria": "A",
+          "remunerativo": 6000,
+          "noRemunerativo": 5000,
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 4
+        }
+      ],
+      "empresaId": "1",
+      "id": 222
+    },
+    {
+      "periodo": null,
+      "afiliados": [
+        {
+          "cuil": 20949118682,
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-02-15",
+          "empresaDomicilioId": 8,
+          "camara": null,
+          "categoria": null,
+          "remunerativo": 1000,
+          "noRemunerativo": 2000,
+          "uomaSocio": true,
+          "amtimaSocio": true,
+          "id": 1
+        },
+        {
+          "cuil": 20949118782,
+          "inte": null,
+          "apellido": "Bueno",
+          "nombre": "Diego",
+          "fechaIngreso": "2024-03-15",
+          "empresaDomicilioId": 10,
+          "camara": null,
+          "categoria": null,
+          "remunerativo": 3000,
+          "noRemunerativo": 6000,
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 2
+        },
+        {
+          "cuil": 21345667676,
+          "apellido": "Lopez",
+          "nombre": "Jose",
+          "fechaIngreso": "2024-04-18",
+          "empresaDomicilioId": 10,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": null,
+          "noRemunerativo": null,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "id": 3
+        },
+        {
+          "cuil": 93822767344,
+          "apellido": "Stack",
+          "nombre": "Tony",
+          "fechaIngreso": "2024-05-19",
+          "empresaDomicilioId": 10,
+          "camara": "CAENA",
+          "categoria": "A",
+          "remunerativo": 6000,
+          "noRemunerativo": 5000,
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 4
+        }
+      ],
+      "empresaId": "1",
+      "id": 223
+    },
+    {
+      "periodo": null,
+      "afiliados": [
+        {
+          "cuil": 20949118682,
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-02-15",
+          "empresaDomicilioId": 8,
+          "camara": null,
+          "categoria": null,
+          "remunerativo": 1000,
+          "noRemunerativo": 2000,
+          "uomaSocio": true,
+          "amtimaSocio": true,
+          "id": 1
+        },
+        {
+          "cuil": 20949118782,
+          "inte": null,
+          "apellido": "Bueno",
+          "nombre": "Diego",
+          "fechaIngreso": "2024-03-15",
+          "empresaDomicilioId": 10,
+          "camara": null,
+          "categoria": null,
+          "remunerativo": 3000,
+          "noRemunerativo": 6000,
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 2
+        },
+        {
+          "cuil": 21345667676,
+          "apellido": "Lopez",
+          "nombre": "Jose",
+          "fechaIngreso": "2024-04-18",
+          "empresaDomicilioId": 10,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": null,
+          "noRemunerativo": null,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "id": 3
+        },
+        {
+          "cuil": 93822767344,
+          "apellido": "Stack",
+          "nombre": "Tony",
+          "fechaIngreso": "2024-05-19",
+          "empresaDomicilioId": 10,
+          "camara": "CAENA",
+          "categoria": "A",
+          "remunerativo": 6000,
+          "noRemunerativo": 5000,
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 4
+        }
+      ],
+      "empresaId": "1",
+      "id": 224
+    },
+    {
+      "periodo": "2024-02-02T03:00:00.000Z",
+      "afiliados": [
+        {
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-05-09T03:00:00.000Z",
+          "empresaDomicilioId": 4,
+          "camara": "FAIM",
+          "categoria": "C",
+          "remunerativo": 111111111,
+          "noRemunerativo": 222222222,
+          "uomaSocio": true,
+          "amtimaSocio": true,
+          "id": 1
+        }
+      ],
+      "id": 225
+    },
+    {
+      "periodo": null,
+      "afiliados": [
+        {
+          "cuil": null,
+          "inte": null,
+          "apellido": null,
+          "nombre": null,
+          "fechaIngreso": null,
+          "empresaDomicilioId": null,
+          "camara": null,
+          "categoria": null,
+          "remunerativo": 11111111,
+          "noRemunerativo": 111111111,
+          "uomaSocio": null,
+          "amtimaSocio": null,
+          "id": 1
+        }
+      ],
+      "empresaId": "1",
+      "id": 226
+    },
+    {
+      "periodo": null,
+      "afiliados": [
+        {
+          "cuil": 20949118682,
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-02-15T03:00:00.000Z",
+          "empresaDomicilioId": null,
+          "camara": "FAIM",
+          "categoria": "C",
+          "remunerativo": 1000,
+          "noRemunerativo": 2000,
+          "uomaSocio": true,
+          "amtimaSocio": true,
+          "id": 1
+        },
+        {
+          "cuil": 20949118782,
+          "inte": null,
+          "apellido": "Bueno",
+          "nombre": "Diego",
+          "fechaIngreso": "2024-03-15T03:00:00.000Z",
+          "empresaDomicilioId": null,
+          "camara": "CAENA",
+          "categoria": "A",
+          "remunerativo": 3000,
+          "noRemunerativo": 6000,
+          "uomaSocio": false,
+          "amtimaSocio": false,
+          "id": 2
+        },
+        {
+          "cuil": 21345667876,
+          "inte": null,
+          "apellido": "Lopez",
+          "nombre": "Jose",
+          "fechaIngreso": "2024-04-18T03:00:00.000Z",
+          "empresaDomicilioId": null,
+          "camara": "CAENA",
+          "categoria": "D",
+          "remunerativo": 4000,
+          "noRemunerativo": 5000,
+          "uomaSocio": true,
+          "amtimaSocio": false,
+          "id": 3
+        }
+      ],
+      "empresaId": "1",
+      "id": 227
+    },
+    {
+      "periodo": null,
+      "afiliados": [
+        {
+          "cuil": "20949118682",
+          "inte": 0,
+          "apellido": "Salinas",
+          "nombre": "Luis",
+          "fechaIngreso": "2024-05-02T03:00:00.000Z",
+          "empresaDomicilioId": 7,
+          "camara": "FAIM",
+          "categoria": "D",
+          "remunerativo": 222222222222.9,
+          "noRemunerativo": 22222222222.8,
+          "uomaSocio": true,
+          "amtimaSocio": true,
+          "id": 1
+        }
+      ],
+      "id": 228
+    }
+  ],
+  "afiliado": [
+    {
+      "cuil": "23278871924",
+      "inte": 0,
+      "apellido": "Morales",
+      "nombre": "Alfio"
+    },
+    {
+      "cuil": "20949118682",
+      "inte": 0,
+      "apellido": "Salinas",
+      "nombre": "Luis"
+    },
+    {
+      "cuil": "27312728848",
+      "inte": 0,
+      "apellido": "Castaneda",
+      "nombre": "Manfredo"
+    },
+    {
+      "cuil": "20289401173",
+      "inte": 0,
+      "apellido": "Anaya",
+      "nombre": "Reinardo"
+    },
+    {
+      "cuil": "27112763592",
+      "inte": 0,
+      "apellido": "Raya",
+      "nombre": "Doria"
+    },
+    {
+      "cuil": "23332969889",
+      "inte": 0,
+      "apellido": "Tejada",
+      "nombre": "Vanda"
+    },
+    {
+      "cuil": "27446744955",
+      "inte": 0,
+      "apellido": "Longoria",
+      "nombre": "Albano"
+    }
+  ],
+  "cuit-restringido": [
+    {
+      "id": 5,
+      "cuit": "18930475012",
+      "observacion": "Cuit restringido por no cumplir con obligaciones tributarias"
+    },
+    {
+      "id": 7,
+      "cuit": "16784026309",
+      "observacion": "Cuit rxxx estringido por inconsistencias en la presentación de declaraciones juradas"
+    },
+    {
+      "id": 8,
+      "cuit": "40872519607",
+      "observacion": "Cuit restringido por falta de regularización de deudas fiscales"
+    },
+    {
+      "cuit": "30789154023",
+      "observacion": "Observacion por falta de pago de deudas previsionales",
+      "id": 9
+    },
+    {
+      "cuit": "30789154024",
+      "observacion": "Cuit restringido por lavado de dinero",
+      "id": 11
+    },
+    {
+      "cuit": "30789154024",
+      "observacion": "Cuit bajo investigación",
+      "id": 13
+    },
+    {
+      "cuit": "30789154024",
+      "observacion": "Cuit vinculado a transacciones ilícitas",
+      "id": 14
+    },
+    {
+      "cuit": "30789154024",
+      "observacion": "Cuit asociado a evasión fiscal",
+      "id": 15
+    },
+    {
+      "cuit": "30789154024",
+      "observacion": "Cuit con irregularidades financieras",
+      "id": 16
+    },
+    {
+      "cuit": "30789154024",
+      "observacion": "Cuit relacionado con actividades fraudulentas",
+      "id": 17
+    },
+    {
+      "cuit": "30789154024",
+      "observacion": "Cuit en lista de vigilancia",
+      "id": 18
+    },
+    {
+      "cuit": "30789154024",
+      "observacion": "Cuit con historial de deudas impagas",
+      "id": 19
+    },
+    {
+      "cuit": "30789154024",
+      "observacion": "Cuit bajo sospecha de lavado de activos",
+      "id": 20
+    },
+    {
+      "cuit": "34123213213123",
+      "observacion": "",
+      "id": 21
+    }
+  ],
+  "aportes": [
+    {
+      "id": 1,
+      "codigo": "UOMACS",
+      "descripcion": "UOMA Cuota Social",
+      "cuenta": "12148/4"
+    },
+    {
+      "id": 2,
+      "codigo": "UOMAAS",
+      "descripcion": "UOMA Aporte Solidario",
+      "cuenta": "47598/4"
+    },
+    {
+      "id": 3,
+      "codigo": "UOMACU",
+      "descripcion": "UOMA Cuota Usufructo",
+      "cuenta": "49859/7"
+    },
+    {
+      "id": 4,
+      "codigo": "AMTIMACS",
+      "descripcion": "AMTIMA Cuota Social",
+      "cuenta": "11598/5"
+    },
+    {
+      "id": 5,
+      "codigo": "ART46",
+      "descripcion": "Art. 46",
+      "cuenta": "89652/7"
+    },
+    {
+      "codigo": "UOMACSXX-PRUEBA",
+      "descripcion": "UOMA Cuota Social XXXX-PRUEBA2",
+      "cuenta": "118888/7",
+      "id": 6
+    }
+  ],
+  "aportesDetalle": [
+    {
+      "id": 1,
+      "aporte": "UOMACS",
+      "entidad": "UOMA",
+      "tipo": "P",
+      "valor": 2,
+      "referencia": "R",
+      "categoria": null,
+      "antiguedad": null,
+      "vigenciaDesde": "1900-01-01",
+      "vigenciaHasta": null
+    },
+    {
+      "id": 2,
+      "entidad": "UOMA",
+      "aporte": "UOMAAS",
+      "unidad": "P",
+      "valor": 2,
+      "referencia": "R",
+      "categoria": null,
+      "antiguedad": null,
+      "vigenciaDesde": "1990-01-01T03:00.000Z",
+      "vigenciaHasta": null
+    },
+    {
+      "id": 3,
+      "entidad": null,
+      "aporte": "ART46",
+      "unidad": "P",
+      "valor": 200,
+      "referencia": "PJ",
+      "categoria": "F",
+      "antiguedad": 0
+    },
+    {
+      "id": 4,
+      "entidad": "AMTIMA",
+      "aporte": "AMTIMACS",
+      "unidad": "E",
+      "valor": 7500,
+      "referencia": null,
+      "categoria": null,
+      "antiguedad": null
+    },
+    {
+      "id": 5,
+      "entidad": "UOMA",
+      "aporte": "UOMACU",
+      "unidad": "P",
+      "valor": 2,
+      "referencia": "R",
+      "categoria": null,
+      "antiguedad": null
+    }
+  ],
+  "boletas": {
+    "declaracion_jurada_id": 120,
+    "tipo_ddjj": "Original",
+    "periodo": "2024-01-01T03:00:00.000Z",
+    "detalle_boletas": [
+      {
+        "codigo": "UOMACS",
+        "descripcion": "UOMA Cuota Social",
+        "vencimiento": "2024-02-21T03:00:00.000Z",
+        "periodo": "2024-01-01T03:00:00.000Z",
+        "total_acumulado": 21810,
+        "interes": 0,
+        "ajustes": [
+          {
+            "descripcion": "Por moras reiteradas",
+            "monto": 2333
+          }
+        ],
+        "total_final": 24143,
+        "intencion_de_pago": "",
+        "afiliados": [
+          {
+            "cuil": "27367071112",
+            "apellido": "Nelo",
+            "nombre": "Rosario",
+            "remunerativo": 200000,
+            "capital": 8400
+          },
+          {
+            "cuil": "2731722324248",
+            "apellido": "Nelo",
+            "nombre": "Manfredo",
+            "remunerativo": 100000,
+            "capital": 7610
+          },
+          {
+            "cuil": "273712728848",
+            "apellido": "Nelo",
+            "nombre": "Sabario",
+            "remunerativo": 100000,
+            "capital": 5800
+          }
+        ],
+        "forma_de_pago": "VENTANILLA",
+        "declaracion_jurada_id": 120,
+        "tipo_ddjj": "Original",
+        "numero_boleta": 11
+      },
+      {
+        "codigo": "ART46",
+        "descripcion": "Art. 46",
+        "vencimiento": "2024-02-21T03:00:00.000Z",
+        "periodo": "01-2024",
+        "total_acumulado": 1484,
+        "interes": 0,
+        "ajustes": [
+          {
+            "descripcion": "Por moras reiteradas",
+            "monto": 2333
+          },
+          {
+            "descripcion": "Porque pintó",
+            "monto": 2344
+          }
+        ],
+        "total_final": 6161,
+        "intencion_de_pago": "",
+        "afiliados": [
+          {
+            "cuil": "27367071112",
+            "apellido": "Nelo",
+            "nombre": "Rosario",
+            "remunerativo": 200000,
+            "capital": 520
+          },
+          {
+            "cuil": "2731722324248",
+            "apellido": "Nelo",
+            "nombre": "Manfredo",
+            "remunerativo": 100000,
+            "capital": 482
+          },
+          {
+            "cuil": "273712728848",
+            "apellido": "Nelo",
+            "nombre": "Sabario",
+            "remunerativo": 200000,
+            "capital": 482
+          }
+        ],
+        "forma_de_pago": "VENTANILLA",
+        "declaracion_jurada_id": 120,
+        "tipo_ddjj": "Original",
+        "numero_boleta": 12
+      },
+      {
+        "codigo": "ANTIMACS",
+        "descripcion": "ANTIMA Cuota Social",
+        "vencimiento": "2024-02-21T00:00:00.000Z",
+        "periodo": "01-2024",
+        "total_acumulado": 7800,
+        "interes": 0,
+        "ajustes": [],
+        "total_final": 7800,
+        "intencion_de_pago": "",
+        "afiliados": [
+          {
+            "cuil": "27367071112",
+            "apellido": "Nelo",
+            "nombre": "Rosario",
+            "remunerativo": 200000,
+            "capital": 7800
+          }
+        ],
+        "forma_de_pago": "VENTANILLA",
+        "declaracion_jurada_id": 120,
+        "tipo_ddjj": "Original",
+        "numero_boleta": 24
+      }
+    ],
+    "sin_ddjj": [
+      {
+        "entidad": "AMTIMA",
+        "nroActa": "123123",
+        "importe": "1431234",
+        "razon_de_pago": "Nro Acta: 123123",
+        "id": 1
+      },
+      {
+        "entidad": "AMTIMA",
+        "nroActa": "123123",
+        "importe": "1431234",
+        "razon_de_pago": "Nro Acta: 123123",
+        "id": 2
+      },
+      {
+        "entidad": "UOMA",
+        "nroActa": "321",
+        "importe": "44452",
+        "razon_de_pago": "Nro Acta: 321",
+        "id": 3
+      },
+      {
+        "entidad": "OSPIM",
+        "nroActa": "999",
+        "importe": "123",
+        "razon_de_pago": "Nro Acta: 999",
+        "id": 4
+      },
+      {
+        "entidad": "OSPIM",
+        "nroActa": "3335555",
+        "importe": "3334444",
+        "intencionDePago": "2024-03-31",
+        "razon_de_pago": "Nro Acta: 3335555",
+        "id": 9
+      },
+      {
+        "entidad": "AMTIMA",
+        "nroActa": "123123",
+        "importe": "1431234",
+        "razon_de_pago": "Nro Acta: 123123",
+        "id": 6
+      },
+      {
+        "entidad": "OSPIM",
+        "nroActa": "1111",
+        "importe": "1111",
+        "intencionDePago": "2024-04-10",
+        "razon_de_pago": "Nro Acta: 1111",
+        "id": 7
+      },
+      {
+        "entidad": "OSPIM",
+        "nroActa": "4444",
+        "importe": "44444",
+        "intencionDePago": "2024-04-19T00:00:00.000Z",
+        "razon_de_pago": "Nro Acta: 4444",
+        "id": 8
+      }
+    ]
+  },
+  "boletas_guardadas": {
+    "con_ddjj": [
+      {
+        "id": 1,
+        "codigo": "ART46",
+        "descripcion": "Art. 46",
+        "vencimiento": "2024-02-21T03:00:00.000Z",
+        "periodo": "2024-01-01T03:00:00.000Z",
+        "total_acumulado": 1484,
+        "interes": 460.04,
+        "ajuste": 0,
+        "ajustes": [
+          {
+            "descripcion": "Por moras reiteradas",
+            "monto": 2333
+          }
+        ],
+        "total_final": 1944.04,
+        "intencion_de_pago": "2024-03-16T03:00:00.000Z",
+        "fecha_de_pago": "2024-03-16T03:00:00.000Z",
+        "importe_recibido": 1944.04,
+        "afiliados": [
+          {
+            "cuil": "27367071112",
+            "apellido": "Nelo",
+            "nombre": "Rosario",
+            "remunerativo": 200000,
+            "capital": 520
+          },
+          {
+            "cuil": "2731722324248",
+            "apellido": "Nelo",
+            "nombre": "Manfredo",
+            "remunerativo": 100000,
+            "capital": 482
+          },
+          {
+            "cuil": "273712728848",
+            "apellido": "Nelo",
+            "nombre": "Sabario",
+            "remunerativo": 200000,
+            "capital": 482
+          }
+        ],
+        "forma_de_pago": "VENTANILLA",
+        "declaracion_jurada_id": 120,
+        "tipo_ddjj": "Original",
+        "numero_boleta": 1
+      },
+      {
+        "id": 2,
+        "codigo": "ANTIMACS",
+        "descripcion": "ANTIMA Cuota Social",
+        "vencimiento": "2024-02-21T03:00:00.000Z",
+        "periodo": "2024-01-01T03:00:00.000Z",
+        "total_acumulado": 7800,
+        "interes": 2418,
+        "ajuste": 0,
+        "total_final": 10218,
+        "intencion_de_pago": "2024-03-16T03:00:00.000Z",
+        "fecha_de_pago": "2024-03-16T03:00:00.000Z",
+        "importe_recibido": 10218,
+        "afiliados": [
+          {
+            "cuil": "27367071112",
+            "apellido": "Nelo",
+            "nombre": "Rosario",
+            "remunerativo": 200000,
+            "capital": 7800
+          }
+        ],
+        "forma_de_pago": "VENTANILLA",
+        "declaracion_jurada_id": 120,
+        "tipo_ddjj": "Original",
+        "numero_boleta": 2
+      },
+      {
+        "id": 4000,
+        "codigo": "UOMACS",
+        "descripcion": "UOMA Cuota Social",
+        "vencimiento": "2024-02-21T03:00:00.000Z",
+        "periodo": "2024-01-01T03:00:00.000Z",
+        "total_acumulado": 13410,
+        "interes": 4827.6,
+        "ajuste": 0,
+        "total_final": 18237.6,
+        "intencion_de_pago": "2024-03-16T03:00:00.000Z",
+        "fecha_de_pago": "2024-03-16T03:00:00.000Z",
+        "afiliados": [
+          {
+            "cuil": "27367071112",
+            "apellido": "Nelo",
+            "nombre": "Rosario",
+            "remunerativo": 10,
+            "capital": 8400
+          },
+          {
+            "cuil": "2731722324248",
+            "apellido": "Nelo",
+            "nombre": "Manfredo",
+            "remunerativo": 100000,
+            "capital": 7610
+          },
+          {
+            "cuil": "273712728848",
+            "apellido": "Nelo",
+            "nombre": "Sabario",
+            "remunerativo": 100000,
+            "capital": 5800
+          }
+        ],
+        "forma_de_pago": "REDLINK",
+        "declaracion_jurada_id": 120,
+        "tipo_ddjj": "Original",
+        "numero_boleta": 3
+      },
+      {
+        "codigo": "UOMACS",
+        "descripcion": "UOMA Cuota Social",
+        "vencimiento": "2024-02-21T03:00:00.000Z",
+        "periodo": "2024-05-23T06:00:00.000Z",
+        "total_acumulado": 21810,
+        "interes": 20037.94,
+        "ajuste": 0,
+        "total_final": 41847.9375,
+        "intencion_de_pago": "2024-05-23T03:00:00.000Z",
+        "afiliados": [
+          {
+            "cuil": "27367071112",
+            "apellido": "Nelo",
+            "nombre": "Rosario",
+            "remunerativo": 200000,
+            "capital": 8400
+          },
+          {
+            "cuil": "2731722324248",
+            "apellido": "Nelo",
+            "nombre": "Manfredo",
+            "remunerativo": 100000,
+            "capital": 7610
+          },
+          {
+            "cuil": "273712728848",
+            "apellido": "Nelo",
+            "nombre": "Sabario",
+            "remunerativo": 100000,
+            "capital": 5800
+          }
+        ],
+        "forma_de_pago": "VENTANILLA",
+        "declaracion_jurada_id": 120,
+        "tipo_ddjj": "Original",
+        "numero_boleta": 11,
+        "ajustes": [
+          {
+            "descripcion": "Por moras reiteradas",
+            "monto": 2333
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "codigo": "ANTIMACS",
+        "descripcion": "ANTIMA Cuota Social",
+        "vencimiento": "2024-02-21T03:00:00.000Z",
+        "periodo": "2024-01-01T03:00:00.000Z",
+        "total_acumulado": 7800,
+        "interes": 2418,
+        "ajuste": 0,
+        "total_final": 10218,
+        "intencion_de_pago": "2024-03-23T03:00:00.000Z",
+        "afiliados": [
+          {
+            "cuil": "27367071112",
+            "apellido": "Nelo",
+            "nombre": "Rosario",
+            "remunerativo": 200000,
+            "capital": 7800
+          }
+        ],
+        "forma_de_pago": "VENTANILLA",
+        "declaracion_jurada_id": 120,
+        "tipo_ddjj": "Original",
+        "numero_boleta": 5
+      },
+      
+      {
+        "id": 12,
+        "codigo": "ART46",
+        "descripcion": "Art. 46",
+        "vencimiento": "2024-02-21T03:00:00.000Z",
+        "periodo": "2024-01-01T03:00:00.000Z",
+        "total_acumulado": 1484,
+        "interes": 623.28,
+        "ajuste": 0,
+        "total_final": 2107.2799999999997,
+        "intencion_de_pago": "2024-04-03T03:00:00.000Z",
+        "afiliados": [
+          {
+            "cuil": "27367071112",
+            "apellido": "Nelo",
+            "nombre": "Rosario",
+            "remunerativo": 200000,
+            "capital": 520
+          },
+          {
+            "cuil": "2731722324248",
+            "apellido": "Nelo",
+            "nombre": "Manfredo",
+            "remunerativo": 100000,
+            "capital": 482
+          },
+          {
+            "cuil": "273712728848",
+            "apellido": "Nelo",
+            "nombre": "Sabario",
+            "remunerativo": 200000,
+            "capital": 482
+          }
+        ],
+        "forma_de_pago": "VENTANILLA",
+        "declaracion_jurada_id": 120,
+        "tipo_ddjj": "Original",
+        "numero_boleta": 12
+      }
+      
+    ],
+    "sin_ddjj": [
+
+      {
+        "entidad": "UOMA",
+        "nroActa": "43121234",
+        "importe": 432134.76,
+        "intencion_de_pago": "2024-05-25T00:00:00.000Z",
+        "razon_de_pago": "Nro Acta: 43121234",
+        "id": 18
+      }
+    ]
+  },
+  "ajustes": [
+    {
+      "cuit": "123",
+      "periodo_original": "2024-03-01T03:00:00.000Z",
+      "importe": 123,
+      "aporte": "AMTIMA",
+      "vigencia": "2024-08-01T03:00:00.000Z",
+      "id": 5
+    },
+    {
+      "cuit": "1",
+      "periodo_original": "2024-07-01T03:00:00.000Z",
+      "importe": 1,
+      "aporte": "ART.46",
+      "vigencia": "2024-11-01T03:00:00.000Z",
+      "id": 6
+    },
+    {
+      "cuit": "2",
+      "periodo_original": "2024-06-01T03:00:00.000Z",
+      "importe": 1,
+      "aporte": "AMTIMA",
+      "vigencia": "2024-07-01T03:00:00.000Z",
+      "id": 7
+    }
+  ],
+  "ddjj-modificacion-datos": [
+    {
+      "cuil": "20949118682",
+      "apellido": "Salinas",
+      "nombre": "Luiss",
+      "id": 1
+    }
+  ],
+  "calculo-aportes": [
+    {
+      "entidad": "AMTIMA",
+      "aporte": "UOMACS",
+      "socio": true,
+      "calculoTipo": "PO",
+      "calculoValor": 3000,
+      "calculoBase": "RE",
+      "camara": "FAIM",
+      "camaraCategoria": "A",
+      "antiguedad": 2,
+      "desde": "2024-01-01T03:00:00.000Z",
+      "hasta": "2024-12-31T03:00:00.000Z",
+      "id": 1
+    },
+    {
+      "id": 2,
+      "entidad": "UOMA",
+      "aporte": "UOMACS",
+      "socio": true,
+      "calculoTipo": "PO",
+      "calculoValor": 3000,
+      "calculoBase": "RE",
+      "camara": "FAIM",
+      "camaraCategoria": "A",
+      "antiguedad": 2,
+      "desde": "2024-01-01T03:00:00.000Z",
+      "hasta": "2024-12-31T03:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "entidad": "UOMA",
+      "aporte": "UOMACS",
+      "socio": true,
+      "calculoTipo": "PO",
+      "calculoValor": 3000,
+      "calculoBase": "RE",
+      "camara": "FAIM",
+      "camaraCategoria": "A",
+      "antiguedad": 2,
+      "desde": "2024-01-01T03:00:00.000Z",
+      "hasta": "2024-12-31T03:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "entidad": "UOMA",
+      "aporte": "UOMAAS",
+      "socio": false,
+      "calculoTipo": "EN",
+      "calculoValor": 1234,
+      "calculoBase": "PJ",
+      "camara": "FAIM",
+      "camaraCategoria": "A",
+      "antiguedad": "2",
+      "desde": "2024-05-07T03:00:00.000Z",
+      "hasta": "2024-05-08T03:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "entidad": "UOMA",
+      "aporte": "UOMAAS",
+      "socio": false,
+      "calculoTipo": "EN",
+      "calculoValor": 1234,
+      "calculoBase": "PJ",
+      "camara": "FAIM",
+      "camaraCategoria": "A",
+      "antiguedad": "2",
+      "desde": "2024-05-07T03:00:00.000Z",
+      "hasta": "2024-05-08T03:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "entidad": "UOMA",
+      "aporte": "UOMAAS",
+      "socio": true,
+      "calculoTipo": "EN",
+      "calculoValor": 11111110,
+      "calculoBase": "PJ",
+      "camara": "FAIM",
+      "camaraCategoria": "B",
+      "antiguedad": "4",
+      "desde": "2024-05-09T03:00:00.000Z",
+      "hasta": "2024-05-11T03:00:00.000Z"
+    }
+  ],
+  "calculo-tipo": [
+    {
+      "codigo": "PO",
+      "descripcion": "Porcentaje"
+    },
+    {
+      "codigo": "EN",
+      "descripcion": "Entero"
+    }
+  ],
+  "calculo-base": [
+    {
+      "codigo": "RE",
+      "descripcion": "Remunerativo"
+    },
+    {
+      "codigo": "PJ",
+      "descripcion": "Paritarial Jornal"
+    },
+    {
+      "codigo": "PS",
+      "descripcion": "Paritarial Salario Mensual"
+    }
+  ],
+  "categoria-antiguedad": [
+    {
+      "categoria": "A",
+      "antiguedad": [
+        {
+          "antDesde": "2"
+        },
+        {
+          "antDesde": "4"
+        },
+        {
+          "antDesde": "6"
+        },
+        {
+          "antDesde": "8"
+        },
+        {
+          "antDesde": "10"
+        },
+        {
+          "antDesde": "12"
+        },
+        {
+          "antDesde": "14"
+        },
+        {
+          "antDesde": "16"
+        },
+        {
+          "antDesde": "18"
+        },
+        {
+          "antDesde": "20"
+        },
+        {
+          "antDesde": "22"
+        },
+        {
+          "antDesde": "24"
+        },
+        {
+          "antDesde": "26"
+        },
+        {
+          "antDesde": "28"
+        },
+        {
+          "antDesde": "30"
+        }
+      ]
+    },
+    {
+      "categoria": "B",
+      "antiguedad": [
+        {
+          "antDesde": "2"
+        },
+        {
+          "antDesde": "4"
+        },
+        {
+          "antDesde": "6"
+        },
+        {
+          "antDesde": "8"
+        },
+        {
+          "antDesde": "10"
+        },
+        {
+          "antDesde": "12"
+        },
+        {
+          "antDesde": "14"
+        },
+        {
+          "antDesde": "16"
+        },
+        {
+          "antDesde": "18"
+        },
+        {
+          "antDesde": "20"
+        },
+        {
+          "antDesde": "22"
+        },
+        {
+          "antDesde": "24"
+        },
+        {
+          "antDesde": "26"
+        },
+        {
+          "antDesde": "28"
+        },
+        {
+          "antDesde": "30"
+        }
+      ]
+    },
+    {
+      "categoria": "C",
+      "antiguedad": [
+        {
+          "antDesde": "2"
+        },
+        {
+          "antDesde": "4"
+        },
+        {
+          "antDesde": "6"
+        },
+        {
+          "antDesde": "8"
+        },
+        {
+          "antDesde": "10"
+        },
+        {
+          "antDesde": "12"
+        },
+        {
+          "antDesde": "14"
+        },
+        {
+          "antDesde": "16"
+        },
+        {
+          "antDesde": "18"
+        },
+        {
+          "antDesde": "20"
+        },
+        {
+          "antDesde": "22"
+        },
+        {
+          "antDesde": "24"
+        },
+        {
+          "antDesde": "26"
+        },
+        {
+          "antDesde": "28"
+        },
+        {
+          "antDesde": "30"
+        }
+      ]
+    },
+    {
+      "categoria": "D",
+      "antiguedad": [
+        {
+          "antDesde": "2"
+        },
+        {
+          "antDesde": "4"
+        },
+        {
+          "antDesde": "6"
+        },
+        {
+          "antDesde": "8"
+        },
+        {
+          "antDesde": "10"
+        },
+        {
+          "antDesde": "12"
+        },
+        {
+          "antDesde": "14"
+        },
+        {
+          "antDesde": "16"
+        },
+        {
+          "antDesde": "18"
+        },
+        {
+          "antDesde": "20"
+        },
+        {
+          "antDesde": "22"
+        },
+        {
+          "antDesde": "24"
+        },
+        {
+          "antDesde": "26"
+        },
+        {
+          "antDesde": "28"
+        },
+        {
+          "antDesde": "30"
+        }
+      ]
+    },
+    {
+      "categoria": "E",
+      "antiguedad": [
+        {
+          "antDesde": "2"
+        },
+        {
+          "antDesde": "4"
+        },
+        {
+          "antDesde": "6"
+        },
+        {
+          "antDesde": "8"
+        },
+        {
+          "antDesde": "10"
+        },
+        {
+          "antDesde": "12"
+        },
+        {
+          "antDesde": "14"
+        },
+        {
+          "antDesde": "16"
+        },
+        {
+          "antDesde": "18"
+        },
+        {
+          "antDesde": "20"
+        },
+        {
+          "antDesde": "22"
+        },
+        {
+          "antDesde": "24"
+        },
+        {
+          "antDesde": "26"
+        },
+        {
+          "antDesde": "28"
+        },
+        {
+          "antDesde": "30"
+        }
+      ]
+    }
+  ]
+}

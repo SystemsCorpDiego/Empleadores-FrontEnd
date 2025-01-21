@@ -1,0 +1,37 @@
+.registro_empresa_container {
+  margin: 20px auto;
+  width: 100%;
+  
+}
+
+.registro_empresa_container h1 {
+  color: #1a76d2;
+  margin-bottom: 15px;
+  text-align: left !important;
+}
+
+.registro_empresa_container h3 {
+  color: #1a76d2;
+  margin-bottom: 25px;
+  text-align: left !important;
+}
+
+.form_register_company {
+  width: 100%;
+  margin: 40px 0px 5px 0px;
+  padding-inline: 64px;
+  align-items: flex-start;
+}
+
+.box{
+  display: flex!important;
+  align-items: flex-end!important;
+  justify-content: flex-end!important;
+  padding-bottom: 90px;
+  margin-bottom: 10px;
+}
+
+.form{
+  display: flex;
+  align-items: flex-end;
+}

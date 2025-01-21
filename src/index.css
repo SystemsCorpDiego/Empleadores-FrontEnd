@@ -1,0 +1,329 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;700&display=swap');
+
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Raleway', sans-serif;
+  box-sizing: border-box;
+}
+
+@font-face {
+	font-family: 'Raleway', sans-serif;
+  src: url('./assets/fonts/Raleway-Bold.ttf');
+}
+
+html {
+  height: 100vh;
+  width: 100%;
+}
+
+body {
+  margin: 0 auto;
+  font-family: 'Raleway', sans-serif;
+}
+
+.link_animado {
+  position: relative;
+  text-decoration: none;
+  color: #1a76d2;
+}
+
+.link_animado::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: #1a76d2;
+  transition: width 0.3s ease;
+}
+
+.link_animado:hover::after {
+  top: 25px;
+  width: 100%;
+}
+
+/* LOGIN STYLES */
+
+/* REGISTER COMPANY */
+
+/* .container_dashboard_register_company h3 {
+	font-weight: 400;
+	font-size: 32px;
+	height: 35.5px;
+	color: #1a76d2;
+	margin-bottom: 10px;
+	width: 100%;
+	text-align: center;
+} */
+
+/* .container_dashboard_register_company .input-group {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin: 10px 0;
+	text-align: center;
+} */
+.header--cell {
+  background-color: #1a76d2;
+  color: white;
+  border: 1px solid #1a76d2;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  line-height: 1.2rem;
+  font-size: 0.8rem;
+}
+
+/* 
+ 
+.username {
+	color: #fff;
+}
+
+.btn-logout {
+	border: 1px solid #fff;
+	background: none;
+	color: #fff;
+	padding: 5px 20px;
+	border-radius: 6px;
+	cursor: pointer;
+}
+
+.btn-logout:hover {
+	background-color: #fff;
+	color: #000;
+}
+
+.wrapper_container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 80vh;
+}
+
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: #fff;
+	width: 600px;
+	margin: 0 auto;
+	height: 584px;
+	border-radius: 10px;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.153);
+}
+
+.wrapper h1 {
+	color: #18365D;
+	font-size: 48px;
+	font-weight: 700;
+	height: 56.25px;
+	width: 500px;
+	text-align: center;
+}
+
+.wrapper h3 {
+	color: #18365D;
+	font-weight: 400;
+	font-size: 32px;
+	height: 35.5px;
+	margin-bottom: 10px;
+}
+
+.contenedor_form {
+	width: 100%;
+	height: 80%;
+	margin-top: -10px;
+}
+
+form {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	margin-left: 64px;
+	margin-right: 64px;
+	height: 100%;
+}
+
+.input-group {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin: 10px 0;
+	text-align: center;
+}
+
+.input-group input {
+	font-weight: 400;
+	font-size: 16px;
+	height: 51px;
+	width: 472px;
+	border-radius: 8px;
+	border: none;
+	border: 1px solid #18365D;
+	padding-left: 10px;
+	
+	outline: none;
+	box-shadow: 0 0 0 2px #18365D;
+	color: #18365D;
+}
+
+
+.input-group input::placeholder {
+	color: #18365D;
+}
+
+.x {
+	display: flex;
+	justify-content: center;
+}
+
+.btn_form_botton {
+	width: 80%;
+}
+
+.btn_ingresar {
+	width: 100%;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	height: 51px;
+	border-radius: 8px;
+	border: none;
+	background-color: #2e4a6f;
+	color: #fff;
+	transition: background-color 0.3s ease;
+}
+
+.btn_ingresar:hover {
+	background-color: #18365D;
+}
+
+.container_btn_pass_firt {
+	display: flex;
+	justify-content: space-around;
+	width: 100%;
+	margin-bottom: 20px;
+	color: #18365D;
+	margin-top: -65px;
+}
+
+.input-group a {
+	color: #18365D;
+}
+
+.title_register {
+	margin-bottom: 45px;
+}
+
+
+
+
+main {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	margin-top: 40px;
+	height: auto;
+}
+
+.container_dashboard_register_company h1 {
+	text-align: center;
+	color: #18365D;
+}
+
+.container_dashboard_register_company h2 {
+	text-align: center;
+	color: #18365D;
+}
+
+.probando {
+	display: flex;
+	justify-content: space-around;
+	border: 1px solid #18365D;
+
+}
+
+
+
+
+.input-group .probando {
+	font-weight: 400;
+	font-size: 16px;
+	height: 51px;
+	width: 472px;
+	border-radius: 8px;
+	border: none;
+	border: 1px solid #18365D;
+	padding-left: 10px;
+
+	outline: none;
+	box-shadow: 0 0 0 2px #18365D;
+	color: #18365D;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	margin-bottom: -10px;
+}
+
+.input-group .probando .input {
+	width: 80%;
+	text-align: start;
+}
+
+.input-group .probando span {
+	width: 20%;
+	margin-top: 10px;
+	font-size: 2rem;
+}
+
+.ramos {
+	opacity: 0;
+	height: 0;
+	overflow: hidden;
+	transition: opacity 0.3s, height 0.3s;
+
+}
+
+.ramos_visible {
+	display: block;
+	width: 100%;
+	margin: 20px auto 20px -5px;
+}
+
+.ramos_visible ul {
+	text-decoration: none;
+	list-style-type: none;
+}
+
+.ramos_visible ul li {
+	background-color: #fff;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.153);
+	color: #18365D;
+	margin: 0 10px 10px 10px;
+	border-radius: 5px;
+	padding: 10px;
+	height: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 450px;
+}
+
+.ramos_visible ul li:hover {
+	background-color: #18365D;
+	color: #fff;
+	margin: 0 10px 10px 10px;
+	border-radius: 5px;
+	padding: 10px;
+}
+ */

@@ -1,0 +1,168 @@
+.aportes_container {
+  margin: 150px auto 0px auto;
+  width: 90%;
+}
+
+.aportes_container h2 {
+  color: #1a76d2;
+  margin-bottom: 10px;
+  text-align: left !important;
+}
+
+.aportes_currency {
+  border: 1px solid #b1b0b0;
+  border-radius: 3px;
+  width: 100%;
+  height: 54.5px;
+  padding: 0 10px;
+  /*color: #737373;*/
+  color: #000;
+}
+
+.aportes_currency:hover {
+  border-color: #6d6d6d;
+}
+
+.aportes_currency:focus {
+  color: #000;
+}
+/* 
+@media (max-width: 1900px) {
+  .aportes_container {
+    margin-left: 120px;
+  }
+}
+
+@media (max-width: 1800px) {
+  .aportes_container {
+    margin-left: 110px;
+  }
+}
+
+@media (max-width: 1700px) {
+  .aportes_container {
+    margin-left: 105px;
+  }
+}
+
+@media (max-width: 1600px) {
+  .aportes_container {
+    margin-left: 102px;
+  }
+}
+
+@media (max-width: 1500px) {
+  .aportes_container {
+    margin-left: 100px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .aportes_container {
+    margin-left: 93px;
+  }
+}
+
+@media (max-width: 1300px) {
+  .aportes_container {
+    margin-left: 86px;
+  }
+}
+
+@media (max-width: 1281px) {
+  .aportes_container {
+    margin-left: 76px;
+    width: 90%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .aportes_container {
+    margin-left: 85px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .aportes_container {
+    margin-left: 83px;
+  }
+}
+
+@media (max-width: 1025px) {
+  .aportes_container {
+    margin-left: 76px;
+    width: 88%;
+  }
+}
+
+@media (max-width: 1000px) {
+  .aportes_container {
+    margin-left: 78px;
+  }
+}
+
+@media (max-width: 900px) {
+  .aportes_container {
+    margin-left: 75px;
+  }
+}
+
+@media (max-width: 800px) {
+  .aportes_container {
+    margin-left: 68px;
+  }
+}
+
+@media (max-width: 790px) {
+  .aportes_container {
+    margin-left: 67px;
+  }
+}
+
+@media (max-width: 780px) {
+  .aportes_container {
+    margin-left: 66px;
+  }
+}
+
+@media (max-width: 770px) {
+  .aportes_container {
+    margin-left: 65px;
+  }
+}
+
+@media (max-width: 760px) {
+  .aportes_container {
+    margin-left: 64.6px;
+  }
+}
+
+@media (max-width: 750px) {
+  .aportes_container {
+    margin-left: 55px;
+  }
+}
+
+@media (max-width: 740px) {
+  .aportes_container {
+    margin-left: 54px;
+  }
+}
+
+@media (max-width: 700px) {
+  .aportes_container {
+    margin-left: 67px;
+  }
+}
+
+@media (max-width: 600px) {
+  .aportes_container {
+    margin-left: 60px;
+  }
+}
+
+@media (max-width: 500px) {
+  .aportes_container {
+    margin-left: 55px;
+  }
+} */

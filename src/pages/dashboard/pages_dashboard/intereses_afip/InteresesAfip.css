@@ -1,0 +1,10 @@
+.intereses_container {
+  margin: 150px auto 0px auto;
+  width: 90%;
+}
+
+.intereses_container h2 {
+  color: #1a76d2;
+  margin-bottom: 65px;
+  text-align: left !important;
+}
