@@ -1,0 +1,27 @@
+.gestion_deudas_container {
+    margin: 150px auto 0px auto;
+    width: 90%;
+  }
+
+  .container_grilla{
+    margin: 20px auto 0 auto;
+    width: 90%;
+  }
+
+  .flex_properties {
+    margin-bottom: 4em;
+    display: flex;
+    justify-content: initial;
+  
+    flex-direction: column;
+  }
+
+  .pr2{
+    padding-right: 2em;
+  }
+
+  .gestion_deudas_container h1 {
+    color: #1a76d2;
+    
+    text-align: left !important;
+  }

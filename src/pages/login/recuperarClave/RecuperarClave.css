@@ -1,0 +1,68 @@
+.container_recupero_page {
+  height: 100vh;
+}
+
+.wrapper_container_recupero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 85vh;
+  background-image: url('../../../assets/fondoLogin.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.wrapper_recupero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(255, 255, 255, 0.8);
+  width: 800px;
+  margin: 0 auto;
+  height: 487px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.153);
+}
+
+.contenedor_form_recupero {
+  width: 100%;
+  height: 90%;
+}
+
+.contenedor_form_recupero h1 {
+  font-size: 48px;
+  margin-top: 20px;
+  margin-bottom: 50px;
+  font-weight: 700;
+  width: 100%;
+  color: #1a76d2;
+  text-align: center;
+}
+
+.container_recupero_page h3 {
+  font-size: 24px;
+  margin-bottom: 50px;
+  font-weight: 700;
+  width: 100%;
+  color: #223f64;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-left: 64px;
+  margin-right: 64px;
+  height: 100%;
+}
+
+.input_group_recupero {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 10px 0;
+  text-align: center;
+}

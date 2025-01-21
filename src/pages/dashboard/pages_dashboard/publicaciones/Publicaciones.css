@@ -1,0 +1,10 @@
+.publicaciones_container {
+  margin: 150px auto 0px auto;
+  width: 90%;
+}
+
+.publicaciones_container h1 {
+  color: #1a76d2;
+  margin-bottom: 65px;
+  text-align: left !important;
+}

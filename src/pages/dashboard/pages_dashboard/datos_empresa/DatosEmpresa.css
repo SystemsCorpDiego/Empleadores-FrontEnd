@@ -1,0 +1,23 @@
+.datos_empresa_container {
+  margin: 150px auto 0px auto;
+  width: 90%;
+}
+
+.datos_empresa_container h1 {
+  color: #1a76d2;
+  margin-bottom: 65px;
+  text-align: left !important;
+}
+
+.formC {
+  width: 350px;
+}
+/*
+.cellClass {
+  border-width: 3px !important;
+}
+*/
+.subtitulo{
+  color: #1a76d2;
+  margin-bottom: 10px;
+}

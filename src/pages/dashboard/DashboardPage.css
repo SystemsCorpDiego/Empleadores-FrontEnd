@@ -1,0 +1,63 @@
+.icon-toggle {
+  color: #1a76d2 !important;
+}
+.icon-container {
+  display: flex;
+  padding: 10px;
+  align-items: center; /* Esto centra verticalmente los elementos */
+  text-decoration: none;
+}
+
+.icon-container-2 {
+  padding: 10px;
+  width: 100%;
+}
+
+.icon-link {
+  margin-right: 10px;
+  list-style: none;
+  text-decoration: none;
+}
+
+.icon-container-afip {
+  margin-left: 3px;
+}
+
+.icono-afip {
+  width: 20px;
+  height: 20px;
+}
+.accordion {
+  margin-left: -6px;
+}
+
+.icon-container-2 .icon-container {
+  display: flex;
+  margin: -10px 0 -10px -10px;
+  align-items: center; /* Esto centra verticalmente los elementos */
+  text-decoration: none;
+}
+
+.icon-container .icon-link {
+  display: flex; /* Asegura que el texto esté alineado verticalmente */
+  align-items: center; /* Centra verticalmente el texto */
+  margin-left: 10px;
+  color: #1a76d2 !important;
+}
+
+.nombre {
+  display: flex; /* Asegura que el texto esté alineado verticalmente */
+  align-items: center; /* Centra verticalmente el texto */
+  margin-left: 10px;
+  color: #1a76d2 !important;
+}
+
+.title{
+  font-size: 2.5rem;
+  margin-top: 2rem;
+  margin-bottom: .5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: white;
+  vertical-align: middle;
+}

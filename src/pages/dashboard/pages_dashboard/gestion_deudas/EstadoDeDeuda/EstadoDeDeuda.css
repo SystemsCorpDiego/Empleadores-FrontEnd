@@ -1,0 +1,9 @@
+.estadoDeDeduda{
+    width: 100%;
+}
+
+.estadoCheck{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

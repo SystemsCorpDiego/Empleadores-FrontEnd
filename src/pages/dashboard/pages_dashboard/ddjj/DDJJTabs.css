@@ -1,0 +1,10 @@
+.declaraciones_juradas_container {
+  margin: 150px auto 0px auto;
+  width: 90%;
+}
+
+.declaraciones_juradas_container h1 {
+  color: #1a76d2;
+  margin-bottom: 10px;
+  text-align: left !important;
+}

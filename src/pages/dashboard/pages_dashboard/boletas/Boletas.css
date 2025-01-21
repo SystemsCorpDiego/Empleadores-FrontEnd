@@ -1,0 +1,57 @@
+.boletas_container {
+  margin: 150px auto 0px auto;
+  width: 90%;
+}
+
+.boletas_container h1 {
+  color: #1a76d2;
+  margin-bottom: 65px;
+  text-align: left !important;
+}
+
+.importes {
+  text-align: right !important;
+}
+
+.importes {
+  text-align: right !important;
+}
+
+.titulos {
+  min-height: 56px;
+  max-height: 56px;
+  line-height: 56px;
+  background-color: #1a76d2 !important;
+}
+
+.cw {
+  color: white !important;
+}
+
+.mb-4em {
+  margin-bottom: 4em;
+}
+.div-lredondeado {
+  border-top-left-radius: 15px;
+}
+.div-rreadondeado {
+  border-top-right-radius: 15px;
+}
+
+.p10 {
+  padding: 10px !important;
+}
+
+.w30 {
+  width: 30% !important;
+}
+
+.space-between {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.leyenda {
+  margin-left: 2rem;
+}
