@@ -3,7 +3,6 @@ import { axiosCrud } from '@components/axios/axiosCrud';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
-
 export const getFuncionalidadesByRol = async (rol) => {
   try {
     const URL = `/funcionalidades/${rol}`;

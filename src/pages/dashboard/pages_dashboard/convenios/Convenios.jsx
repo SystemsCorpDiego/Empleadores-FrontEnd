@@ -21,7 +21,7 @@ import {
 import DownloadIcon from '@mui/icons-material/Download';
 import './Convenios.css';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
-import { UserContext } from '@/context/UserContext';
+import { UserContext } from '@/context/userContext';
 import AddIcon from '@mui/icons-material/Add';
 
 // Datos de ejemplo para el DataGrid

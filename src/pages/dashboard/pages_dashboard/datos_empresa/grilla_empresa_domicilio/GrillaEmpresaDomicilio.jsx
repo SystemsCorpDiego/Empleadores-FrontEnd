@@ -24,7 +24,7 @@ import {
 import { StripedDataGrid, dataGridStyle } from '@/common/dataGridStyle';
 import swal from '@/components/swal/swal';
 import Swal from 'sweetalert2';
-import { UserContext } from '@/context/UserContext';
+import { UserContext } from '@/context/userContext';
 import '../DatosEmpresa.css';
 import localStorageService from '@components/localStorage/localStorageService';
 

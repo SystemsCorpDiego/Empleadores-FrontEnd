@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from '@/context/UserContext';
+import { UserContext } from '@/context/userContext';
 import Box from '@mui/material/Box';
 import {
   GridRowModes,
@@ -85,8 +85,8 @@ export const MisDDJJGrilla = ({ rows, setRows, handlerDDJJEditar }) => {
     handlerDDJJEditar(id);
   };
 
-  const handleImprimirDDJJ = async (idDDJJ, nombreArchivo) => {
-    await axiosDDJJ.imprimir(ID_EMPRESA, idDDJJ, nombreArchivo);
+  const handleImprimirDDJJ = async (idDDJJ) => {
+    await axiosDDJJ.imprimir(ID_EMPRESA, idDDJJ);
   };
 
   const handleDeleteClick = (id) => async () => {
@@ -171,28 +171,6 @@ export const MisDDJJGrilla = ({ rows, setRows, handlerDDJJEditar }) => {
     return columns;
   };
 
-  const getNombreArchivo = (row) => {
-    var nombre = 'ddjj';
-    if (row) {
-      if (row.periodo) {
-        if ((row.periodo.split('-').length = 3)) {
-          nombre =
-            nombre +
-            '_' +
-            row.periodo.split('-')[0] +
-            '-' +
-            row.periodo.split('-')[1];
-        }
-      }
-      if (row.secuencia) {
-        if (row.secuencia > 0) {
-          nombre = nombre + '_Rectif-' + row.secuencia;
-        }
-      }
-    }
-    return nombre;
-  };
-
   const addColumnAcciones = (columns) => {
     columns.push({
       field: 'actions',
@@ -216,11 +194,7 @@ export const MisDDJJGrilla = ({ rows, setRows, handlerDDJJEditar }) => {
               icon={<LocalPrintshopIcon />}
               label="Print"
               color="inherit"
-              onClick={() => {
-                console.log(' onClick - INIT');
-                console.log('PRE handleImprimirDDJJ - ROW: ', row);
-                handleImprimirDDJJ(id, getNombreArchivo(row));
-              }}
+              onClick={() => handleImprimirDDJJ(id)}
             />,
             <GridActionsCellItem
               icon={<DeleteIcon />}
@@ -242,11 +216,7 @@ export const MisDDJJGrilla = ({ rows, setRows, handlerDDJJEditar }) => {
               icon={<LocalPrintshopIcon />}
               label="Print"
               color="inherit"
-              onClick={() => {
-                console.log(' onClick - INIT');
-                console.log('PRE handleImprimirDDJJ - ROW: ', row);
-                handleImprimirDDJJ(id, getNombreArchivo(row));
-              }}
+              onClick={() => handleImprimirDDJJ(id)}
             />,
           ];
         } else {
@@ -262,7 +232,7 @@ export const MisDDJJGrilla = ({ rows, setRows, handlerDDJJEditar }) => {
               icon={<LocalPrintshopIcon />}
               label="Print"
               color="inherit"
-              onClick={() => handleImprimirDDJJ(id, getNombreArchivo(row))}
+              onClick={() => handleImprimirDDJJ(id)}
             />,
           ];
         }

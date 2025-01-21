@@ -19,7 +19,7 @@ import './Publicaciones.css';
 
 import { StripedDataGrid, dataGridStyle } from '@/common/dataGridStyle';
 import formatter from '@/common/formatter';
-import { UserContext } from '@/context/UserContext';
+import { UserContext } from '@/context/userContext';
 import { CloudUploadOutlined } from '@mui/icons-material';
 import { CloudUploadTwoTone } from '@mui/icons-material';
 

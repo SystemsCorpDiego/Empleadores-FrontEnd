@@ -6,7 +6,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import './DDJJTabs.css';
 
-import { UserContext } from '@/context/UserContext';
+import { UserContext } from '@/context/userContext';
 import { MisDDJJFiltro } from './consultas/empresa/MisDDJJFiltro';
 import { ThemeProvider } from '@mui/material/styles';
 
