@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
-import { axiosGestionRoles } from './GestionRolesApi';
-import './GestionRoles.css';
+import { axiosGestionRoles } from './gestionRolesApi';
+import './gestionRoles.css';
 
 export const DragAndDrop = ({ tareas }) => {
   console.log('DragAndDrop - tareas:', tareas);

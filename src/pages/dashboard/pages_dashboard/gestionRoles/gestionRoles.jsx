@@ -1,8 +1,8 @@
 import { MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { axiosGestionRoles } from './GestionRolesApi';
+import { axiosGestionRoles } from './gestionRolesApi';
 import { DragAndDrop } from './DragAndDrop';
-import './GestionRoles.css';
+import './gestionRoles.css';
 
 export const GestionRoles = () => {
   const [roles, setRoles] = useState([]);
