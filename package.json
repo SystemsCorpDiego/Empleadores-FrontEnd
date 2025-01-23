@@ -11,7 +11,7 @@
     "prod": "vite --mode production",
     "build": "vite build --mode production",
     "build-dev": "vite build --mode development",
-    "build-lh": "vite build --mode localhost --port 8070",
+    "build-lh": "vite build --mode localhost ",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
