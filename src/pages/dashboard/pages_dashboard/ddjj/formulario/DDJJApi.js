@@ -2,7 +2,7 @@ import oAxios from '@components/axios/axiosInstace';
 import { axiosCrud } from '@components/axios/axiosCrud';
 import { presentar } from '@/pages/dashboard/pages_dashboard/ddjj/DDJJCommonApi';
 import swal from '@/components/swal/swal';
-
+import Swal from 'sweetalert2';
 const HTTP_MSG_ALTA = import.meta.env.VITE_HTTP_MSG_ALTA;
 const HTTP_MSG_MODI = import.meta.env.VITE_HTTP_MSG_MODI;
 const HTTP_MSG_BAJA = import.meta.env.VITE_HTTP_MSG_BAJA;
@@ -133,8 +133,14 @@ export const validarCuiles = async (empresaId, cuiles) => {
   const URL = `/empresa/${empresaId}/ddjj/upload/nomina/validaCuil`;
   try {
     const validarCuilesResponse = await oAxios.post(URL, cuiles);
+    console.log(validarCuilesResponse)
     return validarCuilesResponse.data || [];
   } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'No pudimos validar el archivo',
+        //html: `Cuiles con errores:<br>${mensajesFormateados2}`,
+      });
     if (error.response && error.response.data) {
       const { errores, codigo, descripcion, ticket, tipo } =
         error.response.data;
