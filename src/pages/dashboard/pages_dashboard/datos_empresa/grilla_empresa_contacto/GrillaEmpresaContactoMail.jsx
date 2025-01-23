@@ -17,7 +17,7 @@ import CancelIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import { axiosContacto } from './GrillaEmpresaContactoApi';
 import Swal from 'sweetalert2';
-import { UserContext } from '@/context/UserContext';
+import { UserContext } from '@/context/userContext';
 import { StripedDataGrid, dataGridStyle } from '@/common/dataGridStyle';
 import localStorageService from '@components/localStorage/localStorageService';
 

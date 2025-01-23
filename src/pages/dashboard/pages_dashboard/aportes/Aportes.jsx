@@ -21,7 +21,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import dayjs from 'dayjs';
 import formatter from '@/common/formatter';
 
-import { UserContext } from '@/context/UserContext';
+import { UserContext } from '@/context/userContext';
 
 export const Aportes = () => {
   const [locale, setLocale] = useState('esES');

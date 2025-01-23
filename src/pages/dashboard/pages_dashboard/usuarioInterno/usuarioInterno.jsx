@@ -45,7 +45,7 @@ import './usuarioInterno.css';
 
 import { dataGridStyle } from '@/common/dataGridStyle';
 import { margin } from '@mui/system';
-import { UserContext } from '@/context/UserContext';
+import { UserContext } from '@/context/userContext';
 
 const style = {
   position: 'absolute',
@@ -134,7 +134,7 @@ export const UsuarioInterno = () => {
   useEffect(() => {
     const ObtenerUsuariosInternos = async () => {
       const response = await axiosUsuariosInternos.consultar();
-      console.log('** response: ', response);
+      console.log('response: ', response);
       setRows(response.map((item) => ({ id: item.id, ...item })));
     };
     ObtenerUsuariosInternos();

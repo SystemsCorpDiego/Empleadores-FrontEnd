@@ -19,7 +19,7 @@ import { axiosCuitsRestringidos } from './CuitsRestringidosApi';
 import Swal from 'sweetalert2';
 import { StripedDataGrid, dataGridStyle } from '@/common/dataGridStyle';
 import './CuitsRestringidos.css';
-import { UserContext } from '@/context/UserContext';
+import { UserContext } from '@/context/userContext';
 import { consultarEmpresa } from '@/common/api/EmpresasApi';
 
 function EditToolbar(props) {

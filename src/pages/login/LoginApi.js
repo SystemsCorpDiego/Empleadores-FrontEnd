@@ -83,19 +83,3 @@ export const consultarUsuarioLogueado = async (token) => {
     errorBackendResponse(error);
   }
 };
-
-export const activarCuentaEmpresa = async (tokenActivacion) => {
-  const URL = `${BACKEND_URL}/auth/usuario/activar/${tokenActivacion}`;
-  console.log('activarCuentaEmpresa - INIT');
-  try {
-    const response = await axios.post(URL);
-    console.log('activarCuentaEmpresa - response:', response);
-    const data = response.data;
-
-    return data || null;
-  } catch (error) {
-    console.log('consultarUsuarioLogueado - ERRROR');
-    errorBackendResponse(error);
-    return null;
-  }
-};

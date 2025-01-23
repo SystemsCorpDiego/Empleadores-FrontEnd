@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { createTheme } from '@mui/material/styles';
-import { UserContext } from './UserContext';
+import { UserContext } from './userContext';
 import { useTheme } from '@mui/material/styles';
 import * as locales from '@mui/material/locale';
 

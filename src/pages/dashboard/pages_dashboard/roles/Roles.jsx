@@ -23,7 +23,7 @@ import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 
 import Swal from 'sweetalert2';
 import './Roles.css';
-import { UserContext } from '@/context/UserContext';
+import { UserContext } from '@/context/userContext';
 
 const crearNuevoRegistro = (props) => {
   const {

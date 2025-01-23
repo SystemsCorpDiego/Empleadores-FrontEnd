@@ -46,11 +46,7 @@ export const obtenerMisDeclaracionesJuradas = async (
   }
 };
 
-export const imprimirDeclaracionJurada = async (
-  empresaId,
-  ddjjId,
-  nombreArchivo,
-) => {
+export const imprimirDeclaracionJurada = async (empresaId, ddjjId) => {
   const URL = `/empresa/${empresaId}/ddjj/${ddjjId}/imprimir`;
 
   try {
@@ -61,7 +57,7 @@ export const imprimirDeclaracionJurada = async (
     const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `${nombreArchivo}.pdf`);
+    link.setAttribute('download', `DeclaracionJurada${ddjjId}.pdf`);
     document.body.appendChild(link);
     link.click();
   } catch (error) {
@@ -128,8 +124,8 @@ export const axiosDDJJ = {
   //return obtenerMiDeclaracionJurada(empresaId, ddjjId);
   //},
 
-  imprimir: async function (empresaId, ddjjId, nombreArchivo) {
-    return imprimirDeclaracionJurada(empresaId, ddjjId, nombreArchivo);
+  imprimir: async function (empresaId, ddjjId) {
+    return imprimirDeclaracionJurada(empresaId, ddjjId);
   },
 
   presentar: async function (empresaId, ddjjId) {

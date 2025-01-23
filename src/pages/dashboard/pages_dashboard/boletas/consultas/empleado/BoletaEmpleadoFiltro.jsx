@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { Box } from '@mui/system';
+import Grid from '@mui/material/Grid';
 import Autocomplete from '@mui/material/Autocomplete';
 import { consultarEmpresas } from '@/common/api/EmpresasApi';
 

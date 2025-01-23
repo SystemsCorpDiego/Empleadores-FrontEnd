@@ -22,7 +22,7 @@ import formatter from '@/common/formatter';
 import dayjs from 'dayjs';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import './Boletas.css';
-import { UserContext } from '@/context/UserContext';
+import { UserContext } from '@/context/userContext';
 import Stack from '@mui/material/Stack';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DesktopDatePicker } from '@mui/x-date-pickers';

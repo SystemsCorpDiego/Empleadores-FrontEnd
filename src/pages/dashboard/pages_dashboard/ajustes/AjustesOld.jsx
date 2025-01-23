@@ -11,7 +11,7 @@ import { Box } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
 import './ajustes.css';
 import { getAjustes } from './AjustesApi';
-import { UserContext } from '@/context/UserContext';
+import { UserContext } from '@/context/userContext';
 
 export const Ajustes = () => {
   const [ajustes, setAjustes] = useState([]);

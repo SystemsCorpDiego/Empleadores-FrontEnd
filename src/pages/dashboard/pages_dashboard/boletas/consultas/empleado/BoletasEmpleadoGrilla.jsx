@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { UserContext } from '@/context/UserContext';
+import { UserContext } from '@/context/userContext';
 import { StripedDataGrid, dataGridStyle } from '@/common/dataGridStyle';
 import { GridToolbar } from '@mui/x-data-grid';
 import { Print as PrintIcon } from '@mui/icons-material';
