@@ -28,7 +28,8 @@ const adapterForBack = (element) => {
 
 export const consultar = async () => {
   const data = await axiosEntity.consultar(URL_ENTITY);
-  return adapterForFront(data);
+  //return adapterForFront(data);
+  return data;
 };
 
 export const crear = async (registro) => {
