@@ -18,10 +18,14 @@ export const axiosEntity = {
     return crear(UrlApi, oEntidad);
   },
 
+  crearPersonalizado: async function (UrlApi, oEntidad, mensaje) {
+    return crearPersonalizado(UrlApi, oEntidad, mensaje);
+  },
+
   actualizar: async function (UrlApi, oEntidad) {
     return actualizar(UrlApi, oEntidad);
   },
-
+  
   eliminar: async function (UrlApi, id) {
     return eliminar(UrlApi, id);
   },
@@ -45,6 +49,20 @@ export const crear = async (UrlApi, registro) => {
     const data = await axiosCrud.crear(UrlApi, registro);
     if (data && data.id) {
       swal.showSuccess(HTTP_MSG_ALTA);
+      return data;
+    }
+    throw data;
+  } catch (error) {
+    swal.showErrorBackEnd(HTTP_MSG_ALTA_ERROR, error);
+    return {};
+  }
+};
+
+export const crearPersonalizado = async (UrlApi, registro, mensaje) => {
+  try {
+    const data = await axiosCrud.crear(UrlApi, registro);
+    if (data && data.id) {
+      swal.showSuccesGenericConfirmButton(mensaje);
       return data;
     }
     throw data;

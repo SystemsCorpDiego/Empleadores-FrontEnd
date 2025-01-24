@@ -34,7 +34,8 @@ export const consultar = async () => {
 
 export const crear = async (registro) => {
   const registro_fb = adapterForBack(registro);
-  return await axiosEntity.crear(URL_ENTITY, registro_fb);
+  const mensaje = 'Para terminar de agregar un nuevo usuario, deberá asignarle una clave provisoria en el icono con candado'
+  return await axiosEntity.crearPersonalizado(URL_ENTITY, registro_fb, mensaje);
 };
 
 export const actualizar = async (registro) => {
