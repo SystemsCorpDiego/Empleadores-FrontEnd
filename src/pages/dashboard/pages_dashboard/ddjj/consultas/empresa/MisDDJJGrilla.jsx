@@ -289,6 +289,10 @@ export const MisDDJJGrilla = ({ rows, setRows, handlerDDJJEditar }) => {
       //console.log('ObtenerVecAportes - data:', data);
       setVecAportes(data);
     };
+    getVecAportes();
+  }, []);
+
+  useEffect(() => {
     const getColumnasGrilla = () => {
       let columnas = getColumns();
       //console.log('MisDDJJGrilla - 1 - columnas:', columnas);
@@ -313,7 +317,7 @@ export const MisDDJJGrilla = ({ rows, setRows, handlerDDJJEditar }) => {
     };
 
     //console.log('MisDDJJGrilla - useEffect ------------------');
-    getVecAportes();
+    //getVecAportes();
 
     const rowsCTblId = castConsulta();
     setRowsGrilla(rowsCTblId);
@@ -322,8 +326,9 @@ export const MisDDJJGrilla = ({ rows, setRows, handlerDDJJEditar }) => {
     setColsGrilla(columnas);
 
     //console.log('MisDDJJGrilla - useEffect ------------------');
-  }, [rows]);
+  }, [rows, vecAportes]);
 
+  /*
   //1ro seteo columans fijas
   let columnas = getColumns();
   //console.log('MisDDJJGrilla - 1 - columnas:', columnas);
@@ -333,6 +338,7 @@ export const MisDDJJGrilla = ({ rows, setRows, handlerDDJJEditar }) => {
   //console.log('MisDDJJGrilla - 3 - columnas:', columnas);
   columnas = addColumnDesicion(columnas);
   //console.log('MisDDJJGrilla - 4 - columnas:', columnas);
+  */
 
   return (
     <div
