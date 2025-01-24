@@ -297,7 +297,7 @@ export const MisDDJJGrilla = ({ rows, setRows, handlerDDJJEditar }) => {
       columnas = addColumnAcciones(columnas);
       //console.log('MisDDJJGrilla - 3 - columnas:', columnas);
       columnas = addColumnDesicion(columnas);
-      //console.log('MisDDJJGrilla - 4 - columnas:', columnas);
+      console.log('MisDDJJGrilla - 4 - columnas:', columnas);
       return columnas;
     };
     const castConsulta = () => {
