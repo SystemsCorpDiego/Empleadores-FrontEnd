@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Box } from '@mui/material';
 import XLSX from 'xlsx';
 import formatter from '@/common/formatter';
@@ -8,7 +8,22 @@ import { axiosDDJJ } from './DDJJApi';
 import DownloadForOffline from '@mui/icons-material/DownloadForOffline';
 import Icon from '@mui/material/Icon';
 import localStorageService from '@/components/localStorage/localStorageService';
+
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+
+import LinearProgress from '@mui/material/LinearProgress';
+
+const LinearDeterminate = ({ progress, isProcessing }) => {
+  if (!isProcessing) return null; // Oculta la barra si no está procesando
+
+  return (
+    <Box sx={{ width: '100%', marginTop: 2 }}>
+      <LinearProgress variant="determinate" value={progress} />
+    </Box>
+  );
+};
+
 
 export const DDJJArchivoImport = ({
   ddjjCabe,
@@ -53,6 +68,8 @@ export const DDJJArchivoImport = ({
   const [fileVecCuiles, setFileVecCuiles] = useState([]);
   const [btnSubirHabilitado, setBtnSubirHabilitado] = useState(false); // No se para que sirve
   const [actualizacionHabilitada, setActualizacionHabilitada] = useState(false); //habilita Import solo cuando estado 'PE'
+  const [progress, setProgress] = useState(0); // Controla el progreso
+  const [isProcessing, setIsProcessing] = useState(false); // Muestra/oculta la barra
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -316,6 +333,7 @@ export const DDJJArchivoImport = ({
       return null;
     }
   };
+  /*
   const importarAfiliado = async () => {
     //fileVecCuiles: valida los cuiles y  actualiza  nombre y apellido del arcivo con lo que hay en "Afiliados"
     console.log('importarAfiliado - fileNameSelected:', fileNameSelected);
@@ -391,6 +409,75 @@ export const DDJJArchivoImport = ({
     }
     console.log('importarAfiliado - 5 -  FIN ');
   };
+  */
+  const importarAfiliado = async () => {
+    setIsProcessing(true); // Activa la barra de progreso
+    setProgress(10); // Progreso inicial
+    
+    if (!fileNameSelected || fileNameSelected === '' || fileNameSelected === undefined) {
+      swal.showWarning('Debe seleccionar un archivo válido.');
+      setIsProcessing(false); // Desactiva la barra si hay error
+      return false;
+    }
+  
+    if (!fileVecCuiles || fileVecCuiles.length === 0) {
+      swal.showWarning('El archivo seleccionado se encuentra vacío.');
+      setIsProcessing(false); // Desactiva la barra si hay error
+      return false;
+    }
+  
+    setProgress(30); // Avanza el progreso tras las primeras validaciones
+  
+    const cuilesValidados = await getCuilesValidados();
+    setProgress(60); // Avanza el progreso tras obtener los datos validados
+  
+    console.log(cuilesValidados)
+    if (cuilesValidados == undefined) {
+      setProgress(100); // Completa el progreso
+      setIsProcessing(false); // Finaliza la barra
+
+      return
+    }
+
+    const fileVecCuilesNew = fileVecCuiles.map((item) => {
+      const val = cuilesValidados.find((regValidado) => regValidado.cuil === item.cuil);
+      if (val) {
+        if (!val.cuilValido) {
+          item.gErrores = true;
+        } else {
+          item.nombre = val.nombre || '';
+          item.apellido = val.apellido || '';
+        }
+      }
+      return item;
+    });
+    
+    setProgress(90); // Avanza el progreso tras el mapeo
+  
+    if (fileVecCuilesNew.some((item) => item.gErrores === true)) {
+      const mensajesFormateados2 = fileVecCuilesNew
+        .map((cuil) => cuil.gErrores && `<p>CUIL ${cuil.cuil} con formato inválido.</p>`)
+        .join('');
+  
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de validacion',
+        html: `Cuiles con errores:<br>${mensajesFormateados2}`,
+      });
+  
+      setFileVecCuiles(fileVecCuilesNew);
+      handlerGrillaActualizar(fileVecCuilesNew);
+    } else {
+      swal.showSuccess(IMPORTACION_OK);
+      setFileVecCuiles(fileVecCuilesNew);
+      handlerGrillaActualizar(fileVecCuilesNew);
+    }
+  
+    setProgress(100); // Completa el progreso
+    setIsProcessing(false); // Finaliza la barra
+  };
+  
+
   const getCuilesValidados = async () => {
     const vecCuiles = fileVecCuiles.map((item) => item.cuil);
     const vecCuilesString = vecCuiles.map((item) => item?.toString());
@@ -479,6 +566,7 @@ export const DDJJArchivoImport = ({
         <DownloadForOffline fontSize="large" style={{ marginLeft: 100 }} />
         Descarga Plantilla
       </a>
+      <LinearDeterminate progress={progress} isProcessing={isProcessing} />
     </Box>
   );
 };
