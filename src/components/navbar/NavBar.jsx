@@ -24,7 +24,7 @@ const NavBar = ({ estilos, estilosLogo, mostrarBtn }) => {
       <header>
           <div>
             <Hidden smDown>
-            <h1>Portal empleadores de UOMA</h1>
+            <h1>Portal empleadores UOMA</h1>
             </Hidden>
           </div>
         {mostrarBtn ? (
