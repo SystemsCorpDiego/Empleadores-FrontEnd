@@ -10,7 +10,8 @@ export const GestionRoles = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axiosGestionRoles.getFuncionalidadesByRol();
+      const response =
+        await axiosGestionRoles.getFuncionalidadesByRolTipoUsuario();
       console.log('GestionRoles - response: ', response);
       setRoles(response);
       setRol(response[0]);

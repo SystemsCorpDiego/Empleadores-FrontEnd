@@ -11,7 +11,6 @@ import localStorageService from '@/components/localStorage/localStorageService';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-
 import LinearProgress from '@mui/material/LinearProgress';
 
 const LinearDeterminate = ({ progress, isProcessing }) => {
@@ -24,7 +23,6 @@ const LinearDeterminate = ({ progress, isProcessing }) => {
   );
 };
 
-
 export const DDJJArchivoImport = ({
   ddjjCabe,
   plantas,
@@ -34,8 +32,8 @@ export const DDJJArchivoImport = ({
   habiModif, //habilitacion de controles
 }) => {
   console.log('DDJJArchivoImport - habiModif:', habiModif);
-  //const URL_PLANTILLA =  BACKEND_URL + '/ddjj/public/plantilla_download/DDJJCarga-Plantilla.xlsx';
-  const URL_PLANTILLA = BACKEND_URL + '/ddjj/public/plantilla_download';
+  const URL_PLANTILLA_XLS = BACKEND_URL + '/ddjj/public/plantilla_download/xls';
+  const URL_PLANTILLA_CSV = BACKEND_URL + '/ddjj/public/plantilla_download/csv';
   const ID_EMPRESA = localStorageService.getEmpresaId();
   const IMPORTACION_OK = import.meta.env.VITE_IMPORTACION_OK;
   const VC_CUIL = 'Cuil';
@@ -413,34 +411,40 @@ export const DDJJArchivoImport = ({
   const importarAfiliado = async () => {
     setIsProcessing(true); // Activa la barra de progreso
     setProgress(10); // Progreso inicial
-    
-    if (!fileNameSelected || fileNameSelected === '' || fileNameSelected === undefined) {
+
+    if (
+      !fileNameSelected ||
+      fileNameSelected === '' ||
+      fileNameSelected === undefined
+    ) {
       swal.showWarning('Debe seleccionar un archivo válido.');
       setIsProcessing(false); // Desactiva la barra si hay error
       return false;
     }
-  
+
     if (!fileVecCuiles || fileVecCuiles.length === 0) {
       swal.showWarning('El archivo seleccionado se encuentra vacío.');
       setIsProcessing(false); // Desactiva la barra si hay error
       return false;
     }
-  
+
     setProgress(30); // Avanza el progreso tras las primeras validaciones
-  
+
     const cuilesValidados = await getCuilesValidados();
     setProgress(60); // Avanza el progreso tras obtener los datos validados
-  
-    console.log(cuilesValidados)
+
+    console.log(cuilesValidados);
     if (cuilesValidados == undefined) {
       setProgress(100); // Completa el progreso
       setIsProcessing(false); // Finaliza la barra
 
-      return
+      return;
     }
 
     const fileVecCuilesNew = fileVecCuiles.map((item) => {
-      const val = cuilesValidados.find((regValidado) => regValidado.cuil === item.cuil);
+      const val = cuilesValidados.find(
+        (regValidado) => regValidado.cuil === item.cuil,
+      );
       if (val) {
         if (!val.cuilValido) {
           item.gErrores = true;
@@ -451,20 +455,23 @@ export const DDJJArchivoImport = ({
       }
       return item;
     });
-    
+
     setProgress(90); // Avanza el progreso tras el mapeo
-  
+
     if (fileVecCuilesNew.some((item) => item.gErrores === true)) {
       const mensajesFormateados2 = fileVecCuilesNew
-        .map((cuil) => cuil.gErrores && `<p>CUIL ${cuil.cuil} con formato inválido.</p>`)
+        .map(
+          (cuil) =>
+            cuil.gErrores && `<p>CUIL ${cuil.cuil} con formato inválido.</p>`,
+        )
         .join('');
-  
+
       Swal.fire({
         icon: 'error',
         title: 'Error de validacion',
         html: `Cuiles con errores:<br>${mensajesFormateados2}`,
       });
-  
+
       setFileVecCuiles(fileVecCuilesNew);
       handlerGrillaActualizar(fileVecCuilesNew);
     } else {
@@ -472,11 +479,10 @@ export const DDJJArchivoImport = ({
       setFileVecCuiles(fileVecCuilesNew);
       handlerGrillaActualizar(fileVecCuilesNew);
     }
-  
+
     setProgress(100); // Completa el progreso
     setIsProcessing(false); // Finaliza la barra
   };
-  
 
   const getCuilesValidados = async () => {
     const vecCuiles = fileVecCuiles.map((item) => item.cuil);
@@ -562,9 +568,13 @@ export const DDJJArchivoImport = ({
       >
         Importar
       </Button>
-      <a href={URL_PLANTILLA} download="proposed_file_name">
+      <a href={URL_PLANTILLA_XLS} download="proposed_file_name">
         <DownloadForOffline fontSize="large" style={{ marginLeft: 100 }} />
-        Descarga Plantilla
+        Plantilla (xls)
+      </a>
+      <a href={URL_PLANTILLA_CSV} download="proposed_file_name">
+        <DownloadForOffline fontSize="large" style={{ marginLeft: 100 }} />
+        Plantilla (csv)
       </a>
       <LinearDeterminate progress={progress} isProcessing={isProcessing} />
     </Box>

@@ -42,6 +42,18 @@ const getFuncionalidadesByRol = async () => {
   }
 };
 
+const getFuncionalidadesByRolTipoUsuario = async () => {
+  try {
+    const URL = `/funcionalidades/usuario`;
+    const response = await axiosCrud.consultar(URL); // esto me tiene que devolver funcionales_activas, funcionalidades_inactivas
+    return response;
+  } catch (error) {
+    const HTTP_MSG =
+      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
+    swal.showErrorBackEnd(HTTP_MSG, error);
+  }
+};
+
 const putFuncionalidades = async (body) => {
   try {
     const URL = `/funcionalidades/actualizar`;
@@ -66,5 +78,6 @@ export const axiosGestionRoles = {
   getRoles,
   getFuncionalidades,
   getFuncionalidadesByRol,
+  getFuncionalidadesByRolTipoUsuario,
   putFuncionalidades,
 };

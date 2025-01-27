@@ -16,15 +16,17 @@ export const Inicio = () => {
   const [contenido, setContenido] = useState([]);
   const [telefonoWsp, setTelefonoWsp] = useState([]);
   const [telefonoLlamada, setTelefonoLlamada] = useState([]);
-  const IDimages =[]
-  const [images, setImages] = useState([])
+  const IDimages = [];
+  const [images, setImages] = useState([]);
   //let images = []
   useEffect(() => {
     const getDatosContacto = async () => {
       const datosContacto = await ObtenerDatosDeContacto();
       setDatosContacto(datosContacto);
-      setTelefonoWsp(datosContacto.whasap.replace(/-/g, ''));
-      setTelefonoLlamada(datosContacto.telefono.replace(/-/g, ''));
+      setTelefonoWsp(datosContacto.whasap.replace(/-/g, '').replace(' ', ''));
+      setTelefonoLlamada(
+        datosContacto.telefono.replace(/-/g, '').replace(' ', ''),
+      );
     };
     getDatosContacto();
   }, []);
@@ -32,13 +34,13 @@ export const Inicio = () => {
   useEffect(() => {
     const getPublicacionesVigentes = async () => {
       const consContenidos = await ObtenerPublicacionesVigentes();
-      consContenidos.forEach(element => {
-        IDimages.push(element.id)
+      consContenidos.forEach((element) => {
+        IDimages.push(element.id);
       });
 
-      const images = await getImages(IDimages)
-      console.log(images)
-      setImages(images)
+      const images = await getImages(IDimages);
+      console.log(images);
+      setImages(images);
       setContenido(consContenidos);
     };
     getPublicacionesVigentes();
@@ -89,9 +91,9 @@ export const Inicio = () => {
         </div>
       </div>
       <div className="novedades">
-       {/* <CarouselText contenido={contenido} /> */}
-       {images && images.length > 0 && <CarouselImg images={images} />}
-       </div>
+        {/* <CarouselText contenido={contenido} /> */}
+        {images && images.length > 0 && <CarouselImg images={images} />}
+      </div>
     </div>
   );
 };

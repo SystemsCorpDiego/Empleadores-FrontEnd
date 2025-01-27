@@ -3,14 +3,14 @@ import formatter from '@/common/formatter';
 function getAporteDescrip(vecAportes, codigo) {
   if (vecAportes && vecAportes.find) {
     let reg = vecAportes.find((aporte) => aporte.codigo == codigo);
-    console.log('getAporteDescrip - codigo: ', codigo);
-    console.log('getAporteDescrip - reg: ', reg);
+    //console.log('getAporteDescrip - codigo: ', codigo);
+    //console.log('getAporteDescrip - reg: ', reg);
 
     if (!reg) {
-      console.log('getAporteDescrip - DEVUELVO CODIGO. ');
+      //console.log('getAporteDescrip - DEVUELVO CODIGO. ');
       return codigo;
     }
-    console.log('getAporteDescrip - DEVUELVO desccrip: ', reg.descripcion);
+    //console.log('getAporteDescrip - DEVUELVO desccrip: ', reg.descripcion);
     return reg.descripcion;
   }
 }

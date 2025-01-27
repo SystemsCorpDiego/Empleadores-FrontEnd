@@ -171,7 +171,6 @@ function EditToolbar(props) {
       [newReg.id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
     }));
 
-    
     gridApiRef.current.setPage(0);
 
     gridApiRef.current.setSortModel([
@@ -179,7 +178,7 @@ function EditToolbar(props) {
         field: 'id',
         sort: 'desc',
       },
-    ])
+    ]);
   };
 
   return (
@@ -547,7 +546,7 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
 
   const handlerGrillaActualizarImportArchivo = async (vecDatos) => {
     setExpanded(true);
-    setLoading(true)
+    setLoading(true);
     console.log(
       '** handlerGrillaActualizarImportArchivo - vecDatos: ',
       vecDatos,
@@ -568,7 +567,7 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
       vecDatos,
       newRowsValidaciones,
     );
-    setLoading(false)
+    setLoading(false);
     console.log(
       '** handlerGrillaActualizarImportArchivo - validarDDJJ() - rowsNew: ',
       rowsNew,
@@ -580,7 +579,6 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
 
     setDdjjModi(true);
     setExpanded(true);
-
   };
 
   const handlerGrillaActualizarPeriodoAnterior = (vecDatos) => {
@@ -1515,31 +1513,32 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
         return plantas.find((planta) => planta.id === value)?.planta || '';
       },
       renderEditCell: (params) => {
-        const filteredPlantas = plantas.filter((planta) => planta.planta !== 'FISCAL')
-        console.log(filteredPlantas)
-         return (
-           <Select
-             fullWidth
-             value={params.value || ''}
-             onChange={(event) => {
-               params.api.setEditCellValue({
-                 id: params.id,
-                 field: 'empresaDomicilioId',
-                 value: event.target.value,
-               });
-             }}
-           >
-             {filteredPlantas.map((planta) => {
-               return (
-                 <MenuItem key={planta.id} value={planta.id}>
-                   {planta.planta}
-                 </MenuItem>
-               );
-             })}
-           </Select>
-         );
-       },
-     
+        const filteredPlantas = plantas.filter(
+          (planta) => planta.planta !== 'FISCAL',
+        );
+        console.log(filteredPlantas);
+        return (
+          <Select
+            fullWidth
+            value={params.value || ''}
+            onChange={(event) => {
+              params.api.setEditCellValue({
+                id: params.id,
+                field: 'empresaDomicilioId',
+                value: event.target.value,
+              });
+            }}
+          >
+            {filteredPlantas.map((planta) => {
+              return (
+                <MenuItem key={planta.id} value={planta.id}>
+                  {planta.planta}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        );
+      },
     },
     {
       field: 'remunerativo',
@@ -1760,6 +1759,7 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
             <Stack spacing={4} direction="row" alignItems="center">
               <DemoContainer components={['DatePicker']}>
                 <DesktopDatePicker
+                  disableFuture
                   label={'Periodo'}
                   views={['month', 'year']}
                   closeOnSelect={true}
@@ -1843,7 +1843,7 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
           >
             Paso 3 - Grilla de afiliado
           </AccordionSummary>
-          
+
           <AccordionDetails>
             <Box
               sx={{
@@ -1866,83 +1866,86 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
                 },
               }}
             >
-
-              {loading ? <Box display="flex" justifyContent="center" alignItems="center" ><CircularProgress /> </Box>: 
-              <ThemeProvider theme={themeWithLocale}>
-                <StripedDataGrid
-                  rows={rows || []}
-                  columns={columns}
-                  editMode="row"
-                  filterModel={filterModel}
-                  //sortModel={sortModel}
-                  rowModesModel={rowModesModel}
-                  onRowModesModelChange={(newRowModesModel) => {
-                    useGridCrud.handleRowModesModelChange(newRowModesModel);
-                    setDdjjModi(true);
-                  }}
-                  onRowEditStop={(params) => {
-                    useGridCrud.handleRowEditStop(gridApiRef, params);
-                  }}
-                  processRowUpdate={(newRow) => {
-                    setDdjjModi(true);
-                    return useGridCrud.processRowUpdate(ddjjCabe, newRow);
-                  }}
-                  onProcessRowUpdateError={(error) => {
-                    useGridCrud.onProcessRowUpdateError(error);
-                  }}
-                  getRowClassName={(params) =>
-                    rows?.indexOf(params.row) % 2 === 0 ? 'even' : 'odd'
-                  }
-                  localeText={dataGridStyle.toolbarText}
-                  slots={{
-                    toolbar: EditToolbar,
-                  }}
-                  slotProps={{
-                    toolbar: {
-                      setRows,
-                      rows,
-                      setRowModesModel,
-                      showQuickFilter: true,
-                      themeWithLocale,
-                      filtrarGrilla,
-                      gridApiRef,
-                      setSortModel,
-                    },
-                  }}
-                  paginationModel={paginationModel}
-                  onPaginationModelChange={setPaginationModel}
-                  pageSizeOptions={pageSizeOptions}
-                  apiRef={gridApiRef}
-                  className="afiliados"
-                  columnVisibilityModel={{
-                    gErrores: false,
-                  }}
-                  timezoneOffset={null}
-                  sx={{
-                    '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {
-                      width: '8px',
-                      visibility: 'visible',
-                    },
-                    '& .MuiDataGrid-virtualScroller::-webkit-scrollbar-thumb': {
-                      backgroundColor: '#ccc',
-                    },
-                    '& .css-1iyq7zh-MuiDataGrid-columnHeaders': {
-                      backgroundColor: '#1A76D2 !important',
-                    },
-                    '& .art46--cell': {
-                      backgroundColor: '#ccc',
-                    },
-                  }}
-                  getCellClassName={getCellClassName}
-                />
-              </ThemeProvider>
-               }
+              {loading ? (
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  <CircularProgress />{' '}
+                </Box>
+              ) : (
+                <ThemeProvider theme={themeWithLocale}>
+                  <StripedDataGrid
+                    rows={rows || []}
+                    columns={columns}
+                    editMode="row"
+                    filterModel={filterModel}
+                    //sortModel={sortModel}
+                    rowModesModel={rowModesModel}
+                    onRowModesModelChange={(newRowModesModel) => {
+                      useGridCrud.handleRowModesModelChange(newRowModesModel);
+                      setDdjjModi(true);
+                    }}
+                    onRowEditStop={(params) => {
+                      useGridCrud.handleRowEditStop(gridApiRef, params);
+                    }}
+                    processRowUpdate={(newRow) => {
+                      setDdjjModi(true);
+                      return useGridCrud.processRowUpdate(ddjjCabe, newRow);
+                    }}
+                    onProcessRowUpdateError={(error) => {
+                      useGridCrud.onProcessRowUpdateError(error);
+                    }}
+                    getRowClassName={(params) =>
+                      rows?.indexOf(params.row) % 2 === 0 ? 'even' : 'odd'
+                    }
+                    localeText={dataGridStyle.toolbarText}
+                    slots={{
+                      toolbar: EditToolbar,
+                    }}
+                    slotProps={{
+                      toolbar: {
+                        setRows,
+                        rows,
+                        setRowModesModel,
+                        showQuickFilter: true,
+                        themeWithLocale,
+                        filtrarGrilla,
+                        gridApiRef,
+                        setSortModel,
+                      },
+                    }}
+                    paginationModel={paginationModel}
+                    onPaginationModelChange={setPaginationModel}
+                    pageSizeOptions={pageSizeOptions}
+                    apiRef={gridApiRef}
+                    className="afiliados"
+                    columnVisibilityModel={{
+                      gErrores: false,
+                    }}
+                    timezoneOffset={null}
+                    sx={{
+                      '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {
+                        width: '8px',
+                        visibility: 'visible',
+                      },
+                      '& .MuiDataGrid-virtualScroller::-webkit-scrollbar-thumb':
+                        {
+                          backgroundColor: '#ccc',
+                        },
+                      '& .css-1iyq7zh-MuiDataGrid-columnHeaders': {
+                        backgroundColor: '#1A76D2 !important',
+                      },
+                      '& .art46--cell': {
+                        backgroundColor: '#ccc',
+                      },
+                    }}
+                    getCellClassName={getCellClassName}
+                  />
+                </ThemeProvider>
+              )}
               <div
                 style={{
                   marginTop: '20px',
                 }}
               ></div>
-              
             </Box>
             <DDJJCuilForm
               formCuilReg={formCuilReg}
@@ -1997,7 +2000,6 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
               </Button>
             </div>
           </AccordionDetails>
-         
         </Accordion>
       </div>
     </div>
