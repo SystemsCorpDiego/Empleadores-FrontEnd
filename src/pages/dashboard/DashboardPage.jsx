@@ -378,7 +378,7 @@ const DashboardPage = () => {
           }}
         >
           <Hidden smDown>
-            <h1 className="title">Portal empleadores de UOMA</h1>
+            <h1 className="title">Portal empleadores UOMA</h1>
           </Hidden>
           <div
             style={{

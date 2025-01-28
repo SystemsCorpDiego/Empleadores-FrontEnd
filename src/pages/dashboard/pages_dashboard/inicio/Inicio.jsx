@@ -82,7 +82,7 @@ export const Inicio = () => {
               >
                 <LocalPhoneIcon />
               </Link>
-              {datosContacto ? datosContacto?.telefono : ''}
+              {datosContacto ? '011 ' + datosContacto?.telefono : ''}
             </div>
           </div>
 
