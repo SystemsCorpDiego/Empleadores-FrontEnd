@@ -45,7 +45,12 @@ export const axiosConsultar = async (UrlApi) => {
 
 export const axiosCrear = async (UrlApi, oEntidad) => {
   try {
-    const response = await oAxios.post(UrlApi, oEntidad);
+    var auxEntidad = oEntidad;
+    if (!oEntidad) {
+      auxEntidad = {};
+    }
+    const response = await oAxios.post(UrlApi, auxEntidad);
+    //const response = await oAxios.post(UrlApi, oEntidad);
     if (response.status !== 201 && response.status !== 200) {
       console.log(
         `axiosCrud.crear() - ERROR 2 - UrlApi: ${UrlApi} - response.status !== 201 - response: ${JSON.stringify(
@@ -98,8 +103,13 @@ export const axiosCrearFormData = async (UrlApi, oEntidad) => {
 };
 
 export const axiosCrearN = async (UrlApi, oEntidad) => {
-  try {
-    const response = await oAxios.post(UrlApi, oEntidad);
+  try { 
+    var auxEntidad = oEntidad;
+    if (!oEntidad) {
+      auxEntidad = {};
+    }
+    const response = await oAxios.post(UrlApi, auxEntidad);
+    //const response = await oAxios.post(UrlApi, oEntidad);
     //console.log(response.status);
     if (response && response.status && response.status == 204) {
       return true;
