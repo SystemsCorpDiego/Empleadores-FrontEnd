@@ -34,7 +34,7 @@ export const LoginPage = () => {
   const [showVerificationForm, setShowVerificationForm] = useState(false);
   const [showAlertUser, setShowAlertUser] = useState(false);
   const [showAlertPassword, setShowAlertPassword] = useState(false);
-  const [verificationCode, setVerificationCode] = useState('310279');
+  const [verificationCode, setVerificationCode] = useState('');
   const [token, setToken] = useState(null);
   const [refreshToken, setRefreshToken] = useState(null);
   const [showLoading, setShowLoading] = useState(true);
