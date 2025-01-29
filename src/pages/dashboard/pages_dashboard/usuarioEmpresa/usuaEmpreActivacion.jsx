@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useMemo, useContext } from 'react';
 import './../../../login/LoginPage.css';
 import NavBar from '@/components/navbar/NavBar.jsx';
@@ -8,9 +8,14 @@ import { Box, Typography, Button } from '@mui/material';
 import { axiosUsuaEmpreActivacion } from './usuaEmpreActivacionApi';
 
 export const UsuaEmpreActivacion = () => {
+  const navigate = useNavigate();
   const { token } = useParams();
   const [activacion, setActivacion] = useState('');
   const [icon, setIcon] = useState('');
+
+  const login = () => {
+    navigate('/login');
+  };
 
   useEffect(() => {
     const activarToken = async () => {
@@ -53,9 +58,10 @@ export const UsuaEmpreActivacion = () => {
               <Typography variant="h1">{activacion}</Typography>
             </Box>
             <Box display="flex" justifyContent="center" alignItems="center">
-            <a href="http://localhost:5173/">
-              <Button variant="contained"> Ir al loguin </Button>
-              </a>
+              <Button variant="contained" onClick={login}>
+                {' '}
+                Ir al loguin{' '}
+              </Button>
             </Box>
           </div>
         </div>
