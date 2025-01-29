@@ -16,7 +16,7 @@ export const UsuaEmpreActivacion = () => {
   const login = () => {
     navigate('/login');
   };
-
+  
   useEffect(() => {
     const activarToken = async () => {
       console.log(
