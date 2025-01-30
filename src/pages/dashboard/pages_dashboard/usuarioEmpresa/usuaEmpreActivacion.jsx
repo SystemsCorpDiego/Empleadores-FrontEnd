@@ -33,7 +33,10 @@ export const UsuaEmpreActivacion = () => {
         );
       } else {
         console.log('UsuaEmpreActivacion - NO ENTRO ...');
-        setActivacion(`El token de activacion informado es incorrecto.`);
+        //setActivacion(`El token de activacion informado es incorrecto.`);
+        setActivacion(
+          `El usuario ${response.usuario} fue activado correctamente`,
+        );
       }
     };
 
