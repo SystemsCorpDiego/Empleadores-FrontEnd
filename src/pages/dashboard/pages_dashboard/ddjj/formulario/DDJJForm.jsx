@@ -772,7 +772,7 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
           setDeshabilitarGuardar(true);
           setShowLoading(true);
           await guardarDDJJ();
-          setDeshabilitarGuardar(true);
+          setDeshabilitarGuardar(false);
           setShowLoading(false);
         }
       });
@@ -780,7 +780,7 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
       setDeshabilitarGuardar(true);
       setShowLoading(true);
       await guardarDDJJ();
-      setDeshabilitarGuardar(true);
+      setDeshabilitarGuardar(false);
       setShowLoading(false);
     }
   };
@@ -2002,7 +2002,7 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
                 variant="contained"
                 sx={{ padding: '6px 52px', marginLeft: '10px' }}
                 onClick={presentarDDJJ}
-                disabled={!habiModif || !ddjjCabe.id}
+                disabled={!habiModif || !ddjjCabe.id || deshabilitarGuardar}
               >
                 Presentar
               </Button>
