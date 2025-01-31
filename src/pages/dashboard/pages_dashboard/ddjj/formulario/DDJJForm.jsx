@@ -207,7 +207,7 @@ function EditToolbar(props) {
 
 export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
   const navigate = useNavigate();
-
+  const [showLoading, setShowLoading] = useState(false);
   const ID_EMPRESA = localStorageService.getEmpresaId();
   const [ddjjCabe, setDdjjCabe] = useState({
     id: idDDJJ || null,
@@ -769,11 +769,19 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
         cancelButtonText: 'Cancelar',
       }).then(async (result) => {
         if (result.isConfirmed) {
+          setDeshabilitarGuardar(true);
+          setShowLoading(true);
           await guardarDDJJ();
+          setDeshabilitarGuardar(true);
+          setShowLoading(false);
         }
       });
     } else {
+      setDeshabilitarGuardar(true);
+      setShowLoading(true);
       await guardarDDJJ();
+      setDeshabilitarGuardar(true);
+      setShowLoading(false);
     }
   };
 
@@ -1961,6 +1969,14 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
                 marginTop: '30px',
               }}
             >
+                                <ThreeCircles
+                    visible={showLoading}
+                    height="25"
+                    width="25"
+                    color="#1A76D2"
+                    ariaLabel="three-circles-loading"
+                    
+                  />
               <Tooltip
                 title={
                   someRowInEditMode
@@ -1970,6 +1986,7 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
                 sx={{ marginLeft: '10px', cursor: 'pointer' }}
               >
                 <span>
+
                   <Button
                     variant="contained"
                     sx={{ padding: '6px 52px', marginLeft: '10px' }}
