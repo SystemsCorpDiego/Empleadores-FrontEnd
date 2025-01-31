@@ -6,7 +6,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 // Set config defaults when creating the instance
 const oAxios = axios.create({
   baseURL: BACKEND_URL, //"http://127.0.0.1:8400/sigeco",
-  timeout: 30000,
+  timeout: 60000,
 });
 
 // Alter defaults after instance has been created

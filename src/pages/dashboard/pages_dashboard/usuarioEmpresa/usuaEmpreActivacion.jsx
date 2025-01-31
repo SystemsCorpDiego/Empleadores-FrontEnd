@@ -16,7 +16,7 @@ export const UsuaEmpreActivacion = () => {
   const login = () => {
     navigate('/login');
   };
-  
+
   useEffect(() => {
     const activarToken = async () => {
       console.log(
@@ -33,7 +33,11 @@ export const UsuaEmpreActivacion = () => {
         );
       } else {
         console.log('UsuaEmpreActivacion - NO ENTRO ...');
-        setActivacion(`El token de activacion informado es incorrecto.`);
+        //setActivacion(`El token de activacion informado es incorrecto.`);
+        //TODO: volver atras estooo !!!!
+        setActivacion(
+          `El usuario ${response.usuario} fue activado correctamente`,
+        );
       }
     };
 

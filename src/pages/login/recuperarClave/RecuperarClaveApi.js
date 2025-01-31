@@ -15,10 +15,11 @@ export const recuperarClave = async (email) => {
       //swal.showSuccess(RECUPERO_MSG);
       return true;
     }
-    swal.showError(RECUPERO_ERROR);
+    swal.showErrorBackEnd(RECUPERO_ERROR, response);
     console.log('recuperoClave - response:', response);
     return false;
   } catch (error) {
+    console.log('recuperoClave - error:', error);
     const HTTP_MSG = RECUPERO_ERROR + ` (${URL} - status: ${error.status})`;
     swal.showErrorBackEnd(HTTP_MSG, error);
     return false;

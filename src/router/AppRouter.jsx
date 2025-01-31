@@ -6,7 +6,9 @@ import NavBar from '../components/navbar/NavBar';
 import { DatosEmpresa } from '../pages/dashboard/pages_dashboard/datos_empresa/DatosEmpresa';
 import { DatosPerfil } from '@/pages/dashboard/pages_dashboard/datosPerfil/DatosPerfil';
 import { Publicaciones } from '../pages/dashboard/pages_dashboard/publicaciones/Publicaciones';
-import { RecuperoPage } from '../pages/recupero/RecuperoPage';
+//import { RecuperoPage } from '../pages/recupero/RecuperoPage';
+import { RecuperarClave } from '@/pages/login/recuperarClave/RecuperarClave';
+import { RecuperarClaveForm } from '@/pages/login/recuperarClave/RecuperarClaveForm';
 import DashboardPage from '../pages/dashboard/DashboardPage';
 import { LoginPage } from '../pages/login/LoginPage';
 import { Feriados } from '../pages/dashboard/pages_dashboard/feriados/Feriados';
@@ -30,9 +32,8 @@ import { UsuaEmpreActivacion } from '@/pages/dashboard/pages_dashboard/usuarioEm
 import { Aportes } from '@/pages/dashboard/pages_dashboard/aportes/Aportes';
 import { DDJJTabs } from '@/pages/dashboard/pages_dashboard/ddjj/DDJJTabs';
 import { UserProvider } from '@/context/userProvider';
-import {GestionDeudas} from '@/pages/dashboard/pages_dashboard/gestion_deudas/GestionDeudas'
-import {Convenios} from '@/pages/dashboard/pages_dashboard/convenios/Convenios'
-
+import { GestionDeudas } from '@/pages/dashboard/pages_dashboard/gestion_deudas/GestionDeudas';
+import { Convenios } from '@/pages/dashboard/pages_dashboard/convenios/Convenios';
 
 const PagosPage = () => (
   <div className="otros_pagos_container">Contenido de la página de pagos</div>
@@ -43,10 +44,14 @@ const AppRouter = () => {
     <UserProvider>
       <Routes>
         <Route path="login" element={<LoginPage />} />
-        <Route path="recupero" element={<RecuperoPage />} />
+        <Route path="recupero" element={<RecuperarClave />} />
         <Route
           path="usuario/empresa/activar/:token"
           element={<UsuaEmpreActivacion />}
+        />
+        <Route
+          path="usuario/recuperar-clave/:token"
+          element={<RecuperarClaveForm />}
         />
 
         <Route
@@ -97,7 +102,6 @@ const AppRouter = () => {
           <Route path="aportes" element={<Aportes />} />
           <Route path="gestiondeuda" element={<GestionDeudas />} />
           <Route path="convenios" element={<Convenios />} />
-          
         </Route>
         <Route path="registercompany" element={<RegistroEmpresa />} />
         <Route index element={<Navigate to="/login" />} />
