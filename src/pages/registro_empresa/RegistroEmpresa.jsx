@@ -942,7 +942,7 @@ export const RegistroEmpresa = () => {
             />
             { !showLoading &&<>
             <GrillaEmpresaDomicilio
-              idEmpresa="PC"
+              idEmpresa="REGISTRO_EMPRESA"
               rows={rows}
               setRows={setRows}
             />

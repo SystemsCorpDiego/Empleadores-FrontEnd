@@ -1969,14 +1969,13 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
                 marginTop: '30px',
               }}
             >
-                                <ThreeCircles
-                    visible={showLoading}
-                    height="25"
-                    width="25"
-                    color="#1A76D2"
-                    ariaLabel="three-circles-loading"
-                    
-                  />
+              <ThreeCircles
+                visible={showLoading}
+                height="25"
+                width="25"
+                color="#1A76D2"
+                ariaLabel="three-circles-loading"
+              />
               <Tooltip
                 title={
                   someRowInEditMode
@@ -1986,7 +1985,6 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
                 sx={{ marginLeft: '10px', cursor: 'pointer' }}
               >
                 <span>
-
                   <Button
                     variant="contained"
                     sx={{ padding: '6px 52px', marginLeft: '10px' }}

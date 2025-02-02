@@ -24,8 +24,19 @@ import { StripedDataGrid, dataGridStyle } from '@/common/dataGridStyle';
 import { InputPeriodo } from '@/components/InputPeriodo';
 import Swal from 'sweetalert2';
 import { consultarEmpresa } from '@/common/api/EmpresasApi';
-
+import LinearProgress from '@mui/material/LinearProgress';
 import { UserContext } from '@/context/userContext';
+
+const LinearDeterminate = ({ progress, isProcessing }) => {
+  if (!isProcessing) return null; // Oculta la barra si no está procesando
+
+  return (
+    <Box sx={{ width: '100%', marginTop: 2 }}>
+      <LinearProgress variant="determinate" value={progress} />
+    </Box>
+  );
+};
+
 
 const style = {
   position: 'absolute',
@@ -125,6 +136,8 @@ export const Ajustes = () => {
   const [rows, setRows] = useState([]);
   const [aportes, setAportes] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
+  const [progress, setProgress] = useState(0);
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
@@ -144,18 +157,35 @@ export const Ajustes = () => {
   );
 
   const ConsultarEntidad = async () => {
+    setProgress(25)
     const data = await axiosAjustes.consultar();
+    setProgress(50)
     setRows(data);
   };
 
   const ConsultarAportes = async () => {
+    setProgress(75)
     const data = await axiosAjustes.consultarAportes();
     setAportes(data);
+    setProgress(100)
+    //setIsProcessing(false)
   };
 
   useEffect(() => {
-    ConsultarEntidad();
-    ConsultarAportes();
+    const fetchData = async () => {
+      try {
+        setIsProcessing(true);
+        setProgress(10);
+        await ConsultarEntidad();
+        await ConsultarAportes();
+      } catch (error) {
+        console.error("Error al consultar datos:", error);
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+  
+    fetchData();
   }, []);
 
   const handleRowEditStop = (params, event) => {
@@ -225,20 +255,25 @@ export const Ajustes = () => {
     console.log('processRowUpdate - newRow:', newRow);
     if (!newRow.id) {
       try {
+        setProgress(0)
+        setIsProcessing(true)
         const newRowCast = { ...newRow };
         newRowCast.importe = parseFloat(String(newRowCast.importe).replace(',', '.'))
          //parseInt(newRowCast.importe) >= 0
           //  ? parseFloat(String(newRowCast.importe).replace(',', '.'))
           //  : null;
-
+        setProgress(25)
         console.log('processRowUpdate - newRowCast  :', newRowCast);
         const data = await axiosAjustes.crear(newRowCast);
+        setProgress(50)
         if (data && data.id) {
           newRow.id = data.id;
         }
         bOk = true;
         const newRows = rows.map((row) => (!row.id ? newRow : row));
+        setProgress(75)
         setRows(newRows);
+        
         if (!(data && data.id)) {
           setTimeout(() => {
             setRowModesModel((oldModel) => ({
@@ -247,27 +282,36 @@ export const Ajustes = () => {
             }));
           }, 100);
         }
+        setProgress(100)
+        setIsProcessing(false)
       } catch (error) {
         console.log(
           'X - processRowUpdate - ALTA - ERROR: ' + JSON.stringify(error),
         );
+        setProgress(100)
+        setIsProcessing(false)
       }
     } else {
       try {
+        setProgress(0)
+        setIsProcessing(true)
         const newRowCast = { ...newRow };
         newRowCast.importe = parseFloat(String(newRowCast.importe).replace(',', '.'))
           //parseInt(newRowCast.importe) >= 0
           //  ? parseFloat(String(newRowCast.importe).replace(',', '.'))
           //  : null;
-
+        setProgress(25)
         console.log('processRowUpdate - newRowCast  :', newRowCast);
 
         bOk = await axiosAjustes.actualizar(newRowCast);
+        setProgress(50)
         if (bOk) {
           const rowsNew = rows.map((row) =>
             row.id === newRow.id ? newRow : row,
           );
           setRows(rowsNew);
+          setProgress(100)
+          setIsProcessing(false)
         }
         if (!bOk) {
           const indice = rows.indexOf(oldRow);
@@ -277,12 +321,16 @@ export const Ajustes = () => {
               ...oldModel,
             }));
           }, 100);
+          setProgress(100)
+          setIsProcessing(false)
           return null;
         }
       } catch (error) {
         console.log(
           'X - processRowUpdate - MODI - ERROR: ' + JSON.stringify(error),
         );
+        setProgress(100)
+        setIsProcessing(false)
       }
     }
 
@@ -578,6 +626,7 @@ export const Ajustes = () => {
           },
         }}
       >
+        <LinearDeterminate progress={progress} isProcessing={isProcessing} />
         <ThemeProvider theme={themeWithLocale}>
           <StripedDataGrid
             apiRef={gridApiRef}

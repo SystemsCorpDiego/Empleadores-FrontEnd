@@ -70,12 +70,13 @@ const crearNuevoRegistro = (props) => {
     }
     isOnEditMode = true;
   };
+
   return (
     <GridToolbarContainer
       theme={themeWithLocale}
       style={{ display: 'flex', justifyContent: 'space-between' }}
     >
-      {(crudHabi || idEmpresa == 'PC') && (
+      {(crudHabi || idEmpresa == 'REGISTRO_EMPRESA') && (
         <Button
           color="primary"
           startIcon={<AddIcon />}
@@ -91,6 +92,7 @@ const crearNuevoRegistro = (props) => {
 };
 
 export const GrillaEmpresaDomicilio = ({ idEmpresa, rows, setRows }) => {
+  //console.log('asi arranca ' + idEmpresa)
   const crudHabi = localStorageService.funcionABMEmpresaHabilitada();
   const [locale, setLocale] = useState('esES');
   const [rowModesModel, setRowModesModel] = useState({});
@@ -111,8 +113,9 @@ export const GrillaEmpresaDomicilio = ({ idEmpresa, rows, setRows }) => {
   console.log('GrillaEmpresaDomicilio - location.href: ', window.location.href);
 
   useEffect(() => {
+    // console.log('ESTE ES EL ID EMPRESA: ' +  idEmpresa)
     async function cargarDatos() {
-      if (idEmpresa !== 'PC') {
+      if (idEmpresa !== 'REGISTRO_EMPRESA') {
         await getRowsDomicilio();
       }
       await getProvincias();
@@ -188,7 +191,7 @@ export const GrillaEmpresaDomicilio = ({ idEmpresa, rows, setRows }) => {
           confirmButtonText: 'Si, bórralo!',
         }).then(async (result) => {
           console.log(row.id);
-          if (result.isConfirmed && idEmpresa !== 'PC') {
+          if (result.isConfirmed && idEmpresa !== 'REGISTRO_EMPRESA') {
             const bBajaOk = await axiosDomicilio.eliminar(idEmpresa, row.id);
             if (bBajaOk) setRows(rows.filter((rowAux) => rowAux.id !== row.id));
           } else {
@@ -244,7 +247,7 @@ export const GrillaEmpresaDomicilio = ({ idEmpresa, rows, setRows }) => {
     let bOk = false;
     if (!newRow.id) {
       try {
-        if (idEmpresa !== 'PC') {
+        if (idEmpresa !== 'REGISTRO_EMPRESA') {
           //Condicion para la grilla de registrar empresa
           const data = await axiosDomicilio.crear(idEmpresa, newRow);
           console.log('processRowUpdate - axiosDomicilio.crear - data:', data);
@@ -281,7 +284,7 @@ export const GrillaEmpresaDomicilio = ({ idEmpresa, rows, setRows }) => {
         );
       }
     } else {
-      if (idEmpresa !== 'PC') {
+      if (idEmpresa !== 'REGISTRO_EMPRESA') {
         try {
           bOk = await axiosDomicilio.actualizar(idEmpresa, newRow);
           if (bOk) {
@@ -509,7 +512,7 @@ export const GrillaEmpresaDomicilio = ({ idEmpresa, rows, setRows }) => {
         const isInEditMode =
           rowModesModel[rows.indexOf(row)]?.mode === GridRowModes.Edit;
 
-        if (!crudHabi && idEmpresa !== 'PC') return [];
+        if (!crudHabi && idEmpresa !== 'REGISTRO_EMPRESA') return [];
 
         if (isInEditMode) {
           return [
@@ -550,10 +553,10 @@ export const GrillaEmpresaDomicilio = ({ idEmpresa, rows, setRows }) => {
   ];
   // Cuando sea registro poner el height en 300
   return (
-    <div style={{ width: idEmpresa === 'PC' ? '100%' : 'auto' }}>
+    <div style={{ width: idEmpresa === 'REGISTRO_EMPRESA' ? '100%' : 'auto' }}>
       <Box
         sx={{
-          height: idEmpresa === 'PC' ? '300px' : '600px',
+          height: idEmpresa === 'REGISTRO_EMPRESA' ? '300px' : '600px',
           width: '100%',
           '& .actions': {
             color: 'text.secondary',

@@ -26,6 +26,7 @@ import dayjs from 'dayjs';
 //import { Boletas } from '../boletas/Boletas';
 
 import swal from '@/components/swal/swal';
+import { ThreeCircles } from 'react-loader-spinner';
 
 export const GenerarBoletas = () => {
   const { id } = useParams();
@@ -43,6 +44,7 @@ export const GenerarBoletas = () => {
   const [habilitaBoton, sethabilitaBoton] = useState(true);
   const [isUseEffect, setIsUseEffect] = useState(true);
   const [hasFetchedData, setHasFetchedData] = useState(false); // Nuevo estado para controlar la ejecución única
+  const [showLoading, setShowLoading] = useState(false)
   const MOTIVOS_DESC = {
     DI: 'Devolución de Intereses',
     DPD: 'Devolución por pago duplicado',
@@ -238,6 +240,7 @@ export const GenerarBoletas = () => {
   };
 
   const setFormaDePago = (codigo, value) => {
+    
     if (primeraSeleccionFDP) {
       const newDetalleBoletas = boletas.detalle_boletas.map((boleta) => {
         //Condicion puesta hasta que se habilite el banelco en amtimacs
@@ -257,12 +260,15 @@ export const GenerarBoletas = () => {
       );
       setFormaDePagoInBoleta(boletaIndex, value);
     }
+    sethabilitaBoton(false)
   };
 
   const toggleDetail = () => setShowDetail(!showDetail);
 
   const generarBoletas = async () => {
     try {
+      sethabilitaBoton(true)
+      setShowLoading(true)
       const data = await axiosGenerarBoletas.generarBoletasPost(
         ID_EMPRESA,
         DDJJ_ID,
@@ -270,6 +276,7 @@ export const GenerarBoletas = () => {
       );
       console.log('Este es el response ', data);
       if (data) {
+        setShowLoading(false)
         sethabilitaBoton(true);
         navigate(`/dashboard/boletas`);
       }
@@ -534,6 +541,13 @@ export const GenerarBoletas = () => {
         </Table>
       </TableContainer>
       <Box display="flex" justifyContent="flex-end" paddingTop="5em">
+        <ThreeCircles
+                visible={showLoading}
+                height="25"
+                width="25"
+                color="#1A76D2"
+                ariaLabel="three-circles-loading"
+              />
         <Button
           variant="contained"
           onClick={() => generarBoletas()}
