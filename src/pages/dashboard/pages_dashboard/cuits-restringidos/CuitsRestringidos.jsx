@@ -98,13 +98,16 @@ export const CuitsRestringidos = () => {
     ) {
       //console.log('ENTROOO');
       razonSocial = vecEmpre[0].razonSocial;
-    } else {
+    }
+    /*
+    else {
       gridApiRef.current.setEditCellValue({
         id: id,
         field: 'cuit',
         value: '',
       });
     }
+    */
     //console.log('obtenerEmpresa- razonSocial:', razonSocial);
 
     gridApiRef.current.setEditCellValue({
