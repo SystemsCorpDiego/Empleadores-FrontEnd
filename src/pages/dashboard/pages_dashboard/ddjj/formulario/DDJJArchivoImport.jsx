@@ -99,9 +99,9 @@ export const DDJJArchivoImport = ({
           return false;
         }
 
-        console.log('rows:', rows);
+        console.log('handleFileChange - rows:', rows);
         const vecRowsGridDto = castFileRowsToGrid(rows);
-        console.log('vecRowsGridDto:', vecRowsGridDto);
+        console.log('handleFileChange - vecRowsGridDto:', vecRowsGridDto);
 
         setFileVecCuiles(vecRowsGridDto);
         //  console.log('handleFileChange - arrayTransformado', arrayTransformado);
@@ -148,6 +148,7 @@ export const DDJJArchivoImport = ({
   };
 
   const validarFileColCanti = (vecRows) => {
+    console.log('validarFileColCanti - INIT');
     const colCanti = vecRowTitulos.length;
     let rowError = false;
     let rowErrorNro = null;
@@ -157,18 +158,21 @@ export const DDJJArchivoImport = ({
         rowErrorNro = index;
       }
     });
-    //console.log('validarFileColCanti');
+    console.log('validarFileColCanti - 1');
     if (rowError) {
+      console.log('validarFileColCanti - rowError: ', rowError);
       swal.showWarning(
         `<div><p>Registro Nro. ${rowErrorNro + 1} incompleto. Debe informar 11 columnas</p></div>`,
         true,
       );
       fileReset();
     }
+    console.log('validarFileColCanti - FIN');
     return !rowError;
   };
 
   const validarTitulos = (vecRows) => {
+    console.log('validarTitulos - INIT ');
     const colCanti = vecRowTitulos.length;
     if (vecRows[0].length === colCanti) {
       try {
@@ -177,6 +181,7 @@ export const DDJJArchivoImport = ({
           vecTitTrim.toString().toUpperCase() ===
           vecRowTitulos.toString().toUpperCase()
         ) {
+          console.log('validarTitulos - 3 - *** ');
           return true;
         }
       } catch (e) {
@@ -193,9 +198,11 @@ export const DDJJArchivoImport = ({
       msgError += `${index + 1}-${reg}<br>`;
     });
 
-    msgError = '</p></div >';
+    msgError = msgError + '</p></div >';
     swal.showWarning(msgError, true);
     fileReset();
+
+    console.log('validarTitulos - FIN ');
     return false;
   };
 
