@@ -72,7 +72,13 @@ export const BoletasEmpleadoGrilla = ({ rowsGrilla }) => {
               <IconButton
                 size="small"
                 onClick={() => {
-                  boletaPdfDownload(params.row.empresaId, params.row.id);
+                  console.log('params.row:', params.row);
+
+                  boletaPdfDownload(
+                    params.row.empresaId,
+                    params.row.id,
+                    params.row.numero_boleta,
+                  );
                 }}
               >
                 <PrintIcon />

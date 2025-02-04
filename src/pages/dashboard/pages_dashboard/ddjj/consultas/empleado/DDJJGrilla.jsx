@@ -26,8 +26,8 @@ export const DDJJGrilla = ({ rows, showCuit }) => {
 
   const navigate = useNavigate();
 
-  const declaracionJuradasImpresion = async (empresaId, idDDJJ) => {
-    await axiosDDJJ.imprimir(empresaId, idDDJJ);
+  const declaracionJuradasImpresion = async (row) => {
+    await axiosDDJJ.imprimir(row.empresaId, row.id, row.periodo, row.secuencia);
   };
 
   const getColumns = () => {
@@ -110,7 +110,7 @@ export const DDJJGrilla = ({ rows, showCuit }) => {
             color="inherit"
             onClick={() => {
               console.log(' **** row: ', row);
-              return declaracionJuradasImpresion(row.empresaId, row.id);
+              return declaracionJuradasImpresion(row);
             }}
           />,
         ];

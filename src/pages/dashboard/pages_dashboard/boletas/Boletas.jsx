@@ -76,7 +76,7 @@ export const Boletas = () => {
   const [boletasSinAfiliados, setBoletasSinAfiliados] = useState([]); //Esta la necesito para generar el csv
   const [boletasSinDDJJ, setBoletasSinDDJJ] = useState([]);
   const [tabState, setTabState] = useState(0);
-  const [showLoading, setShowLoading] = useState([])
+  const [showLoading, setShowLoading] = useState([]);
   const theme = useTheme();
   const [locale, setLocale] = useState('esES');
   const { paginationModel, setPaginationModel, pageSizeOptions } =
@@ -125,10 +125,10 @@ export const Boletas = () => {
           return { ...rest };
         }),
       );
-      setShowLoading(false)
+      setShowLoading(false);
     } catch (error) {
       console.error('Error al obtener las boletas:', error);
-      setShowLoading(false)
+      setShowLoading(false);
     }
   };
 
@@ -323,7 +323,12 @@ export const Boletas = () => {
                             <IconButton
                               size="small"
                               onClick={() => {
-                                boletaPdfDownload(ID_EMPRESA, params.row.id);
+                                console.log('xxx params.row: ', params.row);
+                                boletaPdfDownload(
+                                  ID_EMPRESA,
+                                  params.row.id,
+                                  params.row.numero_boleta,
+                                );
                               }}
                             >
                               <PrintIcon />
@@ -355,7 +360,12 @@ export const Boletas = () => {
                           <IconButton
                             size="small"
                             onClick={() => {
-                              boletaPdfDownload(ID_EMPRESA, params.row.id);
+                              console.log('xxx params.row: ', params.row);
+                              boletaPdfDownload(
+                                ID_EMPRESA,
+                                params.row.id,
+                                params.row.numero_boleta,
+                              );
                             }}
                           >
                             <PrintIcon />
@@ -466,7 +476,12 @@ export const Boletas = () => {
                         <IconButton
                           size="small"
                           onClick={() => {
-                            boletaPdfDownload(ID_EMPRESA, params.row.id);
+                            console.log('xxx params.row: ', params.row);
+                            boletaPdfDownload(
+                              ID_EMPRESA,
+                              params.row.id,
+                              params.row.numero_boleta,
+                            );
                           }}
                         >
                           <PrintIcon />

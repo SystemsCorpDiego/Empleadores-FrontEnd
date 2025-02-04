@@ -46,7 +46,12 @@ export const obtenerMisDeclaracionesJuradas = async (
   }
 };
 
-export const imprimirDeclaracionJurada = async (empresaId, ddjjId) => {
+export const imprimirDeclaracionJurada = async (
+  empresaId,
+  ddjjId,
+  periodo,
+  secuencia,
+) => {
   const URL = `/empresa/${empresaId}/ddjj/${ddjjId}/imprimir`;
 
   try {
@@ -57,7 +62,24 @@ export const imprimirDeclaracionJurada = async (empresaId, ddjjId) => {
     const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `DeclaracionJurada${ddjjId}.pdf`);
+    var strPeriodo = periodo;
+    try {
+      strPeriodo = periodo.split('-')[0] + periodo.split('-')[1];
+    } catch {}
+    var strSecuencia = secuencia;
+    if (secuencia == null) {
+      strSecuencia = 'SinPresentar';
+    } else {
+      if (secuencia == 0) {
+        strSecuencia = 'Original';
+      } else {
+        strSecuencia = 'Rectif_' + secuencia;
+      }
+    }
+    link.setAttribute(
+      'download',
+      `UOMA_ddjj_${strPeriodo}_${strSecuencia}.pdf`,
+    );
     document.body.appendChild(link);
     link.click();
   } catch (error) {
@@ -124,8 +146,8 @@ export const axiosDDJJ = {
   //return obtenerMiDeclaracionJurada(empresaId, ddjjId);
   //},
 
-  imprimir: async function (empresaId, ddjjId) {
-    return imprimirDeclaracionJurada(empresaId, ddjjId);
+  imprimir: async function (empresaId, ddjjId, periodo, secuencia) {
+    return imprimirDeclaracionJurada(empresaId, ddjjId, periodo, secuencia);
   },
 
   presentar: async function (empresaId, ddjjId) {

@@ -85,8 +85,8 @@ export const MisDDJJGrilla = ({ rows, setRows, handlerDDJJEditar }) => {
     handlerDDJJEditar(id);
   };
 
-  const handleImprimirDDJJ = async (idDDJJ) => {
-    await axiosDDJJ.imprimir(ID_EMPRESA, idDDJJ);
+  const handleImprimirDDJJ = async (row) => {
+    await axiosDDJJ.imprimir(ID_EMPRESA, row.id, row.periodo, row.secuencia);
   };
 
   const handleDeleteClick = (id) => async () => {
@@ -194,7 +194,7 @@ export const MisDDJJGrilla = ({ rows, setRows, handlerDDJJEditar }) => {
               icon={<LocalPrintshopIcon />}
               label="Print"
               color="inherit"
-              onClick={() => handleImprimirDDJJ(id)}
+              onClick={() => handleImprimirDDJJ(row)}
             />,
             <GridActionsCellItem
               icon={<DeleteIcon />}
@@ -216,7 +216,7 @@ export const MisDDJJGrilla = ({ rows, setRows, handlerDDJJEditar }) => {
               icon={<LocalPrintshopIcon />}
               label="Print"
               color="inherit"
-              onClick={() => handleImprimirDDJJ(id)}
+              onClick={() => handleImprimirDDJJ(row)}
             />,
           ];
         } else {
@@ -232,7 +232,7 @@ export const MisDDJJGrilla = ({ rows, setRows, handlerDDJJEditar }) => {
               icon={<LocalPrintshopIcon />}
               label="Print"
               color="inherit"
-              onClick={() => handleImprimirDDJJ(id)}
+              onClick={() => handleImprimirDDJJ(row)}
             />,
           ];
         }

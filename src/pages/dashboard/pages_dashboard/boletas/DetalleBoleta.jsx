@@ -241,7 +241,15 @@ export const DetalleBoleta = () => {
       )}
 
       {boletaDetalle.baja == null && (
-        <Button onClick={() => boletaPdfDownload(ID_EMPRESA, boletaDetalle.id)}>
+        <Button
+          onClick={() =>
+            boletaPdfDownload(
+              ID_EMPRESA,
+              boletaDetalle.id,
+              boletaDetalle.numero_boleta,
+            )
+          }
+        >
           Descargar Boleta
         </Button>
       )}
