@@ -170,7 +170,7 @@ const showErrorBackEnd = async (HTTP_MSG, rta) => {
       console.log(rta);
       if (rta.code && rta.code == 'ECONNABORTED') {
         showSwalError(
-          'Error de TimeOut en el Servidor.<br>Por favor realice alguna de las siguientes acciones:<br><br>1)Si intentó registrar información: consulte los datos para verificar el estado y vuelva a intentar la accción de ser necesario.<br>2)Si intentó consultar información: por favor filtre la consulta.',
+          'Error de TimeOut en el Servidor.<br>Por favor realice alguna de las siguientes acciones:<br><br>1)Si intentó registrar información: consulte los datos para verificar el estado y vuelva a intentarlo de ser necesario.<br>2)Si intentó consultar información: por favor filtre la búsqueda.',
         );
       } else {
         showSwalError(HTTP_MSG);
