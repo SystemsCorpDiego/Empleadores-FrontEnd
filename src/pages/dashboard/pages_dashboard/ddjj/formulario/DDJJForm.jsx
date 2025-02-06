@@ -1699,7 +1699,7 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
       width: 100,
       align: 'center',
       editable: true,
-      headerName: 'Paga Mutual',
+      headerName: 'AMTIMA',
       headerAlign: 'center',
       headerClassName: 'header--cell',
       valueOptions: [
@@ -1709,9 +1709,7 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
       renderHeader: () => (
         <div style={{ textAlign: 'center', color: '#fff', fontSize: '0.8rem' }}>
           <span role="img" aria-label="enjoy">
-            Paga
-            <br />
-            mutual
+            AMTIMA
           </span>
         </div>
       ),

@@ -95,9 +95,10 @@ export const generarBoletasPost = async (empresa_id, ddjj_id, boletas) => {
   try {
     const URL = `/empresa/${empresa_id}/ddjj/${ddjj_id}/boletas/generar`;
     const arr_boletas = ordernarBoletas(boletas);
-    console.log(arr_boletas);
+    console.log('generarBoletasPost - arr_boletas: ', arr_boletas);
 
     const data = await axiosCrud.crearN(URL, arr_boletas);
+    console.log('generarBoletasPost - data: ', data);
     if (data == true) {
       swal.showSuccess(HTTP_MSG_ALTA);
       return data;

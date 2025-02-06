@@ -3,6 +3,8 @@ import { useState, useEffect, useMemo, useContext } from 'react';
 import { TextField, Box, Button } from '@mui/material';
 import CurrencyInput from 'react-currency-input-field';
 import { formatValue } from 'react-currency-input-field';
+import Autocomplete from '@mui/material/Autocomplete';
+import Stack from '@mui/material/Stack';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
@@ -23,9 +25,11 @@ import formatter from '@/common/formatter';
 import { StripedDataGrid, dataGridStyle } from '@/common/dataGridStyle';
 import { InputPeriodo } from '@/components/InputPeriodo';
 import Swal from 'sweetalert2';
+import swal from '@/components/swal/swal';
 import { consultarEmpresa } from '@/common/api/EmpresasApi';
 import LinearProgress from '@mui/material/LinearProgress';
 import { UserContext } from '@/context/userContext';
+import { consultarEmpresas } from '@/common/api/EmpresasApi';
 
 const LinearDeterminate = ({ progress, isProcessing }) => {
   if (!isProcessing) return null; // Oculta la barra si no está procesando
@@ -36,7 +40,6 @@ const LinearDeterminate = ({ progress, isProcessing }) => {
     </Box>
   );
 };
-
 
 const style = {
   position: 'absolute',
@@ -58,7 +61,6 @@ const MOTIVOS = [
   { codigo: 'O', descripcion: 'Otros' },
 ];
 
-
 const handleClearFilters = (apiRef) => {
   apiRef.current.setFilterModel({ items: [] });
 };
@@ -71,48 +73,47 @@ const crearNuevoRegistro = (props) => {
     volverPrimerPagina,
     showQuickFilter,
     themeWithLocale,
-    gridApiRef
+    gridApiRef,
   } = props;
-  
+
   const altaHandleClick = () => {
     //borro los filtros para que no genere un error
-    handleClearFilters(gridApiRef)
-  //Validar si hay un registro en Edicion
-    try{
+    handleClearFilters(gridApiRef);
+    //Validar si hay un registro en Edicion
+    try {
       if (rows) {
         const editRow = rows.find((row) => !row.id);
         if (typeof editRow === 'undefined' || editRow.id) {
           //console.log(editRow.id)
-          const newReg =     {
+          const newReg = {
             //"id": rows.indexOf(editRow),
-            "cuit": "",
-            "razonSocial": "",
+            cuit: '',
+            razonSocial: '',
             //"periodo_original": "2024-06-01",
-            "periodo_original": "",
-            "importe": 0.00,
-            "aporte": "ART46",
-            "motivo": "O",
-            "vigencia": "",
-            "boleta": null
-        };
+            periodo_original: '',
+            importe: 0.0,
+            aporte: 'ART46',
+            motivo: 'O',
+            vigencia: '',
+            boleta: null,
+          };
           //newReg.id = Date.now()
-          console.log(newReg)
+          console.log(newReg);
           volverPrimerPagina();
-  
+
           setRows((oldRows) => [newReg, ...oldRows]);
           //console.log(rows)
           //console.log(oldModel)
           setRowModesModel((oldModel) => ({
-            [0]: { mode: GridRowModes.Edit},//, fieldToFocus: 'name' },
+            [0]: { mode: GridRowModes.Edit }, //, fieldToFocus: 'name' },
             ...oldModel,
           }));
           //setRowModesModel((oldModel) => console.log(oldModel))
         }
       }
-    } catch(e) {
-      console.log(error)
+    } catch (e) {
+      console.log(error);
     }
-
   };
 
   return (
@@ -131,13 +132,18 @@ const crearNuevoRegistro = (props) => {
 export const Ajustes = () => {
   const gridApiRef = useGridApiRef();
 
-  console.log(gridApiRef)
+  console.log(gridApiRef);
   const [locale, setLocale] = useState('esES');
   const [rows, setRows] = useState([]);
   const [aportes, setAportes] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   const [progress, setProgress] = useState(0);
-  const [isProcessing, setIsProcessing] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [filtro, setFiltro] = useState({
+    cuit: null,
+  });
+  const [empresa, setEmpresa] = useState({ cuit: '', razonSocial: '' });
+  const [empresas, setEmpresas] = useState([]);
 
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
@@ -157,18 +163,25 @@ export const Ajustes = () => {
   );
 
   const ConsultarEntidad = async () => {
-    setProgress(25)
-    const data = await axiosAjustes.consultar();
-    setProgress(50)
+    setProgress(25);
+    console.log('ConsultarEntidad - filtro: ', filtro);
+    const data = await axiosAjustes.consultarCRUD(filtro.cuit);
+    setProgress(50);
     setRows(data);
   };
 
   const ConsultarAportes = async () => {
-    setProgress(75)
+    setProgress(75);
     const data = await axiosAjustes.consultarAportes();
     setAportes(data);
-    setProgress(100)
+    setProgress(100);
     //setIsProcessing(false)
+  };
+
+  const ConsultarEmpresas = async () => {
+    const empresas = await consultarEmpresas();
+    console.log('** ObtenerEmpresa - empresas: ', empresas);
+    setEmpresas(empresas);
   };
 
   useEffect(() => {
@@ -176,17 +189,40 @@ export const Ajustes = () => {
       try {
         setIsProcessing(true);
         setProgress(10);
-        await ConsultarEntidad();
+        await ConsultarEmpresas();
         await ConsultarAportes();
       } catch (error) {
-        console.error("Error al consultar datos:", error);
+        console.error('Error al consultar datos:', error);
       } finally {
         setIsProcessing(false);
       }
     };
-  
+
     fetchData();
   }, []);
+
+  /*
+   **************************************************************
+   **************************************************************
+   */
+  const handlerConsultar = async () => {
+    //setShowLoading(true);
+    try {
+      console.log('handlerConsultar - filtro:', filtro);
+      if (filtro.cuit == null) {
+        swal.showErrorBusiness('Debe indicar un CUIT');
+        return;
+      }
+
+      ConsultarEntidad();
+    } catch (error) {
+      console.error('Error al buscar declaraciones juradas:', error);
+    }
+  };
+  /*
+   **************************************************************
+   **************************************************************
+   */
 
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -255,25 +291,27 @@ export const Ajustes = () => {
     console.log('processRowUpdate - newRow:', newRow);
     if (!newRow.id) {
       try {
-        setProgress(0)
-        setIsProcessing(true)
+        setProgress(0);
+        setIsProcessing(true);
         const newRowCast = { ...newRow };
-        newRowCast.importe = parseFloat(String(newRowCast.importe).replace(',', '.'))
-         //parseInt(newRowCast.importe) >= 0
-          //  ? parseFloat(String(newRowCast.importe).replace(',', '.'))
-          //  : null;
-        setProgress(25)
+        newRowCast.importe = parseFloat(
+          String(newRowCast.importe).replace(',', '.'),
+        );
+        //parseInt(newRowCast.importe) >= 0
+        //  ? parseFloat(String(newRowCast.importe).replace(',', '.'))
+        //  : null;
+        setProgress(25);
         console.log('processRowUpdate - newRowCast  :', newRowCast);
         const data = await axiosAjustes.crear(newRowCast);
-        setProgress(50)
+        setProgress(50);
         if (data && data.id) {
           newRow.id = data.id;
         }
         bOk = true;
         const newRows = rows.map((row) => (!row.id ? newRow : row));
-        setProgress(75)
+        setProgress(75);
         setRows(newRows);
-        
+
         if (!(data && data.id)) {
           setTimeout(() => {
             setRowModesModel((oldModel) => ({
@@ -282,36 +320,38 @@ export const Ajustes = () => {
             }));
           }, 100);
         }
-        setProgress(100)
-        setIsProcessing(false)
+        setProgress(100);
+        setIsProcessing(false);
       } catch (error) {
         console.log(
           'X - processRowUpdate - ALTA - ERROR: ' + JSON.stringify(error),
         );
-        setProgress(100)
-        setIsProcessing(false)
+        setProgress(100);
+        setIsProcessing(false);
       }
     } else {
       try {
-        setProgress(0)
-        setIsProcessing(true)
+        setProgress(0);
+        setIsProcessing(true);
         const newRowCast = { ...newRow };
-        newRowCast.importe = parseFloat(String(newRowCast.importe).replace(',', '.'))
-          //parseInt(newRowCast.importe) >= 0
-          //  ? parseFloat(String(newRowCast.importe).replace(',', '.'))
-          //  : null;
-        setProgress(25)
+        newRowCast.importe = parseFloat(
+          String(newRowCast.importe).replace(',', '.'),
+        );
+        //parseInt(newRowCast.importe) >= 0
+        //  ? parseFloat(String(newRowCast.importe).replace(',', '.'))
+        //  : null;
+        setProgress(25);
         console.log('processRowUpdate - newRowCast  :', newRowCast);
 
         bOk = await axiosAjustes.actualizar(newRowCast);
-        setProgress(50)
+        setProgress(50);
         if (bOk) {
           const rowsNew = rows.map((row) =>
             row.id === newRow.id ? newRow : row,
           );
           setRows(rowsNew);
-          setProgress(100)
-          setIsProcessing(false)
+          setProgress(100);
+          setIsProcessing(false);
         }
         if (!bOk) {
           const indice = rows.indexOf(oldRow);
@@ -321,16 +361,16 @@ export const Ajustes = () => {
               ...oldModel,
             }));
           }, 100);
-          setProgress(100)
-          setIsProcessing(false)
+          setProgress(100);
+          setIsProcessing(false);
           return null;
         }
       } catch (error) {
         console.log(
           'X - processRowUpdate - MODI - ERROR: ' + JSON.stringify(error),
         );
-        setProgress(100)
-        setIsProcessing(false)
+        setProgress(100);
+        setIsProcessing(false);
       }
     }
 
@@ -613,6 +653,74 @@ export const Ajustes = () => {
       >
         Administración de Ajustes
       </h1>
+      <div>
+        <Stack
+          spacing={4}
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <div
+            style={{
+              height: '100px',
+              width: '550px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '8px',
+            }}
+          >
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={empresas}
+              key={(option) => option.id}
+              onChange={(event, value) => {
+                console.log('** onChange-value:', value);
+                setEmpresa(value);
+
+                setFiltro({ ...filtro, cuit: value?.cuit || null });
+              }}
+              value={empresa}
+              getOptionLabel={(reg) => reg.cuit}
+              sx={{ width: 190 }}
+              renderInput={(params) => <TextField {...params} label="CUIT" />}
+            />
+            -
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={empresas}
+              key={(option) => option.id}
+              onChange={(event, value) => {
+                console.log('value:', value);
+                setEmpresa(value);
+                setFiltro({ ...filtro, cuit: value?.cuit || null });
+              }}
+              value={empresa}
+              getOptionLabel={(reg) => reg.razonSocial}
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Razón Social" />
+              )}
+            />
+          </div>
+        </Stack>
+        <Stack
+          spacing={4}
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Button
+            onClick={handlerConsultar}
+            variant="contained"
+            style={{ marginLeft: '2em' }}
+          >
+            Buscar
+          </Button>
+        </Stack>
+      </div>
 
       <Box
         sx={{
@@ -654,7 +762,7 @@ export const Ajustes = () => {
                 showQuickFilter: true,
                 showColumnMenu: true,
                 themeWithLocale,
-                gridApiRef
+                gridApiRef,
               },
             }}
             paginationModel={paginationModel}

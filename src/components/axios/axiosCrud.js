@@ -14,7 +14,7 @@ export const axiosCrud = {
   },
 
   crearFormData: async function (UrlApi, oEntidad) {
-    return axiosCrearFormData(UrlApi, oEntidad)
+    return axiosCrearFormData(UrlApi, oEntidad);
   },
 
   actualizar: async function (UrlApi, oEntidad) {
@@ -76,9 +76,11 @@ export const axiosCrear = async (UrlApi, oEntidad) => {
 
 export const axiosCrearFormData = async (UrlApi, oEntidad) => {
   try {
-    const response = await oAxios.post(UrlApi, oEntidad, {headers: {
-      'Content-Type': 'multipart/form-data'
-    }});
+    const response = await oAxios.post(UrlApi, oEntidad, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     if (response.status !== 201 && response.status !== 200) {
       console.log(
         `axiosCrud.crear() - ERROR 2 - UrlApi: ${UrlApi} - response.status !== 201 - response: ${JSON.stringify(
@@ -103,14 +105,15 @@ export const axiosCrearFormData = async (UrlApi, oEntidad) => {
 };
 
 export const axiosCrearN = async (UrlApi, oEntidad) => {
-  try { 
+  try {
     var auxEntidad = oEntidad;
     if (!oEntidad) {
       auxEntidad = {};
     }
     const response = await oAxios.post(UrlApi, auxEntidad);
     //const response = await oAxios.post(UrlApi, oEntidad);
-    //console.log(response.status);
+    console.log('axiosCrearN - response: ', response.status);
+
     if (response && response.status && response.status == 204) {
       return true;
     }
@@ -128,6 +131,9 @@ export const axiosCrearN = async (UrlApi, oEntidad) => {
       console.log(
         'axiosCrud.axiosCrearN() - catch() - error: ' + JSON.stringify(error),
       );
+      if (error && error.code && error.code == 'ECONNABORTED') {
+        return error;
+      }
     }
     return false;
   }

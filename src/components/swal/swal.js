@@ -25,13 +25,12 @@ const showSwallSuccessWithConfirmButton = (MESSAGE_HTTP, redirectFunction) => {
   });
 };
 
-
 const showSwallSuccessWithGenericConfirmButton = (MESSAGE_HTTP) => {
   Swal.fire({
     icon: 'success',
     title: MESSAGE_HTTP,
     showConfirmButton: true,
-  })
+  });
 };
 
 const showSwalError = (descripcion) => {
@@ -133,7 +132,6 @@ const showErrorBackEnd = async (HTTP_MSG, rta) => {
 
   try {
     console.log('showErrorBackEnd - rta:', rta);
-
     if (
       rta.request &&
       rta.request.responseType &&
@@ -170,7 +168,13 @@ const showErrorBackEnd = async (HTTP_MSG, rta) => {
     } else {
       console.log('* showErrorBackEnd - NOOO ticket');
       console.log(rta);
-      showSwalError(HTTP_MSG);
+      if (rta.code && rta.code == 'ECONNABORTED') {
+        showSwalError(
+          'Error de TimeOut en el Servidor.<br>Por favor realice alguna de las siguientes acciones:<br><br>1)Si intentó registrar información: consulte los datos para verificar el estado y vuelva a intentar la accción de ser necesario.<br>2)Si intentó consultar información: por favor filtre la consulta.',
+        );
+      } else {
+        showSwalError(HTTP_MSG);
+      }
     }
   } catch (error) {
     console.log('showErrorBackEnd - catch() - error: ', error);
@@ -202,8 +206,8 @@ const swal = {
     return showErrorBackEnd(HTTP_MSG, rta);
   },
 
-  showSuccesGenericConfirmButton: async function(descripcion) {
-    return showSwallSuccessWithGenericConfirmButton(descripcion)
+  showSuccesGenericConfirmButton: async function (descripcion) {
+    return showSwallSuccessWithGenericConfirmButton(descripcion);
   },
 
   getSettingConfirm: function (seteos) {

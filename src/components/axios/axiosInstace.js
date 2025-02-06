@@ -47,43 +47,46 @@ oAxios.interceptors.response.use(
 
     console.log('originalRequest:', originalRequest);
 
-    if (error.response.status && error.response.status == 401) {
-      console.log(
-        '** oAxios.interceptors.response - HTTP-ERROR 401 - ERROR AUTH ',
-      );
-
-      let rta = await execTokenRefresh();
-      console.log('execTokenRefresh - rta:', rta);
-      if (rta) {
-        rta = await execOriginalRequest(originalRequest);
-        console.log('execOriginalRequest - rta:', rta);
-        return rta;
-      }
-      console.log('oAxios.interceptors.response - GO LOGIN');
-      window.location.href = '/';
-      return error;
-    }
-
-    if (error.response.status == 404) {
-      console.log('** oAxios.interceptors - RESPONSE - HTTP - ERROR 404');
-      if (error.response.config.url) {
+    if (error.response) {
+      if (error.response.status && error.response.status == 401) {
         console.log(
-          '- URL INCORRECTA: ' +
-            error.response.config.url +
-            '. verificar que el Backend este activo',
+          '** oAxios.interceptors.response - HTTP-ERROR 401 - ERROR AUTH ',
+        );
+
+        let rta = await execTokenRefresh();
+        console.log('execTokenRefresh - rta:', rta);
+        if (rta) {
+          rta = await execOriginalRequest(originalRequest);
+          console.log('execOriginalRequest - rta:', rta);
+          return rta;
+        }
+        console.log('oAxios.interceptors.response - GO LOGIN');
+        window.location.href = '/';
+        return error;
+      }
+
+      if (error.response.status == 404) {
+        console.log('** oAxios.interceptors - RESPONSE - HTTP - ERROR 404');
+        if (error.response.config.url) {
+          console.log(
+            '- URL INCORRECTA: ' +
+              error.response.config.url +
+              '. verificar que el Backend este activo',
+          );
+        }
+      }
+
+      if (error.response.data) {
+        const oJsonResponse = error.response.data;
+        console.log(
+          '** oAxios.interceptors - RESPONSE - HTTP - oJsonResponse:' +
+            JSON.stringify(oJsonResponse),
         );
       }
+
+      error.status = error.response.status;
     }
 
-    if (error.response && error.response.data) {
-      const oJsonResponse = error.response.data;
-      console.log(
-        '** oAxios.interceptors - RESPONSE - HTTP - oJsonResponse:' +
-          JSON.stringify(oJsonResponse),
-      );
-    }
-
-    error.status = error.response.status;
     console.log('*** Promise.reject(error) - OJOOO !!! ');
     return Promise.reject(error);
   },

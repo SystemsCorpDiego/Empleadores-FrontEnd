@@ -17,7 +17,9 @@ export const axiosAjustes = {
   consultar: async function (UrlApi) {
     return consultar(UrlApi);
   },
-
+  consultarCRUD: async function (UrlApi) {
+    return consultarCRUD(UrlApi);
+  },
   crear: async function (oEntidad) {
     return crear(oEntidad);
   },
@@ -42,6 +44,20 @@ export const consultar = async () => {
   } catch (error) {
     swal.showErrorBackEnd(
       HTTP_MSG_CONSUL_ERROR + ` (${URL_ENTITY} - status: ${error.status})`,
+      error,
+    );
+    return [];
+  }
+};
+
+export const consultarCRUD = async (cuit) => {
+  try {
+    const url = URL_ENTITY + '/crud/cuit/' + cuit;
+    const data = await axiosCrud.consultar(url);
+    return data || [];
+  } catch (error) {
+    swal.showErrorBackEnd(
+      HTTP_MSG_CONSUL_ERROR + ` (${url} - status: ${error.status})`,
       error,
     );
     return [];
