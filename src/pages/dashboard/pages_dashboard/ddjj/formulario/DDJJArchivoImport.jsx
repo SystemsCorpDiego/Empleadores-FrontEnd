@@ -123,10 +123,33 @@ export const DDJJArchivoImport = ({
 
   const readFile = (e) => {
     const data = new Uint8Array(e.target.result);
+    console.log('readFile - data:', data);
+
     const workbook = XLSX.read(data, { type: 'array' });
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
-    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+    /*
+         assign number formats 
+    ws["B2"].z = '"$"#,##0.00_);\\("$"#,##0.00\\)';
+    ws["B3"].z = '#,##0';
+    ws["B4"].z = "0.00%";
+    
+    
+    var ref = XLSX.utils.decode_range(sheet['!ref']);
+    for (var R = 0; R <= ref.e.r; ++R) {
+      var addr = XLSX.utils.encode_cell({ r: R, c: 7 });
+      sheet[addr].s = { numFmt: '#.##0' };
+      var addr2 = XLSX.utils.encode_cell({ r: R, c: 8 });
+      sheet[addr2].s = { numFmt: '#.##0' };
+    }
+    */
+
+    const rows = XLSX.utils.sheet_to_json(sheet, {
+      header: 1,
+      //rawNumbers: true,
+      //raw: false,
+    });
 
     //Elimino rows en blanco
     console.log('readFile - rows:', rows);

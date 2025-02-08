@@ -3,18 +3,25 @@ import NavBar from '@/components/navbar/NavBar';
 import './RecuperarClave.css';
 import { Button, TextField } from '@mui/material';
 import { useState } from 'react';
-import { recuperarClave } from './RecuperarClaveApi';
+import { recuperarClave, recuperarClaveByUsuario } from './RecuperarClaveApi';
 
 export const RecuperarClave = () => {
-  const [email, setEmail] = useState('');
+  const valorRecuperacion = 'USUARIO'; // 'MAIL'
+  const [valor, setValor] = useState('');
+  const [mailEnvio, setMailEnvio] = useState('');
   const [error, setError] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-    setError(!validateEmail(event.target.value));
+  const handleValorChange = (event) => {
+    console.log('handleValorChange - INIT');
+    setValor(event.target.value);
+    console.log('handleValorChange - event.target.value:', event.target.value);
+    if (valorRecuperacion == 'MAIL') {
+      console.log('handleValorChange - validamail...');
+      setError(!validateEmail(event.target.value));
+    }
   };
 
   const validateEmail = (email) => {
@@ -22,16 +29,59 @@ export const RecuperarClave = () => {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (validateEmail(email)) {
-      const OK = await recuperarClave(email);
-      if (OK) {
-        setEmail('');
-        setSubmitted(true);
-      }
+    if (valorRecuperacion == 'MAIL') {
+      console.log('handleSubmit -> handleSubmitMail ');
+      handleSubmitMail(event);
     } else {
-      console.log('Email incorrecto');
+      console.log('handleSubmit -> handleSubmitUsuario ');
+      handleSubmitUsuario(event);
     }
+  };
+
+  const handleSubmitMail = async (event) => {
+    event.preventDefault();
+    if (!validateEmail(valor)) {
+      console.log('Email incorrecto');
+      return false;
+    }
+    const OK = await recuperarClave(valor);
+    if (OK) {
+      setValor('');
+      setSubmitted(true);
+    }
+  };
+
+  const handleSubmitUsuario = async (event) => {
+    event.preventDefault();
+    const dto = await recuperarClaveByUsuario(valor);
+    if (dto) {
+      setMailEnvio(dto.mail);
+      setValor('');
+      setSubmitted(true);
+    }
+  };
+
+  const textoMailEnvio = () => {
+    if (valorRecuperacion == 'USUARIO' && mailEnvio != '') {
+      return ` ( a ${mailEnvio}) `;
+    }
+    return '';
+  };
+  const textoValorAIngresar = () => {
+    if (valorRecuperacion == 'USUARIO') {
+      return 'el Usuario';
+    }
+    return 'el correo electrónico';
+  };
+  const TextFieldType = () => {
+    if (valorRecuperacion == 'USUARIO') return 'text';
+
+    return 'email';
+  };
+  const TextFieldLable = () => {
+    if (valorRecuperacion == 'USUARIO') return 'Usuario';
+
+    return 'Email';
   };
 
   return (
@@ -59,8 +109,8 @@ export const RecuperarClave = () => {
                 </h1>
                 <h3>
                   Si encontramos una cuenta de usuario, te enviaremos un correo
-                  electrónico con más información acerca de cómo restablecer tu
-                  contraseña.
+                  electrónico {textoMailEnvio()}con más información acerca de
+                  cómo restablecer tu contraseña.
                 </h3>
                 <Button
                   variant="contained"
@@ -80,20 +130,20 @@ export const RecuperarClave = () => {
                 <form onSubmit={handleSubmit}>
                   <h1>¿Olvidaste tu contraseña?</h1>
                   <h3>
-                    Escribe el correo electrónico con el cuál te registraste y
+                    Escribe {textoValorAIngresar()} con el cuál te registraste y
                     te enviaremos las instrucciones de restablecimiento.
                   </h3>
                   <div className="input_group_recupero">
                     <TextField
                       error={error}
                       helperText={error ? 'Correo electrónico incorrecto' : ''}
-                      type="email"
-                      name="email"
-                      id="email"
+                      type={TextFieldType()}
+                      name={TextFieldLable()}
+                      id={TextFieldLable()}
                       autoComplete="off"
-                      label="Email"
-                      value={email}
-                      onChange={handleEmailChange}
+                      label={TextFieldLable()}
+                      value={valor}
+                      onChange={handleValorChange}
                     />
                   </div>
                   <Button
@@ -104,7 +154,7 @@ export const RecuperarClave = () => {
                       alignSelf: 'flex-start',
                     }}
                     // deshabilitar el botón si el email no es válido y si no se ha ingresado nada
-                    disabled={!email || error}
+                    disabled={!valor || error}
                     type="submit"
                   >
                     Enviar
