@@ -10,7 +10,7 @@ import { Box } from '@mui/system';
 import Grid from '@mui/material/Grid';
 import Autocomplete from '@mui/material/Autocomplete';
 import { consultarEmpresas } from '@/common/api/EmpresasApi';
-
+import { ThreeCircles } from 'react-loader-spinner';
 import TextField from '@mui/material/TextField';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
@@ -34,6 +34,7 @@ export const BoletaEmpleadoFiltro = () => {
   const [aportes, setAportes] = useState([]);
   const [formasPago, setFormasPago] = useState([]);
   const [entidades, setEntidades] = useState([]);
+  const [showLoading, setShowLoading] = useState(false)
 
   const handlerLimpiarFiltro = () => {
     setEmpresa(null);
@@ -49,6 +50,7 @@ export const BoletaEmpleadoFiltro = () => {
 
   const handlerConsultar = async () => {
     try {
+      setShowLoading(true)
       const filtroBack = { ...filtro };
 
       if (filtro.periodoDesde !== null) {
@@ -66,8 +68,10 @@ export const BoletaEmpleadoFiltro = () => {
       const ddjjResponse = await axiosBoletas.getBoletasEmpleado(filtroBack);
       console.log('handlerConsultar - ddjjResponse: ', ddjjResponse);
       setRows(ddjjResponse.con_ddjj);
+      setShowLoading(false)
     } catch (error) {
       console.error('Error al buscar declaraciones juradas:', error);
+      setShowLoading(false)
     }
   };
 
@@ -252,7 +256,20 @@ export const BoletaEmpleadoFiltro = () => {
             },
           }}
         >
-          <BoletasEmpleadoGrilla rowsGrilla={rows} />
+          {' '}
+          <ThreeCircles
+            visible={showLoading}
+            height="100"
+            width="100"
+            color="#1A76D2"
+            ariaLabel="three-circles-loading"
+            wrapperStyle={{
+              margin: '15%',
+              marginLeft: '50%',
+            }}
+            wrapperClass=""
+          />
+         {showLoading || <BoletasEmpleadoGrilla rowsGrilla={rows} />} 
         </Box>
       </Stack>
     </div>
