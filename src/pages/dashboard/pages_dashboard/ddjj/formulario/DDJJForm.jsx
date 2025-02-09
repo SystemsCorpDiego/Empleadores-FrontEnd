@@ -1086,7 +1086,7 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
     console.log('*useEffect - !habiModif:', !habiModif);
     console.log(
       'gridApiRef.current.getRowModels():',
-      gridApiRef.current.getRowModels(),
+   //   gridApiRef.current.getRowModels(),
     );
   }, [someRowInEditMode]);
   // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -1880,11 +1880,13 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
                 </Box>
               ) : (
                 <ThemeProvider theme={themeWithLocale}>
-                  <StripedDataGrid
+                   <StripedDataGrid
                     rows={rows || []}
                     columns={columns}
+                    disableColumnSelector
                     editMode="row"
                     filterModel={filterModel}
+                    onFilterModelChange={setFilterModel}
                     //sortModel={sortModel}
                     rowModesModel={rowModesModel}
                     onRowModesModelChange={(newRowModesModel) => {
@@ -1947,6 +1949,49 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
                     }}
                     getCellClassName={getCellClassName}
                   />
+                 {/* <StripedDataGrid
+                    apiRef={gridApiRef}
+                    rows={rows || []}
+                    getCellClassName={getCellClassName}
+                    filterModel={filterModel}
+                    onFilterModelChange={setFilterModel}
+                    columns={columns}
+                    editMode="row"
+                    rowModesModel={rowModesModel}
+                    onRowModesModelChange={(newRowModesModel) => {
+                      console.log('onRowModesModelChange:', newRowModesModel);
+                      useGridCrud.handleRowModesModelChange(newRowModesModel);
+                      setDdjjModi(true);
+                    }}
+                    onRowEditStop={(params) => {
+                      console.log('onRowEditStop:', params);
+                      useGridCrud.handleRowEditStop(gridApiRef, params);
+                    }}
+                    processRowUpdate={(newRow) => {
+                      console.log('processRowUpdate:', newRow);
+                      setDdjjModi(true);
+                      return useGridCrud.processRowUpdate(ddjjCabe, newRow);
+                    }}
+                    onProcessRowUpdateError={(error) => {
+                      console.error('onProcessRowUpdateError:', error);
+                      useGridCrud.onProcessRowUpdateError(error);
+                    }}
+                    slots={{
+                      toolbar: EditToolbar,
+                    }}
+                    slotProps={{
+                      toolbar: {
+                        setRows,
+                        rows,
+                        setRowModesModel,
+                        showQuickFilter: true,
+                        themeWithLocale,
+                        filtrarGrilla,
+                        gridApiRef,
+                        setSortModel,
+                      },
+                    }}
+                  /> */}
                 </ThemeProvider>
               )}
               <div
