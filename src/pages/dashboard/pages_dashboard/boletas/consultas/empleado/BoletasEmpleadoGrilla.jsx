@@ -71,6 +71,7 @@ export const BoletasEmpleadoGrilla = ({ rowsGrilla }) => {
             <>
               <IconButton
                 size="small"
+                title="Imprimir"
                 onClick={() => {
                   boletaPdfDownload(params.row.empresaId, params.row.id);
                 }}
