@@ -41,7 +41,7 @@ import UOMA from '../../assets/Logos_PNG_azul/UOMA_AZUL.png';
 import { width } from '@mui/system';
 import Hidden from '@mui/material/Hidden';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-
+import { useMediaQuery } from "@mui/material";
 
 const drawerWidth = 250;
 
@@ -98,7 +98,7 @@ const DashboardPage = () => {
   const rol = localStorageService.getRol();
   const [showModal, setShowModal] = useState(false);
   const nombre = localStorageService.getNombre();
-
+  const isLargeScreen = useMediaQuery("(min-width:1045px)");
 
 
   useEffect(() => {
@@ -377,9 +377,10 @@ const DashboardPage = () => {
             paddingRight: 80,
           }}
         >
-          <Hidden smDown>
-            <h1 className="title">Portal empleadores UOMA</h1>
-          </Hidden>
+                    <>
+      {isLargeScreen && <h1  className='title'
+>Portal empleadores UOMA</h1>}
+    </>
           <div
             style={{
               display: 'flex',

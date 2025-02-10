@@ -76,7 +76,7 @@ export const GrillaPeriodo  = ({ boletas, selectedBoletas, setSelectedBoletas })
           },
           {
             field: 'interes',
-            headerName: 'Interes',
+            headerName: 'Intereses',
             flex: 1,
             align: 'right',
             valueFormatter: (params) => {

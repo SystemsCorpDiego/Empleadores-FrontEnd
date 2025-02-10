@@ -6,13 +6,14 @@ import AMTIMA from '../../assets/Logos_PNG_azul/AMTIMA_AZUL.png'
 import OSPIM from '../../assets/Logos_PNG_azul/OSPIM_AZUL.png'
 import UOMA from '../../assets/Logos_PNG_azul/UOMA_AZUL.png'
 import Hidden from '@mui/material/Hidden';
+import { useMediaQuery } from "@mui/material";
 
 import './NavBar.css';
 
 const NavBar = ({ estilos, estilosLogo, mostrarBtn }) => {
   const { state } = useLocation();
   const navigate = useNavigate();
-
+  const isLargeScreen = useMediaQuery("(min-width:1045px)");
   if (state) localStorage.setItem('stateLogin', JSON.stringify(state));
 
   const login = () => {
@@ -23,9 +24,9 @@ const NavBar = ({ estilos, estilosLogo, mostrarBtn }) => {
     <div style={estilos}>
       <header>
           <div>
-            <Hidden smDown>
-            <h1>Portal empleadores UOMA</h1>
-            </Hidden>
+          <>
+      {isLargeScreen && <h1>Portal empleadores UOMA</h1>}
+    </>
           </div>
         {mostrarBtn ? (
           <ButtonOutlinedComponent name={'Iniciar Sesión'} onClick={login} />

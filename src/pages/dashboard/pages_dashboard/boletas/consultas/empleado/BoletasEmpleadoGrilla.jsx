@@ -71,6 +71,7 @@ export const BoletasEmpleadoGrilla = ({ rowsGrilla }) => {
             <>
               <IconButton
                 size="small"
+                title="Imprimir"
                 onClick={() => {
                   console.log('params.row:', params.row);
 
