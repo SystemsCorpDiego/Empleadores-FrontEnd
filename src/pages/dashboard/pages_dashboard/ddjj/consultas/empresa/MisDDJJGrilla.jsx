@@ -221,7 +221,7 @@ export const MisDDJJGrilla = ({ rows, setRows, handlerDDJJEditar }) => {
               label="Print"
               color="inherit"
               title="Imprimir"
-              onClick={() => handleImprimirDDJJ(id)}
+              onClick={() => handleImprimirDDJJ(row)}
             />,
           ];
         } else {

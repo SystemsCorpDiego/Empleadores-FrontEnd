@@ -269,6 +269,13 @@ export const DDJJArchivoImport = ({
       reg[index2] = castearFloat(reg[index2]);
 
       /*
+      index2 = vecRowTitulos.indexOf(VC_APE);
+      if (reg[index2] != null) reg[index2] = reg[index2].toUpperCase();
+
+      index2 = vecRowTitulos.indexOf(VC_NOM);
+      if (reg[index2] != null) reg[index2] = reg[index2].toUpperCase();
+*/
+      /*
       index2 = vecRowTitulos.indexOf(VC_SINDICAL);
       reg[index2] = castearBoolean(reg[index2]);
 
