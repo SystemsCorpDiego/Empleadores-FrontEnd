@@ -294,6 +294,11 @@ export const Boletas = () => {
                     flex: 0.8,
                   },
                   {
+                    field: 'estadoBep',
+                    headerName: 'Bep',
+                    flex: 0.8,
+                  },
+                  {
                     field: 'acciones',
                     headerName: 'Acciones',
                     flex: 1,
