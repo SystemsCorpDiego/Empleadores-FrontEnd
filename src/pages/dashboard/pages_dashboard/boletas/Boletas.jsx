@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useMemo } from 'react';
-import { TextField, Button, IconButton, Box } from '@mui/material';
+import { Tooltip, TextField, Button, IconButton, Box } from '@mui/material';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 
 import {
@@ -310,7 +310,9 @@ export const Boletas = () => {
                               size="small"
                               onClick={() => handleViewClick(params.row)}
                             >
-                              <VisibilityIcon />
+                              <Tooltip id="button-report" title="Ver">
+                                <VisibilityIcon />
+                              </Tooltip>
                             </IconButton>
                           </>
                         );
@@ -321,14 +323,24 @@ export const Boletas = () => {
                           <>
                             <IconButton
                               size="small"
-                              onClick={() => handleViewClick(params.row)}
+                              onClick={() => handleGenerarBepClick(params.row)}
                             >
-                              <VisibilityIcon />
+                              <Tooltip id="button-bep" title="Generar BEP">
+                                <RequestQuoteIcon />
+                              </Tooltip>
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleViewClick(params.row)}
+                              disabled={!!params.row.fecha_de_pago}
+                            >
+                              <Tooltip id="button-pdf" title="Editar">
+                                <EditIcon />
+                              </Tooltip>
                             </IconButton>
                             <IconButton
                               size="small"
                               onClick={() => {
-                                console.log('xxx params.row: ', params.row);
                                 boletaPdfDownload(
                                   ID_EMPRESA,
                                   params.row.id,
@@ -336,20 +348,18 @@ export const Boletas = () => {
                                 );
                               }}
                             >
-                              <PrintIcon />
+                              <Tooltip id="button-pdf" title="Imprimir">
+                                <PrintIcon />
+                              </Tooltip>
                             </IconButton>
+
                             <IconButton
                               size="small"
                               onClick={() => handleViewClick(params.row)}
-                              disabled={!!params.row.fecha_de_pago}
                             >
-                              <EditIcon />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              onClick={() => handleGenerarBepClick(params.row)}
-                            >
-                              <RequestQuoteIcon />
+                              <Tooltip id="button-report" title="Ver">
+                                <VisibilityIcon />
+                              </Tooltip>
                             </IconButton>
                           </>
                         );
@@ -359,13 +369,16 @@ export const Boletas = () => {
                           <IconButton
                             size="small"
                             onClick={() => handleViewClick(params.row)}
+                            disabled={!!params.row.fecha_de_pago}
                           >
-                            <VisibilityIcon />
+                            <Tooltip id="button-pdf" title="Editar">
+                              <EditIcon />
+                            </Tooltip>
                           </IconButton>
+
                           <IconButton
                             size="small"
                             onClick={() => {
-                              console.log('xxx params.row: ', params.row);
                               boletaPdfDownload(
                                 ID_EMPRESA,
                                 params.row.id,
@@ -373,14 +386,18 @@ export const Boletas = () => {
                               );
                             }}
                           >
-                            <PrintIcon />
+                            <Tooltip id="button-pdf" title="Imprimir">
+                              <PrintIcon />
+                            </Tooltip>
                           </IconButton>
+
                           <IconButton
                             size="small"
                             onClick={() => handleViewClick(params.row)}
-                            disabled={!!params.row.fecha_de_pago}
                           >
-                            <EditIcon />
+                            <Tooltip id="button-report" title="Ver">
+                              <VisibilityIcon />
+                            </Tooltip>
                           </IconButton>
                         </>
                       );
@@ -489,7 +506,9 @@ export const Boletas = () => {
                             );
                           }}
                         >
-                          <PrintIcon />
+                          <Tooltip id="button-pdf" title="Imprimir">
+                            <PrintIcon />
+                          </Tooltip>
                         </IconButton>
                       </>
                     ),
