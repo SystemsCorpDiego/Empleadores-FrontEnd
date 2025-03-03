@@ -7,24 +7,26 @@ const HTTP_MSG_MODI = import.meta.env.VITE_HTTP_MSG_MODI;
 const HTTP_MSG_MODI_ERROR = import.meta.env.VITE_HTTP_MSG_MODI_ERROR;
 
 const emuRespuesta = {
-  boletas: [
+  declaracionesJuradas: [
     {
-      id: 97,
+      id: 1233,
       periodo: '2024-04-01',
-      numero_boleta: 10,
-      concepto: 'Cuota Social',
-      totalConcepto: 20.0,
+      rectificativa: 10,
+      aporteCodigo: 'Cuota Social',
+      aporteDescripcion: '',
+      importe: 20.0,
       interes: 176.8,
-      total_final: 196.8,
+      importeTotal: 196.8,
     },
     {
-      id: 98,
+      id: 9312,
       periodo: '2024-04-01',
-      numero_boleta: 10,
-      concepto: 'Cuota Social',
-      totalConcepto: 20.0,
+      rectificativa: 10,
+      aporteCodigo: 'UOMACS',
+      aporteDescripcion: 'Cuota Social UOMA',
+      importe: 20.0,
       interes: 176.8,
-      total_final: 196.8,
+      importeTotal: 196.8
     },
   ],
   actas: [
@@ -319,10 +321,11 @@ const bodyConvenio = {
   usarSaldoAFavor: true,
 };
 
-export const getBoletas = async (empresa_id, entidad) => {
+export const getDeclaracionesJuradas = async (empresa_id, entidad) => {
   try {
     const URL = `/empresa/${empresa_id}/boletas/gestion-deuda/${entidad}`;
     //const response = axiosCrud.consultar(URL);
+    console.log('Llegamos a esta parte')
     //return response;
     switch (entidad) {
       case 'AMTIMA':
@@ -391,6 +394,6 @@ export const generarConvenio = async (empresa_id, body) => {
 };
 
 export const axiosGestionDeudas = {
-  getBoletas,
+  getDeclaracionesJuradas,
   getDetalleConvenio,
 };

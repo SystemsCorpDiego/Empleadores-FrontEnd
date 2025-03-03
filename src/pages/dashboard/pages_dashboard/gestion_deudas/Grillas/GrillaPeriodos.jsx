@@ -12,12 +12,12 @@ import {
 import './Grilla.css'
 
 
-export const GrillaPeriodo  = ({ boletas, selectedBoletas, setSelectedBoletas }) =>{
+export const GrillaPeriodo  = ({ declaracionesJuradas, selectedDeclaracionesJuradas, setSelectedDeclaracionesJuradas }) =>{
     const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
 
     const handleSelectionChange = (id) => {
-      setSelectedBoletas((prevSelected) => {
+      setSelectedDeclaracionesJuradas((prevSelected) => {
         console.log(prevSelected)
         if (prevSelected.includes(id)) {
           return prevSelected.filter((selectedId) => selectedId !== id);
@@ -38,7 +38,7 @@ export const GrillaPeriodo  = ({ boletas, selectedBoletas, setSelectedBoletas })
       }}
     >
       <DataGrid
-        rows={boletas? boletas : []}
+        rows={declaracionesJuradas? declaracionesJuradas : []}
         columns={[
             {
                 field: 'selection',
@@ -46,7 +46,7 @@ export const GrillaPeriodo  = ({ boletas, selectedBoletas, setSelectedBoletas })
                 renderCell: (params) =>{
                   return (
                     <Checkbox
-                      checked={selectedBoletas.includes(params.id) }
+                      checked={selectedDeclaracionesJuradas.includes(params.id) }
                       onChange={() => handleSelectionChange(params.id)}
                     />
                   )
@@ -63,11 +63,12 @@ export const GrillaPeriodo  = ({ boletas, selectedBoletas, setSelectedBoletas })
               formatter.periodoString(params.value),
           },
           
-          { field: 'numero_boleta', headerName: 'Número', flex: 0.8 },
-          { field: 'concepto', headerName: 'Concepto', flex: 1 },
+          { field: 'rectificativa', headerName: 'Rectificativa', flex: 0.8 },
+          { field: 'aporteCodigo', headerName: 'Codigo Aporte', flex: 1 },
+          { field: 'aporteDescripcion', headerName: 'Descripción Aporte', flex: 1 },
           {
-            field: 'totalConcepto',
-            headerName: 'Total Concepto',
+            field: 'importe',
+            headerName: 'Importe',
             flex: 1,
             align: 'right',
             valueFormatter: (params) => {
@@ -84,7 +85,7 @@ export const GrillaPeriodo  = ({ boletas, selectedBoletas, setSelectedBoletas })
             },
           },
           {
-            field: 'total_final',
+            field: 'importeTotal',
             headerName: 'Importe Boleta',
             flex: 1,
             align: 'right',
@@ -95,7 +96,7 @@ export const GrillaPeriodo  = ({ boletas, selectedBoletas, setSelectedBoletas })
 
         ]}
         getRowClassName={(params) =>
-          boletas.indexOf(params.row) % 2 === 0 ? 'even' : ''
+          declaracionesJuradas.indexOf(params.row) % 2 === 0 ? 'even' : ''
         }
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}

@@ -1,5 +1,5 @@
 import * as locales from '@mui/material/locale';
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -10,6 +10,8 @@ import {
   createTheme,
 } from '@mui/material';
 import { StripedDataGrid, dataGridStyle } from '@/common/dataGridStyle';
+import EditIcon from '@mui/icons-material/Edit';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import {
   GridRowModes,
   DataGrid,
@@ -23,6 +25,7 @@ import './Convenios.css';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
 import { UserContext } from '@/context/userContext';
 import AddIcon from '@mui/icons-material/Add';
+import { useNavigate } from 'react-router-dom';
 
 // Datos de ejemplo para el DataGrid
 const conveniosData = [
@@ -68,29 +71,7 @@ const conveniosData = [
 ];
 
 // Columnas del DataGrid
-const columnas = [
-  { field: 'fecha', headerName: 'Fecha', width: 120 },
-  { field: 'numero', headerName: 'N°', width: 40, align: 'right' },
-  { field: 'deuda', headerName: 'Deuda Orig', width: 120, align: 'right'},
-  { field: 'interes', headerName: 'Intereses Financ.', width: 120, align: 'right' },
-  { field: 'saldo', headerName: 'Sdo a Favor utilizado', width: 120, align: 'right' },
-  { field: 'total', headerName: 'Total Convenio', width: 150, align: 'right' },
-  { field: 'cuotas', headerName: 'Cant. Cuotas', width: 80, align: 'right' },
-  { field: 'medioPago', headerName: 'Medio Pago', width: 120 },
-  { field: 'cheque', headerName: 'N° Cheque', width: 120 },
-  { field: 'estado', headerName: 'Estado', width: 150 },
-  {
-    field: 'acciones',
-    headerName: 'Acciones',
-    width: 100,
-    renderCell: () => (
-      <IconButton color="primary">
-        <DownloadIcon />
-      </IconButton>
-    ),
-    sortable: false,
-  },
-];
+
 
 const crearNuevoRegistro = (props) => {
   const {
@@ -102,29 +83,13 @@ const crearNuevoRegistro = (props) => {
     themeWithLocale,
   } = props;
 
-  const altaHandleClick = () => {
-    if (rows) {
-      const editRow = rows.find((row) => !row.id);
-      if (typeof editRow === 'undefined' || editRow.id) {
-        const newReg = { descripcion: '' };
-        volverPrimerPagina();
-        setRows((oldRows) => [newReg, ...oldRows]);
-        setRowModesModel((oldModel) => ({
-          [0]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-          ...oldModel,
-        }));
-      }
-    }
-  };
 
   return (
     <GridToolbarContainer
       theme={themeWithLocale}
       style={{ display: 'flex', justifyContent: 'space-between' }}
     >
-      <Button color="primary" startIcon={<AddIcon />} onClick={altaHandleClick}>
-        Nuevo Registro
-      </Button>
+
       <GridToolbar showQuickFilter={showQuickFilter} />
     </GridToolbarContainer>
   );
@@ -132,6 +97,7 @@ const crearNuevoRegistro = (props) => {
 
 export const Convenios = () => {
   const [locale, setLocale] = useState('esES');
+  const navigate = useNavigate();
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   const { paginationModel, setPaginationModel, pageSizeOptions } =
@@ -141,6 +107,53 @@ export const Convenios = () => {
     () => createTheme(theme, locales[locale]),
     [locale, theme],
   );
+
+  const columnas = [
+    { field: 'fecha', headerName: 'Fecha', width: 120 },
+    { field: 'numero', headerName: 'N°', width: 40, align: 'right' },
+    { field: 'deuda', headerName: 'Deuda Orig', width: 120, align: 'right'},
+    { field: 'interes', headerName: 'Intereses Financ.', width: 120, align: 'right' },
+    { field: 'saldo', headerName: 'Sdo a Favor utilizado', width: 120, align: 'right' },
+    { field: 'total', headerName: 'Total Convenio', width: 150, align: 'right' },
+    { field: 'cuotas', headerName: 'Cant. Cuotas', width: 80, align: 'right' },
+    { field: 'medioPago', headerName: 'Medio Pago', width: 120 },
+    { field: 'cheque', headerName: 'N° Cheque', width: 120 },
+    { field: 'estado', headerName: 'Estado', width: 150 },
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      type:'actions',
+      width: 150,
+      getActions: ({ row }) => [
+        <GridActionsCellItem
+          icon={<DownloadIcon />}
+          label="Download"
+          sx={{ color: 'primary.main' }}
+          onClick={() => console.log(row)}
+        />,
+        <GridActionsCellItem
+          icon={<EditIcon />}
+          label="Editar"
+          sx={{ color: 'primary.main' }}
+          onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}`)}
+          color="inherit"
+        />,
+        <GridActionsCellItem
+          icon={<AccountBalanceWalletIcon />}
+          label="Editar"
+          sx={{ color: 'primary.main' }}
+          onClick={() => handleCancelClick(row)}
+          color="inherit"
+        />
+      ],
+      sortable: false,
+    }
+  ];
+
+  useEffect(()=> setRows(conveniosData),[])
+  const handleCancelClick = (row) => {
+    console.log("Acción cancelada para:", row);
+  };
 
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
@@ -204,9 +217,8 @@ export const Convenios = () => {
         <Box sx={{ height: 450, width: '100%' }}>
           <ThemeProvider theme={themeWithLocale}>
             <StripedDataGrid
-              rows={conveniosData}
+              rows={rows}
               columns={columnas}
-              
               getRowClassName={(params) =>
                 rows.indexOf(params.row) % 2 === 0 ? 'even' : 'odd'
               }
