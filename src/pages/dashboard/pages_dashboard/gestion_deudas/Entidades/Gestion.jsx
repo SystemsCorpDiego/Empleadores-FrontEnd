@@ -47,9 +47,9 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   const [actas, setActas] = useState([]); //Se usa para guardar las actas que vienen del backend
   const [selectedActas, setSelectedActas] = useState([]); //Se usa para guardar los ids de las actas seleccionadas
   const [totalActas, setTotalActas] = useState(0); //Se usa para mostrar en la cabecera del acordion
-  const [boletas, setBoletas] = useState([]); //Se usa para guardar las boletas que vienen del backend
-  const [selectedBoletas, setSelectedBoletas] = useState([]); //Se usa para guardar los ids de las boletas seleccionadas
-  const [totalBoletas, setTotalBoletas] = useState(0); //Se usa para mostrar en la cabecera del acordion
+  const [declaracionesJuradas, setDeclaracionesJuradas] = useState([]); //Se usa para guardar las declaracionesJuradas que vienen del backend
+  const [selectedDeclaracionesJuradas, setSelectedDeclaracionesJuradas] = useState([]); //Se usa para guardar los ids de las declaracionesJuradas seleccionadas
+  const [totalDeclaracionesJuradas, setTotalDeclaracionesJuradas] = useState(0); //Se usa para mostrar en la cabecera del acordion
   const [convenios, setConvenios] = useState([]); //Se usa para guardar los convenios que vienen del backend
   const [totalConvenios, setTotalConvenios] = useState(0); //Se usa para mostrar en la cabecera del acordion
   const [isCheckedEstadoDeDeduda, setIsCheckedEstadoDeDeduda] = useState(true); //Se utiliza para tildar o destildar todas las rows
@@ -73,22 +73,22 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   }, []);
 
   useEffect(() => {
-    //TODO: cuando este evento se dispare se deben setear todas las selected boletas y todas las actas en sus
+    //TODO: cuando este evento se dispare se deben setear todas las selected declaracionesJuradas y todas las actas en sus
     // respectivos arreglos
     if (isCheckedEstadoDeDeduda) {
       const idsActas = actas.map((objeto) => objeto.id);
       setSelectedActas(idsActas);
-      const idsBoletas = boletas.map((objeto) => objeto.id);
-      setSelectedBoletas(idsBoletas);
+      const idsdeclaracionesJuradas = declaracionesJuradas.map((objeto) => objeto.id);
+      setSelectedDeclaracionesJuradas(idsdeclaracionesJuradas);
     } else {
       setSelectedActas([]);
-      setSelectedBoletas([]);
+      setSelectedDeclaracionesJuradas([]);
     }
   }, [isCheckedEstadoDeDeduda]);
 
   useEffect(() => {
     //
-  }, [selectedActas, selectedBoletas, fechaIntencion, noUsar]);
+  }, [selectedActas, selectedDeclaracionesJuradas, fechaIntencion, noUsar]);
 
   useEffect(() => {
     const ATotal = actas
@@ -99,12 +99,12 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   }, [selectedActas]);
 
   useEffect(() => {
-    const BTotal = boletas
-      .filter((item) => selectedBoletas.includes(item.id))
-      .reduce((acc, item) => (acc += item.total_final), 0);
+    const BTotal = declaracionesJuradas
+      .filter((item) => selectedDeclaracionesJuradas.includes(item.id))
+      .reduce((acc, item) => (acc += item.importeTotal), 0);
     console.log('Esto es lo que se tendria que imprimir', BTotal);
-    setTotalBoletas(BTotal);
-  }, [selectedBoletas]);
+    setTotalDeclaracionesJuradas(BTotal);
+  }, [selectedDeclaracionesJuradas]);
 
   useEffect(() => {
     const CTotal = convenios.reduce(
@@ -119,27 +119,30 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     try {
       console.log(ID_EMPRESA);
       console.log(ENTIDAD);
-      const response = await axiosGestionDeudas.getBoletas(
+      const response = await axiosGestionDeudas.getDeclaracionesJuradas(
         ID_EMPRESA,
         ENTIDAD,
       );
+      console.log(response)
       calcularDetalle();
 
-      console.log('axiosBoletas.getBoletasEmpresa - response:', response);
+      console.log('axiosdeclaracionesJuradas.getDeclaracionesJuradas - response:', response);
+      
+      console.log(response['declaracionesJuradas'])
 
-      setBoletas(response['boletas']);
+      setDeclaracionesJuradas(response['declaracionesJuradas']);
       setActas(response['actas']);
       setConvenios(response['convenios']);
 
       const idsActas = response['actas'].map((objeto) => objeto.id);
       setSelectedActas(idsActas);
 
-      const idsBoletas = response['boletas'].map((objeto) => objeto.id);
-      setSelectedBoletas(idsBoletas);
+      const idsdeclaracionesJuradas = response['declaracionesJuradas'].map((objeto) => objeto.id);
+      setSelectedDeclaracionesJuradas(idsdeclaracionesJuradas);
 
       //setSaldoAFavor(response['saldoAFavor']);
     } catch (error) {
-      console.error('Error al obtener las boletas: ', error);
+      console.error('Error al obtener las declaracionesJuradas: ', error);
     }
   };
 
@@ -148,7 +151,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       const body = {
         entidad: 'UOMA',
         actas: selectedActas,
-        boletas: selectedBoletas,
+        declaracionesJuradas: selectedDeclaracionesJuradas,
         convenios: convenios.map((convenio) => convenio.id),
         cuotas: 2,
         medioDePago: 'CHEQUE',
@@ -221,15 +224,15 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
                 Periodos
               </Typography>
               <Typography variant="h6" color="primary">
-                TOTAL: {formatter.currencyString(totalBoletas)}
+                TOTAL: {formatter.currencyString(totalDeclaracionesJuradas)}
               </Typography>
             </Box>
           </AccordionSummary>
           <AccordionDetails>
             <GrillaPeriodo
-              boletas={boletas}
-              selectedBoletas={selectedBoletas}
-              setSelectedBoletas={setSelectedBoletas}
+              declaracionesJuradas={declaracionesJuradas}
+              selectedDeclaracionesJuradas={selectedDeclaracionesJuradas}
+              setSelectedDeclaracionesJuradas={setSelectedDeclaracionesJuradas}
             />
           </AccordionDetails>
         </Accordion>

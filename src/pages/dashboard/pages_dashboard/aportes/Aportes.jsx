@@ -395,7 +395,7 @@ export const Aportes = () => {
       headerClassName: 'header--cell',
     },
     {
-      field: 'antiguedad',
+      field: 'camaraAntiguedad',
       headerName: 'Antigüedad',
       flex: 1,
       editable: true,

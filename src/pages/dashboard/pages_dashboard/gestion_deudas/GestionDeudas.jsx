@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Box } from '@mui/material';
 import localStorageService from '@/components/localStorage/localStorageService';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
@@ -7,6 +7,7 @@ import Tab from '@mui/material/Tab';
 import * as locales from '@mui/material/locale';
 import PropTypes from 'prop-types';
 import { Gestion } from './Entidades/Gestion'
+import { useParams } from "react-router-dom";
 
 import './GestionDeudas.css'
 
@@ -45,6 +46,7 @@ function a11yProps(index) {
 }
 
 export const GestionDeudas = () => {
+  const { id } = useParams();
   const ID_EMPRESA = localStorageService.getEmpresaId();
   const [tabState, setTabState] = useState(0);
   const theme = useTheme();
@@ -55,6 +57,7 @@ export const GestionDeudas = () => {
   );
   const handleChangeTabState = (event, value) => setTabState(value);
 
+  useEffect(()=>{console.log(id)},[])
 
   return (
     
