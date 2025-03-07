@@ -377,8 +377,8 @@ export const GenerarBoletas = () => {
                     >
                       {formasPago.map((reg) => {
                         if (
-                          boleta.codigo !== 'AMTIMACS' ||
-                          reg.codigo != 'PMCUENTAS'
+                          'AMTIMACS' !== boleta.codigo ||
+                          'PMCUENTAS' !== reg.codigo
                         ) {
                           return (
                             <MenuItem key={reg.codigo} value={reg.codigo}>

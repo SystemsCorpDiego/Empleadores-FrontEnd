@@ -349,11 +349,15 @@ export const DetalleBoleta = () => {
                       handleSetMetodoPago(event.target.value)
                     }
                   >
-                    {formasPago.map((reg) => (
-                      <MenuItem value={reg.codigo} key={reg.codigo}>
-                        {reg.descripcion}
-                      </MenuItem>
-                    ))}
+                    {formasPago.map((reg) => {
+                      if ('AMTIMACS' !== codigo || 'PMCUENTAS' !== reg.codigo) {
+                        return (
+                          <MenuItem value={reg.codigo} key={reg.codigo}>
+                            {reg.descripcion}
+                          </MenuItem>
+                        );
+                      }
+                    })}
                   </Select>
                 ) : (
                   getDescripcion(formasPago, boletaDetalle.formaDePago)
