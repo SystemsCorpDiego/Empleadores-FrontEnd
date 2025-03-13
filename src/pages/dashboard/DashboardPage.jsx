@@ -42,6 +42,7 @@ import { width } from '@mui/system';
 import Hidden from '@mui/material/Hidden';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { useMediaQuery } from "@mui/material";
+import HandshakeIcon from '@mui/icons-material/Handshake';
 
 const drawerWidth = 250;
 
@@ -310,12 +311,18 @@ const DashboardPage = () => {
                     {open && <span className="icon-link">Aportes</span>}
                   </NavLink>
                 )}
-                {/*rolFuncionalidades.DEUDA && (
+                {//rolFuncionalidades.DEUDA && 
+                (
                   <NavLink to="./gestiondeuda" className="icon-container">
                     <CalculateIcon className="icon-link" />{' '}
                     {open && <span className="icon-link">Gestión Deuda</span>}
                   </NavLink>
-                )*/}
+                )}
+                {(<NavLink to="./convenios" className="icon-container">
+                    <HandshakeIcon className="icon-link" />{' '}
+                    {open && <span className="icon-link">Deuda</span>}
+                    </NavLink>
+                  )}
               </ListItemIcon>
             </ListItemButton>
           </ListItem>

@@ -26,13 +26,13 @@ const emuRespuesta = {
       aporteDescripcion: 'Cuota Social UOMA',
       importe: 20.0,
       interes: 176.8,
-      importeTotal: 196.8
+      importeTotal: 196.8,
     },
   ],
   actas: [
     {
       id: 95,
-      estadoDeuda: 'PENDIENTE',
+      estadoDeuda: 'JUDICIALIZADO',
       nroActa: '123',
       fechaActa: '2024-05-30',
       importe: 123.0,
@@ -114,7 +114,20 @@ const emuRespuesta = {
       totalActualizado: 276,
     },
   ],
-  saldoAFavor: 2000,
+  saldosAFavor: [
+    {
+      id:31,
+      fecha: '2024-04-01',
+      concepto: 'prueba',
+      importe: 2000,
+    },
+    {
+      id:32,
+      fecha: '2024-05-01',
+      concepto: 'prueba',
+      importe: 6000,
+    },
+  ],
 };
 const emuRespuestaOSPIM = {
   boletas: [
@@ -204,7 +217,20 @@ const emuRespuestaOSPIM = {
       totalActualizado: 276,
     },
   ],
-  saldoAFavor: 2000,
+  saldosAFavor: [
+    {
+      id:21,
+      fecha: '2024-04-01',
+      concepto: 'prueba',
+      importe: 2000,
+    },
+    {
+      id:22,
+      fecha: '2024-05-01',
+      concepto: 'prueba',
+      importe: 6000,
+    },
+  ],
 };
 const emuRespuestaAMTIMA = {
   boletas: [
@@ -285,7 +311,20 @@ const emuRespuestaAMTIMA = {
       totalActualizado: 276,
     },
   ],
-  saldoAFavor: 2000,
+  saldosAFavor: [
+    {
+      id: 10,
+      fecha: '2024-04-01',
+      concepto: 'prueba',
+      importe: 2000,
+    },
+    {
+      id: 12,
+      fecha: '2024-05-01',
+      concepto: 'prueba',
+      importe: 6000,
+    },
+  ],
 };
 const emuRespuestaDetalleConvenio = {
   importeDeDeuda: 33000,
@@ -325,7 +364,7 @@ export const getDeclaracionesJuradas = async (empresa_id, entidad) => {
   try {
     const URL = `/empresa/${empresa_id}/boletas/gestion-deuda/${entidad}`;
     //const response = axiosCrud.consultar(URL);
-    console.log('Llegamos a esta parte')
+    console.log('Llegamos a esta parte');
     //return response;
     switch (entidad) {
       case 'AMTIMA':
@@ -349,7 +388,7 @@ export const getDeclaracionesJuradas = async (empresa_id, entidad) => {
   }
 };
 
-export const getBoletasUsuarioInterno = async (entidad) =>{
+export const getBoletasUsuarioInterno = async (entidad) => {
   const URL = `/empresa/boletas/gestion-deuda/${entidad}`;
   //const response = axiosCrud.consultar(URL);
   //return response;
@@ -364,8 +403,8 @@ export const getBoletasUsuarioInterno = async (entidad) =>{
       console.log('Entidad invalida');
   }
 
-  return emuRespuesta
-}
+  return emuRespuesta;
+};
 
 export const getDetalleConvenio = async (empresa_id, entidad, body) => {
   try {
@@ -385,7 +424,7 @@ export const generarConvenio = async (empresa_id, body) => {
     const URL = `sigeco/empresa/${idEmpresa}/deuda/entidad/${codigoEntidad}/convenio`;
     //const response = axiosCrud.crear(URL,body);
     //return reponse;
-    return 'OK'
+    return 'OK';
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;

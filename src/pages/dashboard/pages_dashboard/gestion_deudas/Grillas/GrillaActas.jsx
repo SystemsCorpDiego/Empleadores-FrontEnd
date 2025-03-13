@@ -44,12 +44,17 @@ export const GrillaActas = ({ actas, selectedActas, setSelectedActas }) => {
           {
             field: 'selection',
             headerName: '',
-            renderCell: (params) => (
-              <Checkbox
-                checked={selectedActas.includes(params.id)}
-                onChange={() => handleSelectionChange(params.id)}
-              />
-            ),
+            renderCell: (params) => {
+              const isJudicializado =
+                params.row && params.row.estadoDeuda === 'JUDICIALIZADO';
+              return (
+                <Checkbox
+                  checked={selectedActas.includes(params.id)}
+                  onChange={() => handleSelectionChange(params.id)}
+                  disabled={isJudicializado}
+                />
+              );
+            },
             headerCheckboxSelection: true,
             checkboxSelection: true,
             flex: 0.25,
@@ -72,24 +77,30 @@ export const GrillaActas = ({ actas, selectedActas, setSelectedActas }) => {
             headerName: 'Importe Acta',
             align: 'right',
             flex: 1,
-            valueFormatter: (params) =>
-              params.value ? formatter.currencyString(params.value) : '',
+            renderCell: (params) =>
+              params.row && params.row.estadoDeuda === 'JUDICIALIZADO'
+                ? ''
+                : formatter.currencyString(params.value),
           },
           {
             field: 'intereses',
             headerName: 'Intereses',
             align: 'right',
             flex: 1,
-            valueFormatter: (params) =>
-              params.value ? formatter.currencyString(params.value) : '',
+            renderCell: (params) =>
+              params.row && params.row.estadoDeuda === 'JUDICIALIZADO'
+                ? ''
+                : formatter.currencyString(params.value),
           },
           {
             field: 'importeTotal',
             headerName: 'Importe Total',
             align: 'right',
             flex: 1,
-            valueFormatter: (params) =>
-              params.value ? formatter.currencyString(params.value) : '',
+            renderCell: (params) =>
+              params.row && params.row.estadoDeuda === 'JUDICIALIZADO'
+                ? ''
+                : formatter.currencyString(params.value),
           },
         ]}
         getRowClassName={(params) =>

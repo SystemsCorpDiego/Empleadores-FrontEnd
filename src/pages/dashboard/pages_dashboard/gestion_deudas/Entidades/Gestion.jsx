@@ -15,6 +15,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import formatter from '@/common/formatter';
+import { GrillaSaldoAFavor } from '../Grillas/GrillaSaldoAFavor';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -55,6 +56,9 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   const [isCheckedEstadoDeDeduda, setIsCheckedEstadoDeDeduda] = useState(true); //Se utiliza para tildar o destildar todas las rows
   const [cuotas, setCuotas] = useState(1); //Se utiliza para guardar la cantidad de cuotas seleccionadas por el usuario
   const [fechaIntencion, setFechaIntencion] = useState(null); //Se utiliza para guardar la fecha de intencion de pago que con la que vamos a generar el convenio
+  const [saldosAFavor, setSaldosAFavor] = useState([])
+  const [selectedSaldosAFavor, setSelectedSaldosAFavor] = useState([])
+  const [totalSaldosAFavor, setTotalSaldosAFavor] = useState(0)
   const [detalleConvenio, setDetalleConvenio] = useState({
     importeDeDeuda: 0,
     interesesDeFinanciacion: 0,
@@ -80,20 +84,20 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       setSelectedActas(idsActas);
       const idsdeclaracionesJuradas = declaracionesJuradas.map((objeto) => objeto.id);
       setSelectedDeclaracionesJuradas(idsdeclaracionesJuradas);
+      const idsSaldosAFavor =saldosAFavor.map((objeto) => objeto.id);
+      setSelectedSaldosAFavor(idsSaldosAFavor)
     } else {
       setSelectedActas([]);
       setSelectedDeclaracionesJuradas([]);
+      setSelectedSaldosAFavor([]);
     }
   }, [isCheckedEstadoDeDeduda]);
 
-  useEffect(() => {
-    //
-  }, [selectedActas, selectedDeclaracionesJuradas, fechaIntencion, noUsar]);
 
   useEffect(() => {
     const ATotal = actas
       .filter((item) => selectedActas.includes(item.id))
-      .reduce((acc, item) => (acc += item.importeTotal), 0);
+      .reduce((acc, item) => (acc += item.estadoDeuda !== 'JUDICIALIZADO'? item.importeTotal : 0), 0);
     console.log('Esto es lo que se tendria que imprimir', ATotal);
     setTotalActas(ATotal);
   }, [selectedActas]);
@@ -105,6 +109,14 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     console.log('Esto es lo que se tendria que imprimir', BTotal);
     setTotalDeclaracionesJuradas(BTotal);
   }, [selectedDeclaracionesJuradas]);
+  
+  useEffect(() => {
+    const CTotal = saldosAFavor
+      .filter((item) => selectedSaldosAFavor.includes(item.id))
+      .reduce((acc, item) => (acc += item.importe), 0);
+    console.log('Esto es lo que se tendria que imprimir', CTotal);
+    setTotalSaldosAFavor(CTotal);
+  }, [selectedSaldosAFavor]);
 
   useEffect(() => {
     const CTotal = convenios.reduce(
@@ -133,12 +145,19 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       setDeclaracionesJuradas(response['declaracionesJuradas']);
       setActas(response['actas']);
       setConvenios(response['convenios']);
+      setSaldosAFavor(response['saldosAFavor'])
 
       const idsActas = response['actas'].map((objeto) => objeto.id);
       setSelectedActas(idsActas);
 
       const idsdeclaracionesJuradas = response['declaracionesJuradas'].map((objeto) => objeto.id);
       setSelectedDeclaracionesJuradas(idsdeclaracionesJuradas);
+
+      const idSelectedSaldosAFavor = response['saldosAFavor'].map((objeto)=> objeto.id);
+      console.log(idSelectedSaldosAFavor)
+      console.log(response['saldosAFavor'])
+      setSelectedSaldosAFavor(idSelectedSaldosAFavor);
+      console.log(selectedSaldosAFavor)
 
       //setSaldoAFavor(response['saldoAFavor']);
     } catch (error) {
@@ -177,7 +196,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           setIsCheckedEstadoDeDeduda={setIsCheckedEstadoDeDeduda}
           fecha_total={'09/07/2024'}
           deuda={detalleConvenio.totalAPagar}
-          saldo_a_favor={detalleConvenio.saldoAFavor}
+          saldo_a_favor={totalSaldosAFavor}
         ></EstadoDeDeuda>
         <Accordion>
           <AccordionSummary
@@ -236,7 +255,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
             />
           </AccordionDetails>
         </Accordion>
-        {/*
+        
         <Accordion>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -250,18 +269,22 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
               alignItems="center"
             >
               <Typography variant="h6" color="primary">
-                Convenios
+                Saldos a favor
               </Typography>
               <Typography variant="h6" color="primary">
-                TOTAL: {formatter.currencyString(totalConvenios)}
+                TOTAL: {formatter.currencyString(totalSaldosAFavor)}
               </Typography>
             </Box>
           </AccordionSummary>
           <AccordionDetails>
-            <GrillaConvenio convenios={convenios} />
+            <GrillaSaldoAFavor
+              saldoAFavor={saldosAFavor}
+              selectedSaldosAFavor={selectedSaldosAFavor}
+              setSelectedSaldosAFavor={setSelectedSaldosAFavor}
+            />
           </AccordionDetails>
         </Accordion>
-      */}
+      
         <OpcionesDePago
           cuotas={cuotas}
           setCuotas={setCuotas}
@@ -271,6 +294,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           setNoUsar={setNoUsar}
           medioPago={medioPago}
           detalleConvenio={detalleConvenio}
+          saldoAFavorUtilizado={totalSaldosAFavor}
         ></OpcionesDePago>
       </div>
     </div>

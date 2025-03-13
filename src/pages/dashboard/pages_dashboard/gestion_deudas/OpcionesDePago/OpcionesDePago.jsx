@@ -28,6 +28,7 @@ export const OpcionesDePago = ({
   setNoUsar,
   medioPago,
   detalleConvenio,
+  saldoAFavorUtilizado
 }) => {
   return (
     <Box p={3} sx={{ margin: '60px auto', padding: 0 }}>
@@ -99,7 +100,7 @@ export const OpcionesDePago = ({
                 value={formatter.currencyString(detalleConvenio.interesesDeFinanciacion)}
               />
             </Grid>
-            <Grid item xs={12}>
+           {/* <Grid item xs={12}>
               <TextField
                 label="Saldo a favor"
                 variant="outlined"
@@ -119,6 +120,7 @@ export const OpcionesDePago = ({
                 label="No Usar"
               />
             </Grid>
+            */}
             <Grid item xs={12}>
               <Typography variant="h6">TOTAL</Typography>
               <TextField
@@ -146,7 +148,7 @@ export const OpcionesDePago = ({
         <ul>
           <li>Importe de deuda: {detalleConvenio.importeDeDeuda}</li>
           <li>Intereses de financiación: {detalleConvenio.interesesDeFinanciacion}</li>
-          <li>Saldo a Favor utilizado: {detalleConvenio.saldoAFavorUtilizado}</li>
+          <li>Saldo a Favor utilizado: {saldoAFavorUtilizado}</li>
           <li>Total a pagar: {detalleConvenio.totalAPagar}</li>
           <li>Cantidad de cuotas: {detalleConvenio.cantidadCuotas}</li>
         </ul>
