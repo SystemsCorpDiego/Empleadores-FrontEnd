@@ -78,6 +78,7 @@ export const Boletas = () => {
   const [tabState, setTabState] = useState(0);
   const [showLoading, setShowLoading] = useState([]);
   const theme = useTheme();
+  const [desactivarBep, setDesactivarBep] = useState(false);
   const [locale, setLocale] = useState('esES');
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
@@ -138,7 +139,9 @@ export const Boletas = () => {
 
   const handleGenerarBepClick = async (row) => {
     console.log('handleGenerarBepClick - row: ', row);
+    setDesactivarBep(true);
     const data = await axiosBoletas.generarBep(ID_EMPRESA, row.id);
+
     console.log('handleGenerarBepClick - data: ', data);
     if (data != null && data.bep && data.bep != null) {
       row.formaDePago = row.formaDePago + ' (BEP)';
@@ -148,6 +151,7 @@ export const Boletas = () => {
       );
       setBoletasVisibles(newRows);
     }
+    setDesactivarBep(false);
   };
 
   return (
@@ -321,14 +325,34 @@ export const Boletas = () => {
                       if (params.row.requiereBep) {
                         return (
                           <>
-                            <IconButton
-                              size="small"
-                              onClick={() => handleGenerarBepClick(params.row)}
-                            >
-                              <Tooltip id="button-bep" title="Generar BEP">
-                                <RequestQuoteIcon />
-                              </Tooltip>
-                            </IconButton>
+                            <ThreeCircles
+                              visible={desactivarBep}
+                              height="15"
+                              width="15"
+                              color="#1A76D2"
+                              ariaLabel="three-circles-loading"
+                              wrapperStyle={
+                                {
+                                  // margin: '15%',
+                                  // marginLeft: '50%'
+                                }
+                              }
+                              wrapperClass=""
+                            />
+                            {!desactivarBep && (
+                              <IconButton
+                                size="small"
+                                onClick={() =>
+                                  handleGenerarBepClick(params.row)
+                                }
+                                disabled={desactivarBep}
+                              >
+                                <Tooltip id="button-bep" title="Generar BEP">
+                                  <RequestQuoteIcon />
+                                </Tooltip>
+                              </IconButton>
+                            )}
+
                             <IconButton
                               size="small"
                               onClick={() => handleViewClick(params.row)}
@@ -352,7 +376,6 @@ export const Boletas = () => {
                                 <PrintIcon />
                               </Tooltip>
                             </IconButton>
-
                             <IconButton
                               size="small"
                               onClick={() => handleViewClick(params.row)}
