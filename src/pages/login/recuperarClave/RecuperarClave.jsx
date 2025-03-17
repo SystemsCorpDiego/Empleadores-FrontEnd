@@ -4,6 +4,7 @@ import './RecuperarClave.css';
 import { Button, TextField } from '@mui/material';
 import { useState } from 'react';
 import { recuperarClave, recuperarClaveByUsuario } from './RecuperarClaveApi';
+import { ThreeCircles } from 'react-loader-spinner';
 
 export const RecuperarClave = () => {
   const valorRecuperacion = 'USUARIO'; // 'MAIL'
@@ -11,6 +12,7 @@ export const RecuperarClave = () => {
   const [mailEnvio, setMailEnvio] = useState('');
   const [error, setError] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -29,12 +31,15 @@ export const RecuperarClave = () => {
   };
 
   const handleSubmit = async (event) => {
+    setShowLoading(true);
     if (valorRecuperacion == 'MAIL') {
       console.log('handleSubmit -> handleSubmitMail ');
-      handleSubmitMail(event);
+      await handleSubmitMail(event);
+      setShowLoading(false);
     } else {
       console.log('handleSubmit -> handleSubmitUsuario ');
-      handleSubmitUsuario(event);
+      await handleSubmitUsuario(event);
+      setShowLoading(false);
     }
   };
 
@@ -53,12 +58,14 @@ export const RecuperarClave = () => {
 
   const handleSubmitUsuario = async (event) => {
     event.preventDefault();
+    setShowLoading(true);
     const dto = await recuperarClaveByUsuario(valor);
     if (dto) {
       setMailEnvio(dto.mail);
       setValor('');
       setSubmitted(true);
     }
+    setShowLoading(false);
   };
 
   const textoMailEnvio = () => {
@@ -146,19 +153,34 @@ export const RecuperarClave = () => {
                       onChange={handleValorChange}
                     />
                   </div>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{
-                      marginTop: '50px',
-                      alignSelf: 'flex-start',
+                  <ThreeCircles
+                    visible={showLoading}
+                    height="35"
+                    width="35"
+                    color="#1A76D2"
+                    ariaLabel="three-circles-loading"
+                    wrapperStyle={{
+                      marginTop: '20px',
                     }}
-                    // deshabilitar el botón si el email no es válido y si no se ha ingresado nada
-                    disabled={!valor || error}
-                    type="submit"
-                  >
-                    Enviar
-                  </Button>
+                    wrapperClass=""
+                  />
+                  {
+                    !showLoading && (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                          marginTop: '50px',
+                          alignSelf: 'flex-start',
+                        }}
+                        // deshabilitar el botón si el email no es válido y si no se ha ingresado nada
+                        disabled={!valor || error}
+                        type="submit"
+                      >
+                        Enviar
+                      </Button>
+                    )
+                  }
                 </form>
               </div>
             )}

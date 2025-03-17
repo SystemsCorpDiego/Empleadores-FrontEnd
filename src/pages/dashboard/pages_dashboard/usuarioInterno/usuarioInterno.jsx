@@ -25,6 +25,7 @@ import LockPersonIcon from '@mui/icons-material/LockPerson';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import { ThreeCircles } from 'react-loader-spinner';
 
 import {
   GridRowModes,
@@ -111,7 +112,7 @@ export const UsuarioInterno = () => {
   const [rowModesModel, setRowModesModel] = useState({});
   const [rows, setRows] = useState([]);
   const [roles, setRoles] = useState([]);
-
+  const [showLoading, setShowLoading] = useState(false);
   const {
     paginationModel,
     setPaginationModel,
@@ -302,10 +303,11 @@ export const UsuarioInterno = () => {
 
   const handleFormSubmit = async (e) => {
     console.log(rows);
-
+    setShowLoading(true);
     e.preventDefault();
     if (clave !== repetirClave) {
       swal.showError('Las claves no coinciden !');
+      setShowLoading(false);
       handleClose();
       return; // Para salir de la función sin continuar
     }
@@ -322,6 +324,7 @@ export const UsuarioInterno = () => {
     if (resp) {
       swal.showSuccess('Clave actualizada correctamente !');
     }
+    setShowLoading(false);
     handleClose();
   };
 
@@ -670,13 +673,26 @@ export const UsuarioInterno = () => {
                 justifyContent="space-between"
                 sx={{ width: '76%' }}
               >
-                <Button
-                  variant="contained"
-                  sx={{ marginTop: '20px' }}
-                  type="submit"
-                >
-                  Actualizar
-                </Button>
+            <ThreeCircles
+              visible={showLoading}
+              height="35"
+              width="35"
+              color="#1A76D2"
+              ariaLabel="three-circles-loading"
+              wrapperStyle={{
+                marginTop: '20px',
+              }}
+              wrapperClass=""
+            />
+            {!showLoading && (
+              <Button
+                variant="contained"
+                sx={{ marginTop: '20px' }}
+                type="submit"
+              >
+                Actualizar
+              </Button>
+            )}
                 <Button
                   variant="contained"
                   sx={{ marginTop: '20px' }}

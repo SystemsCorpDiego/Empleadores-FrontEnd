@@ -11,7 +11,7 @@ function getAporteDescrip(vecAportes, codigo) {
       return codigo;
     }
     //console.log('getAporteDescrip - DEVUELVO desccrip: ', reg.descripcion);
-    return reg.descripcion;
+    return reg.descripcion === 'Cuota Social AMTIMA'? 'AMTIMA' : reg.descripcion;
   }
 }
 

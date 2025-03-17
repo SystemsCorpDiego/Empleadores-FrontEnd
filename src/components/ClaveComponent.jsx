@@ -5,7 +5,7 @@ import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Modal from '@mui/material/Modal';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-
+import { ThreeCircles } from 'react-loader-spinner';
 import Typography from '@mui/material/Typography';
 import {
   Box,
@@ -47,22 +47,27 @@ export const ClaveComponent = ({ showModal, setShowModal }) => {
   const [errorPassword, setErrorPassword] = useState(false);
   const [claveNuevaRepe, setClaveNuevaRepe] = useState('');
   const [claveNuevaRepeError, setClaveNuevaRepeError] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const theme = useTheme();
 
   const handleFormSubmit = async (e) => {
     console.log('claveNueva:', claveNueva);
+    setShowLoading(true);
     if (
       claveNuevaRepe != claveNueva ||
       claveNueva == '' ||
       claveNuevaRepe == '' ||
       clave == ''
     ) {
+      setShowLoading(false);
       return false;
     }
+
     const URL = '/usuario/clave';
     e.preventDefault();
     const bRta = await patch(URL, { clave, claveNueva });
+    setShowLoading(false);
     setShowModal(!showModal);
   };
 
@@ -211,13 +216,26 @@ export const ClaveComponent = ({ showModal, setShowModal }) => {
             >
               Cancelar
             </Button>
-            <Button
-              variant="contained"
-              sx={{ marginTop: '20px' }}
-              type="submit"
-            >
-              Actualizar
-            </Button>
+            <ThreeCircles
+              visible={showLoading}
+              height="35"
+              width="35"
+              color="#1A76D2"
+              ariaLabel="three-circles-loading"
+              wrapperStyle={{
+                marginTop: '20px',
+              }}
+              wrapperClass=""
+            />
+            {!showLoading && (
+              <Button
+                variant="contained"
+                sx={{ marginTop: '20px' }}
+                type="submit"
+              >
+                Actualizar
+              </Button>
+            )}
           </Box>
         </form>
       </Box>

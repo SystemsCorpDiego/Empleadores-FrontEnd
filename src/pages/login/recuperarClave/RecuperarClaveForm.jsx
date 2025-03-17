@@ -34,6 +34,7 @@ export const RecuperarClaveForm = () => {
   const [errorPassword, setErrorPassword] = useState(false);
   const [claveNuevaRepeError, setClaveNuevaRepeError] = useState(false);
   const [claveNuevaRepe, setClaveNuevaRepe] = useState('');
+  const [showLoading, setShowLoading] = useState(false);
   const style = {
     position: 'absolute',
     top: '50%',
@@ -244,13 +245,26 @@ export const RecuperarClaveForm = () => {
                   >
                     Cancelar
                   </Button>
-                  <Button
-                    variant="contained"
-                    sx={{ marginTop: '20px' }}
-                    type="submit"
-                  >
-                    Actualizar
-                  </Button>
+                  <ThreeCircles
+                    visible={showLoading}
+                    height="35"
+                    width="35"
+                    color="#1A76D2"
+                    ariaLabel="three-circles-loading"
+                    wrapperStyle={{
+                      marginTop: '20px',
+                    }}
+                    wrapperClass=""
+                  />
+                  {!showLoading && (
+                    <Button
+                      variant="contained"
+                      sx={{ marginTop: '20px' }}
+                      type="submit"
+                    >
+                      Actualizar
+                    </Button>
+                  )}
                 </Box>
               </form>
             </Box>
