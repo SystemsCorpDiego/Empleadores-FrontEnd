@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useMemo, useContext } from 'react';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-
+import { ThreeCircles } from 'react-loader-spinner';
 import '../LoginPage.css';
 import NavBar from '@/components/navbar/NavBar.jsx';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -75,12 +75,14 @@ export const RecuperarClaveForm = () => {
 
   const handleFormSubmit = async (e) => {
     console.log('handleFormSubmit - claveNueva:', claveNueva);
+    setShowLoading(true);
     e.preventDefault();
     if (
       claveNuevaRepe != claveNueva ||
       claveNueva == '' ||
       claveNuevaRepe == ''
     ) {
+      setShowLoading(false);
       return false;
     }
     const bRta = await RecuperarClaveFormApi.cambiarClave(token, claveNueva);
@@ -89,6 +91,7 @@ export const RecuperarClaveForm = () => {
         replace: true,
       });
     }
+    setShowLoading(false);
     return true;
   };
 
