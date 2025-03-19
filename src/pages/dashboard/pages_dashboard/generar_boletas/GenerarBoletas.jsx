@@ -376,16 +376,13 @@ export const GenerarBoletas = () => {
                       }
                     >
                       {formasPago.map((reg) => {
-                        if (
-                          'AMTIMACS' !== boleta.codigo ||
-                          'PMCUENTAS' !== reg.codigo
-                        ) {
-                          return (
-                            <MenuItem key={reg.codigo} value={reg.codigo}>
-                              {reg.descripcion}
-                            </MenuItem>
-                          );
-                        }
+                        //if ( 'AMTIMACS' !== boleta.codigo || 'PMCUENTAS' !== reg.codigo ) {
+                        return (
+                          <MenuItem key={reg.codigo} value={reg.codigo}>
+                            {reg.descripcion}
+                          </MenuItem>
+                        );
+                        //}
                       })}
                     </Select>
                   </TableCell>
