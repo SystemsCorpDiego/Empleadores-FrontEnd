@@ -45,7 +45,7 @@ export const Cuotas = ({ numeroConvenio }) => {
 
   return (
     <div className="convenios_container">
-      <h1 className="mt-1em">Mis convenios</h1>
+      <h1 className="mt-1em">`Cuotas convenio Nro `</h1>
       <Box sx={{ height: 450, width: '100%' }}>
         <DataGrid
           rows={cuotas || []}

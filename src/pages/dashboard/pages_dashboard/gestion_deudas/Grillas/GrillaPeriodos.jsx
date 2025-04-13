@@ -86,7 +86,7 @@ export const GrillaPeriodo  = ({ declaracionesJuradas, selectedDeclaracionesJura
           },
           {
             field: 'importeTotal',
-            headerName: 'Importe Boleta',
+            headerName: 'Importe Total',
             flex: 1,
             align: 'right',
             valueFormatter: (params) => {

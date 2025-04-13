@@ -57,6 +57,7 @@ const altaHandleClick = () => {
     monto: 0,
     cuota: 0,
     id: newId,
+    convenioID
   };
 
   setRows((oldRows) => [newReg, ...oldRows]);
@@ -157,19 +158,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
 
   return (
     <Modal open={open} onClose={handleClose}>
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 800,
-          bgcolor: 'background.paper',
-          boxShadow: 24,
-          p: 4,
-          borderRadius: 2,
-        }}
-      >
+
         <h2>Ingresar Cheques</h2>
         <Box
           sx={{

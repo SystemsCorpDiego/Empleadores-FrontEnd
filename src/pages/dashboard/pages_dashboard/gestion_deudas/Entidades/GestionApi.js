@@ -129,203 +129,7 @@ const emuRespuesta = {
     },
   ],
 };
-const emuRespuestaOSPIM = {
-  boletas: [
-    {
-      id: 97,
-      periodo: '2024-04-01',
-      numero_boleta: 10,
-      concepto: 'Cuota Social',
-      totalConcepto: 20.0,
-      interes: 126.8,
-      total_final: 146.8,
-    },
-    {
-      id: 98,
-      periodo: '2024-04-01',
-      numero_boleta: 10,
-      concepto: 'Cuota Social',
-      totalConcepto: 20.0,
-      interes: 126.8,
-      total_final: 146.8,
-    },
-  ],
-  actas: [
-    {
-      id: 95,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '123',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 13.0,
-      importeTotal: 136.0,
-    },
-    {
-      id: 100,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '124',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 13.0,
-      importeTotal: 136.0,
-    },
-    {
-      id: 103,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '127',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 104,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '128',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 105,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '129',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-  ],
-  convenios: [
-    {
-      id: 1,
-      estado: 'PENDIENTE',
-      nroConvenio: 1,
-      nroCuota: 2,
-      totalCuota: 234,
-      intereses: 42,
-      totalActualizado: 276,
-    },
-    {
-      id: 2,
-      estado: 'PENDIENTE',
-      nroConvenio: 1,
-      nroCuota: 3,
-      totalCuota: 234,
-      intereses: 42,
-      totalActualizado: 276,
-    },
-  ],
-  saldosAFavor: [
-    {
-      id:21,
-      fecha: '2024-04-01',
-      concepto: 'prueba',
-      importe: 2000,
-    },
-    {
-      id:22,
-      fecha: '2024-05-01',
-      concepto: 'prueba',
-      importe: 6000,
-    },
-  ],
-};
-const emuRespuestaAMTIMA = {
-  boletas: [
-    {
-      id: 97,
-      periodo: '2024-04-01',
-      numero_boleta: 10,
-      concepto: 'Cuota Social',
-      totalConcepto: 20.0,
-      interes: 176.8,
-      total_final: 196.8,
-    },
-    {
-      id: 98,
-      periodo: '2024-04-01',
-      numero_boleta: 10,
-      concepto: 'Cuota Social',
-      totalConcepto: 20.0,
-      interes: 176.8,
-      total_final: 196.8,
-    },
-    {
-      id: 99,
-      periodo: '2024-04-01',
-      numero_boleta: 10,
-      concepto: 'Cuota Social',
-      totalConcepto: 20.0,
-      interes: 176.8,
-      total_final: 196.8,
-    },
-  ],
-  actas: [
-    {
-      id: 95,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '123',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 100,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '124',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 101,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '125',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-  ],
-  convenios: [
-    {
-      id: 1,
-      estado: 'PENDIENTE',
-      nroConvenio: 1,
-      nroCuota: 2,
-      totalCuota: 234,
-      intereses: 42,
-      totalActualizado: 276,
-    },
-    {
-      id: 2,
-      estado: 'PENDIENTE',
-      nroConvenio: 1,
-      nroCuota: 3,
-      totalCuota: 234,
-      intereses: 42,
-      totalActualizado: 276,
-    },
-  ],
-  saldosAFavor: [
-    {
-      id: 10,
-      fecha: '2024-04-01',
-      concepto: 'prueba',
-      importe: 2000,
-    },
-    {
-      id: 12,
-      fecha: '2024-05-01',
-      concepto: 'prueba',
-      importe: 6000,
-    },
-  ],
-};
+
 const emuRespuestaDetalleConvenio = {
   importeDeDeuda: 33000,
   interesesDeFinanciacion: 230,
@@ -368,9 +172,9 @@ export const getDeclaracionesJuradas = async (empresa_id, entidad) => {
     //return response;
     switch (entidad) {
       case 'AMTIMA':
-        return emuRespuestaAMTIMA;
+        return emuRespuesta;
       case 'OSPIM':
-        return emuRespuestaOSPIM;
+        return emuRespuesta;
       case 'UOMA':
         return emuRespuesta;
       default:
@@ -394,9 +198,9 @@ export const getBoletasUsuarioInterno = async (entidad) => {
   //return response;
   switch (entidad) {
     case 'AMTIMA':
-      return emuRespuestaAMTIMA;
+      return emuRespuesta;
     case 'OSPIM':
-      return emuRespuestaOSPIM;
+      return emuRespuesta;
     case 'UOMA':
       return emuRespuesta;
     default:
