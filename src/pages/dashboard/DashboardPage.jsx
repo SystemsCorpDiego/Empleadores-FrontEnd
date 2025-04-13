@@ -315,12 +315,12 @@ const DashboardPage = () => {
                 (
                   <NavLink to="./gestiondeuda" className="icon-container">
                     <CalculateIcon className="icon-link" />{' '}
-                    {open && <span className="icon-link">Gestión Deuda</span>}
+                    {open && <span className="icon-link">Autogesión Deuda</span>}
                   </NavLink>
                 )}
                 {(<NavLink to="./convenios" className="icon-container">
                     <HandshakeIcon className="icon-link" />{' '}
-                    {open && <span className="icon-link">Deuda</span>}
+                    {open && <span className="icon-link">Mis Convenios</span>}
                     </NavLink>
                   )}
               </ListItemIcon>

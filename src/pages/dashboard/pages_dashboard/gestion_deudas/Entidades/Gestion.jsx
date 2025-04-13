@@ -290,6 +290,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           setCuotas={setCuotas}
           fechaIntencion={fechaIntencion}
           setFechaIntencion={setFechaIntencion}
+          saldoAFavor={formatter.currencyString(totalSaldosAFavor)}
           noUsar={noUsar}
           setNoUsar={setNoUsar}
           medioPago={medioPago}

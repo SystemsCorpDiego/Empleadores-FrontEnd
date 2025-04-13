@@ -34,46 +34,44 @@ const conveniosData = [
     id: 1,
     fecha: 'MM/AAAA',
     numero: 1,
-    deuda: 20000.00,
-    interes: 100.00,
-    saldo: 20100.00,
-    total: 20100.00,
-    cuotas: 3,
+    deuda: 20000.0,
+    interes: 100.0,
+    saldo: 200.0,
+    total: 20100.0,
+    cuota: 3,
     medioPago: 'Cheque',
-    cheque: '',
+    //cheques: '',
     estado: 'Pendiente...',
   },
   {
     id: 2,
     fecha: 'MM/AAAA',
     numero: 2,
-    deuda: 30000.00,
-    interes: 3000.00,
-    saldo: 33000.00,
-    total: 33000.00,
-    cuotas: 2,
+    deuda: 30000.0,
+    interes: 3000.0,
+    saldo: 33000.0,
+    total: 33000.0,
+    cuota: 2,
     medioPago: 'Cheque',
-    cheques: [{ id: 1, numero: "123", monto: 5000.00 }],
+    //cheques: [{ id: 1, numero: '123', monto: 5000.0, cuota: 2 }],
     estado: 'Cheque Recibido',
   },
   {
     id: 3,
     fecha: 'MM/AAAA',
     numero: 3,
-    deuda: 120000.00,
-    interes: 20000.00,
-    saldo: 140000.00,
-    total: 140000.00,
-    cuotas: 1,
+    deuda: 120000.0,
+    interes: 20000.0,
+    saldo: 140000.0,
+    total: 140000.0,
+    cuota: 1,
     medioPago: 'Cheque',
-    cheque: '',
+    cheques: '',
     estado: 'Cerrado',
   },
 ];
 
-
 // Columnas del DataGrid
-
 
 const crearNuevoRegistro = (props) => {
   const {
@@ -85,13 +83,11 @@ const crearNuevoRegistro = (props) => {
     themeWithLocale,
   } = props;
 
-
   return (
     <GridToolbarContainer
       theme={themeWithLocale}
       style={{ display: 'flex', justifyContent: 'space-between' }}
     >
-
       <GridToolbar showQuickFilter={showQuickFilter} />
     </GridToolbarContainer>
   );
@@ -103,17 +99,17 @@ export const Convenios = () => {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   const [open, setOpen] = useState(false);
-  const [cheques, setCheques] = useState([{ id: 1, numero: "", monto: "" }]);
+  const [cheques, setCheques] = useState([{ id: 1, numero: '', monto: '' }]);
   const [chequesPorFila, setChequesPorFila] = useState({});
   const [filaSeleccionada, setFilaSeleccionada] = useState(null);
-  const [total, setTotal] = useState(0)
+  const [total, setTotal] = useState(0);
 
   const handleOpen = (row) => {
     console.log(row.id);
     setFilaSeleccionada(row.id);
-    console.log(row.total)
+    console.log(row.total);
     setTotal(Number(row.total) || 0);
-    console.log(total)
+    console.log(total);
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
@@ -125,64 +121,90 @@ export const Convenios = () => {
     () => createTheme(theme, locales[locale]),
     [locale, theme],
   );
-
-
+/**
   useEffect(() => {
     setRows(conveniosData);
-    const inicialCheques = {};
-    conveniosData.forEach(row => {
-      inicialCheques[row.id] = row.cheques || [];
-    });
-    setChequesPorFila(inicialCheques);
+    //const inicialCheques = {};
+    //conveniosData.forEach((row) => {
+    //  inicialCheques[row.id] = row.cheques || [];
+    //});
+    //setChequesPorFila(inicialCheques);
   }, []);
-
+ */
   const actualizarCheques = (chequesActualizados) => {
-    setChequesPorFila(prev => ({
+    setChequesPorFila((prev) => ({
       ...prev,
-      [filaSeleccionada]: chequesActualizados
+      [filaSeleccionada]: chequesActualizados,
     }));
-    setRows(prevRows =>
-      prevRows.map(row =>
-        row.id === filaSeleccionada ? { ...row, cheques: chequesActualizados } : row
-      )
+    setRows((prevRows) =>
+      prevRows.map((row) =>
+        row.id === filaSeleccionada
+          ? { ...row, cheques: chequesActualizados }
+          : row,
+      ),
     );
   };
-
 
   const columnas = [
     { field: 'fecha', headerName: 'Fecha', flex: 1 },
     { field: 'numero', headerName: 'N°', flex: 0.1, align: 'right' },
-    { field: 'deuda', headerName: 'Deuda Original', flex: 1.2, align: 'right', valueFormatter: (params) => formatter.currency.format(params.value || 0)},
-    { field: 'interes', headerName: 'Intereses Financ.', flex: 1.2, align: 'right', valueFormatter: (params) => formatter.currency.format(params.value || 0) },
-    { field: 'saldo', headerName: 'Sdo a Favor utilizado', flex: 1.5, align: 'right', valueFormatter: (params) => formatter.currency.format(params.value || 0) },
-    { field: 'total', headerName: 'Total Convenio', flex: 1, align: 'right', valueFormatter: (params) => formatter.currency.format(params.value || 0) },
-    { field: 'cuotas', headerName: 'Cant. Cuotas', flex: 0.5 , align: 'right' },
-    { field: 'medioPago', headerName: 'Medio Pago', flex: 1 },
     {
-      field: "cheque",
-      headerName: "N° Cheque",
+      field: 'deuda',
+      headerName: 'Deuda Original',
+      flex: 1.2,
+      align: 'right',
+      valueFormatter: (params) => formatter.currency.format(params.value || 0),
+    },
+    {
+      field: 'interes',
+      headerName: 'Intereses Financ.',
+      flex: 1.2,
+      align: 'right',
+      valueFormatter: (params) => formatter.currency.format(params.value || 0),
+    },
+    {
+      field: 'saldo',
+      headerName: 'Sdo a Favor utilizado',
+      flex: 1.5,
+      align: 'right',
+      valueFormatter: (params) => formatter.currency.format(params.value || 0),
+    },
+    {
+      field: 'total',
+      headerName: 'Total Convenio',
+      flex: 1,
+      align: 'right',
+      valueFormatter: (params) => formatter.currency.format(params.value || 0),
+    },
+    { field: 'cuota', headerName: 'Cuotas', flex: 0.5, align: 'right' },
+    { field: 'medioPago', headerName: 'Medio Pago', flex: 1 },
+    /*{
+      field: 'cheque',
+      headerName: 'N° Cheque',
       flex: 1,
       valueGetter: (params) =>
         params.row.cheques && params.row.cheques.length > 0
-          ? params.row.cheques.map(c => c.numero).join("/ ")
-          : "Sin Cheques"
-    },
+          ? params.row.cheques.map((c) => c.numero).join('/ ')
+          : 'Sin Cheques',
+    },*/
     { field: 'estado', headerName: 'Estado', flex: 1 },
     {
       field: 'acciones',
       headerName: 'Acciones',
-      type:'actions',
+      type: 'actions',
       flex: 1.5,
       getActions: ({ row }) => [
         <GridActionsCellItem
           icon={<DownloadIcon />}
           label="Download"
+          title="Descargar"
           sx={{ color: 'primary.main' }}
           onClick={() => console.log(row)}
         />,
         <GridActionsCellItem
           icon={<EditIcon />}
           label="Editar"
+          title="Editar"
           sx={{ color: 'primary.main' }}
           onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}`)}
           color="inherit"
@@ -190,18 +212,20 @@ export const Convenios = () => {
         <GridActionsCellItem
           icon={<AccountBalanceWalletIcon />}
           label="Cheques"
+          title="Cheques"
           sx={{ color: 'primary.main' }}
-          onClick={()=>handleOpen(row)}
+          onClick={() => handleOpen(row)}
+          //onClick={() =>  navigate(`/dashboard/convenio/${row.numero}/cuotas`)}
           color="inherit"
-        />
+        />,
       ],
       sortable: false,
-    }
+    },
   ];
 
-  useEffect(()=> setRows(conveniosData),[])
+  useEffect(() => setRows(conveniosData), []);
   const handleCancelClick = (row) => {
-    console.log("Acción cancelada para:", row);
+    console.log('Acción cancelada para:', row);
   };
 
   const handleRowModesModelChange = (newRowModesModel) => {
@@ -223,9 +247,17 @@ export const Convenios = () => {
   return (
     <Box>
       {/* Título */}
-      <Cheques open={open} handleClose={handleClose} cheques={chequesPorFila[filaSeleccionada] || []} setCheques={actualizarCheques}  total={total}/>
+      <Cheques
+        open={open}
+        handleClose={handleClose}
+        convenio={conveniosData.id}
+        cuota={conveniosData.cuota}
+        //cheques={chequesPorFila[filaSeleccionada] || []}
+        //setCheques={actualizarCheques}
+        total={total}
+      />
       <div className="convenios_container">
-        <h1 className="mt-1em">CONVENIOS</h1>
+        <h1 className="mt-1em">Mis convenios</h1>
 
         {/* Filtros */}
         <Box sx={{ display: 'flex', gap: 2, mb: 3 }} className="mt-1em">
@@ -301,7 +333,7 @@ export const Convenios = () => {
                 },
                 '& .css-1iyq7zh-MuiDataGrid-columnHeaders': {
                   backgroundColor: '#1A76D2 !important',
-                  color: 'white'
+                  color: 'white',
                 },
               }}
               paginationModel={paginationModel}

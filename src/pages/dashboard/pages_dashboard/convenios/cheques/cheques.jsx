@@ -1,84 +1,151 @@
-import React, { useContext, useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import {
+    Modal,
+    Box,
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import { axiosCheques } from './chequesApi';
 
-import { Modal, Box, TextField, IconButton, Button } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
 
-const Cheques = ({ open, handleClose, cheques, setCheques, total }) => {
-    console.log(total)
-  const [resta, setResta] = useState(total)
-  console.log(resta)
-  const agregarFila = () => {
-    setCheques([...cheques, { id: cheques.length + 1, numero: "", monto: "" }]);
-  };
+  const [cheques, setCheques] = useState([]);
+  const [openChequeNuevo, setOpenChequeNuevo] = useState(false);
+  const [resta, setResta] = useState(total);
 
-  const handleChange = (index, field, value) => {
-    const nuevosCheques = [...cheques];
-    nuevosCheques[index][field] = value;
-    setCheques(nuevosCheques);
-  };
+  const [newCheque, setNewCheque] = useState({
+    numero: '',
+    monto: '',
+    cuota: '',
+    idConvenio: '',
+  });
 
-  const hadleSave = () =>{
-    console.log(cheques)
-    handleClose()
-  }
-  useEffect(()=>setResta(total),[])
-  
   useEffect(() => {
-    const sumatoriaMontosCheques = cheques.reduce((acc, item) => acc + Number(item.monto || 0), 0);
-    setResta(total - sumatoriaMontosCheques);
-  }, [cheques, total]); // Ahora `resta` se actualiza correctamente cuando `total` cambia
-  
-  //let total = cheques.map(cheque => resta)
+    const fetchCheques = async () => {
+      const response = await axiosCheques.consultar(convenio, cuota);
+      setCheques(response);
+    };
+    fetchCheques();
+  }, []);
+
+    useEffect(() => {
+      const sumatoriaMontosCheques = cheques.reduce(
+        (acc, item) => acc + Number(item.monto || 0),
+        0,
+      );
+      console.log(cheques)
+      console.log(sumatoriaMontosCheques)
+      console.log(total)
+      setResta(total - sumatoriaMontosCheques);
+      console.log(resta)
+    }, [cheques, total]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewCheque({ ...newCheque, [name]: value });
+  };
+
+  const handleAddCheque = async () => {
+    const response = await axiosCheques.crear(newCheque);
+    setCheques([...cheques, response]);
+    setOpenChequeNuevo(false);
+    setNewCheque({ numero: '', monto: '', cuota: '', idConvenio: '' });
+  };
+
+  const columns = [
+    //{ field: 'id', headerName: 'ID', width: 90 },
+    { field: 'numero', headerName: 'Número', width: 150 },
+    { field: 'monto', headerName: 'Monto', width: 150 },
+    { field: 'cuota', headerName: 'Cuota', width: 150 },
+    //{ field: 'idConvenio', headerName: 'ID Convenio', width: 150 },
+  ];
 
   return (
     <Modal open={open} onClose={handleClose}>
       <Box
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 400,
-          bgcolor: "background.paper",
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 500,
+          height: 600,
+          bgcolor: 'background.paper',
           boxShadow: 24,
           p: 4,
-          borderRadius: 2
+          borderRadius: 2,
         }}
       >
-        <h2>Ingresar Cheques</h2>
-        {cheques.map((cheque, index) => (
-          <Box key={cheque.id} sx={{ display: "flex", gap: 1, mb: 2 }}>
-            <TextField
-              label="Número de Cheque"
-              variant="outlined"
-              fullWidth
-              value={cheque.numero}
-              onChange={(e) => handleChange(index, "numero", e.target.value)}
-            />
-            <TextField
-              label="Monto"
-              variant="outlined"
-              fullWidth
-              type="number"
-              value={cheque.monto}
-              onChange={(e) => handleChange(index, "monto", e.target.value)}
-            />
-          </Box>
-        ))}
-
-        <IconButton onClick={agregarFila} color="primary">
-          <AddCircleOutlineIcon />
-        </IconButton>
-        <h3>Resta ${resta.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
-
-        <Box sx={{ mt: 2 }}>
-          <Button variant="contained" color="primary" onClick={hadleSave}>
-            Guardar
+        <div style={{ height: 400, width: '100%' }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setOpenChequeNuevo(true)}
+          >
+            Crear Nuevo Cheque
           </Button>
-          <Button variant="contained" color="primary" onClick={handleClose} sx={{ ml: 2 }}>
-            Cancelar
+          <DataGrid
+            rows={cheques}
+            columns={columns}
+            pageSize={4}
+            rowsPerPageOptions={[5]}
+            getRowClassName={(params) =>
+                cheques.indexOf(params.row) % 2 === 0 ? 'even' : 'odd'
+              }
+          />
+          <Dialog open={openChequeNuevo} onClose={() => setOpenChequeNuevo(false)}>
+            <DialogTitle>Crear Nuevo Cheque</DialogTitle>
+            <DialogContent>
+              <TextField
+                margin="dense"
+                name="numero"
+                label="Número"
+                type="text"
+                fullWidth
+                value={newCheque.numero}
+                onChange={handleInputChange}
+              />
+              <TextField
+                margin="dense"
+                name="monto"
+                label="Monto"
+                type="number"
+                fullWidth
+                value={newCheque.monto}
+                onChange={handleInputChange}
+              />
+              <TextField
+                margin="dense"
+                name="cuota"
+                label="Cuota"
+                type="number"
+                fullWidth
+                value={newCheque.cuota}
+                onChange={handleInputChange}
+              />
+              
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpenChequeNuevo(false)} color="secondary">
+                Cancelar
+              </Button>
+              <Button onClick={handleAddCheque} color="primary">
+                Guardar
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+        <div style={{ marginTop: '60px' }}>
+          <h3>Total restante cuota 1: {resta}</h3>
+          <Button variant="contained" color="primary" onClick={handleClose}>
+            Cerrar
           </Button>
-        </Box>
+        </div>
       </Box>
     </Modal>
   );

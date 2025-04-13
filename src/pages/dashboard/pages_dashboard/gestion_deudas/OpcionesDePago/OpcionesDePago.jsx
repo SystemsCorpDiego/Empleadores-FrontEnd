@@ -24,6 +24,7 @@ export const OpcionesDePago = ({
   setCuotas,
   fechaIntencion,
   setFechaIntencion,
+  saldoAFavor,
   noUsar,
   setNoUsar,
   medioPago,
@@ -100,7 +101,7 @@ export const OpcionesDePago = ({
                 value={formatter.currencyString(detalleConvenio.interesesDeFinanciacion)}
               />
             </Grid>
-           {/* <Grid item xs={12}>
+            <Grid item xs={12}>
               <TextField
                 label="Saldo a favor"
                 variant="outlined"
@@ -108,9 +109,9 @@ export const OpcionesDePago = ({
                 InputProps={{
                   readOnly: true,
                 }}
-                value={formatter.currencyString(detalleConvenio.saldoAFavor)}
+                value={saldoAFavor}
               />
-              <FormControlLabel
+             {/** <FormControlLabel
                 control={
                   <Checkbox
                     checked={noUsar}
@@ -118,10 +119,9 @@ export const OpcionesDePago = ({
                   />
                 }
                 label="No Usar"
-              />
+              /> */}
             </Grid>
-            */}
-            <Grid item xs={12}>
+            <Grid item xs={12} marginTop={'2.3em'}>
               <Typography variant="h6">TOTAL</Typography>
               <TextField
                 variant="outlined"

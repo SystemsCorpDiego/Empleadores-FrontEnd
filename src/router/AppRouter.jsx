@@ -34,6 +34,7 @@ import { DDJJTabs } from '@/pages/dashboard/pages_dashboard/ddjj/DDJJTabs';
 import { UserProvider } from '@/context/userProvider';
 import { GestionDeudas } from '@/pages/dashboard/pages_dashboard/gestion_deudas/GestionDeudas';
 import { Convenios } from '@/pages/dashboard/pages_dashboard/convenios/Convenios';
+import { Cuotas } from '@/pages/dashboard/pages_dashboard/convenios/cuotas/Cuotas';
 
 const PagosPage = () => (
   <div className="otros_pagos_container">Contenido de la página de pagos</div>
@@ -102,6 +103,7 @@ const AppRouter = () => {
           <Route path="aportes" element={<Aportes />} />
           <Route path="gestiondeuda" element={<GestionDeudas />} />
           <Route path="gestiondeuda/:id" element={<GestionDeudas />} />
+          <Route path="convenio/:id/cuotas" element={<Cuotas />} />
 
           <Route path="convenios" element={<Convenios />} />
         </Route>
