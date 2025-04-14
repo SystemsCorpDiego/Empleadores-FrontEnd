@@ -39,6 +39,7 @@ export const consultar = async (convenio, cuota) => {
     const URL_API = `${URL_ENTITY}/${convenio}/${cuota}`;
     console.log(URL_API)
     //const data = await axiosCrud.consultar(URL_API);
+    console.log(arregloCheques)
     return arregloCheques || [];
   } catch (error) {
     swal.showErrorBackEnd(

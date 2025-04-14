@@ -39,8 +39,8 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
         0,
       );
       console.log(cheques)
-      console.log(sumatoriaMontosCheques)
-      console.log(total)
+      console.log('sumatoria monto cheques: ', sumatoriaMontosCheques)
+      console.log('total: ', total)
       setResta(total - sumatoriaMontosCheques);
       console.log(resta)
     }, [cheques, total]);
@@ -74,7 +74,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: 500,
-          height: 600,
+          height: 700,
           bgcolor: 'background.paper',
           boxShadow: 24,
           p: 4,
@@ -82,6 +82,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
         }}
       >
         <div style={{ height: 400, width: '100%' }}>
+        <h2 >Cheques convenio Nro {convenio} / Nro. Cuota {cuota} </h2>
           <Button
             variant="contained"
             color="primary"
@@ -140,7 +141,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
             </DialogActions>
           </Dialog>
         </div>
-        <div style={{ marginTop: '60px' }}>
+        <div style={{ marginTop: '150px' }}>
           <h3>Total restante cuota 1: {resta}</h3>
           <Button variant="contained" color="primary" onClick={handleClose}>
             Cerrar

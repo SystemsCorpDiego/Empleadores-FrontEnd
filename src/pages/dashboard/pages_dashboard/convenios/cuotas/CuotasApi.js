@@ -15,8 +15,7 @@ const arregloCuotas = [
     {
         convenioId: 1,
         id: 1,
-        fecha: '2023-01-01',
-        nro_cuota: '001',
+        nro_cuota: '1',
         importeCuota: 15000.0,
         cheques: '12345/67890',
         totalCheques: 15000.0,
@@ -24,8 +23,7 @@ const arregloCuotas = [
     {
         convenioId: 1,
         id: 2,
-        fecha: '2023-02-01',
-        nro_cuota: '002',
+        nro_cuota: '2',
         importeCuota: 15000.0,
         cheques: '22345/77890',
         totalCheques: 15000.0,
@@ -33,8 +31,7 @@ const arregloCuotas = [
     {
         convenioId: 1,
         id: 3,
-        fecha: '2023-03-01',
-        nro_cuota: '003',
+        nro_cuota: '3',
         importeCuota: 15000.0,
         cheques: '32345/87890',
         totalCheques: 15000.0,
@@ -42,8 +39,7 @@ const arregloCuotas = [
     {
         convenioId: 1,
         id: 4,
-        fecha: '2023-04-01',
-        nro_cuota: '004',
+        nro_cuota: '4',
         importeCuota: 15000.0,
         cheques: '42345/97890',
         totalCheques: 15000.0,
@@ -67,11 +63,12 @@ export const axiosCuotas = {
         return eliminar(id);
     },
 };*/
-export const consultar = async (convenio, cuota) => {
+export const consultar = async (convenio) => {
     try {
         const URL_API = `${URL_ENTITY}/${convenio}/`;
         console.log(URL_API)
         //const data = await axiosCrud.consultar(URL_API);
+        console.log(arregloCuotas)
         return arregloCuotas || [];
     } catch (error) {
         swal.showErrorBackEnd(

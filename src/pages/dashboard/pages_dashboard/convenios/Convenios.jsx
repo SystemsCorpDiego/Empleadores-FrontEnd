@@ -38,7 +38,7 @@ const conveniosData = [
     interes: 100.0,
     saldo: 200.0,
     total: 20100.0,
-    cuota: 3,
+    cantCuotas: 3,
     medioPago: 'Cheque',
     //cheques: '',
     estado: 'Pendiente...',
@@ -51,7 +51,7 @@ const conveniosData = [
     interes: 3000.0,
     saldo: 33000.0,
     total: 33000.0,
-    cuota: 2,
+    cantCuotas: 2,
     medioPago: 'Cheque',
     //cheques: [{ id: 1, numero: '123', monto: 5000.0, cuota: 2 }],
     estado: 'Cheque Recibido',
@@ -64,7 +64,7 @@ const conveniosData = [
     interes: 20000.0,
     saldo: 140000.0,
     total: 140000.0,
-    cuota: 1,
+    cantCuotas: 1,
     medioPago: 'Cheque',
     cheques: '',
     estado: 'Cerrado',
@@ -158,25 +158,25 @@ export const Convenios = () => {
     {
       field: 'interes',
       headerName: 'Intereses Financ.',
-      flex: 1.2,
+      flex: 1,
       align: 'right',
       valueFormatter: (params) => formatter.currency.format(params.value || 0),
     },
     {
       field: 'saldo',
       headerName: 'Sdo a Favor utilizado',
-      flex: 1.5,
+      flex: 1,
       align: 'right',
       valueFormatter: (params) => formatter.currency.format(params.value || 0),
     },
     {
       field: 'total',
       headerName: 'Total Convenio',
-      flex: 1,
+      flex: 0.8,
       align: 'right',
       valueFormatter: (params) => formatter.currency.format(params.value || 0),
     },
-    { field: 'cuota', headerName: 'Cuotas', flex: 0.5, align: 'right' },
+    { field: 'cantCuotas', headerName: 'Cant. Cuotas', flex: 0.8, align: 'right' },
     { field: 'medioPago', headerName: 'Medio Pago', flex: 1 },
     /*{
       field: 'cheque',
@@ -214,8 +214,8 @@ export const Convenios = () => {
           label="Cheques"
           title="Cheques"
           sx={{ color: 'primary.main' }}
-          onClick={() => handleOpen(row)}
-          //onClick={() =>  navigate(`/dashboard/convenio/${row.numero}/cuotas`)}
+          //onClick={() => handleOpen(row)}
+          onClick={() =>  navigate(`/dashboard/convenio/${row.numero}/cuotas`)}
           color="inherit"
         />,
       ],
