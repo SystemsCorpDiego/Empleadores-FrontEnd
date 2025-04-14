@@ -13,8 +13,8 @@ const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
 
 const arregloCheques = [
     { convenioId: 1, id: 1, numero: '123', monto: 5000.0, cuota: 2 },
-    { convenioId: 1, id: 2, numero: '456', monto: 10000.0, cuota: 3 },
-    { convenioId: 1, id: 3, numero: '789', monto: 15000.0, cuota: 4 },
+    { convenioId: 1, id: 2, numero: '123', monto: 10000.0, cuota: 3 },
+    { convenioId: 1, id: 3, numero: '123', monto: 15000.0, cuota: 4 },
   ];
 
 export const axiosCheques = {

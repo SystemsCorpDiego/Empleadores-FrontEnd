@@ -59,9 +59,9 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
 
   const columns = [
     //{ field: 'id', headerName: 'ID', width: 90 },
-    { field: 'numero', headerName: 'Número', width: 150 },
+    { field: 'numero', headerName: 'Número Cuota', width: 150 },
     { field: 'monto', headerName: 'Monto', width: 150 },
-    { field: 'cuota', headerName: 'Cuota', width: 150 },
+    { field: 'cuota', headerName: 'Número Cheque', width: 150 },
     //{ field: 'idConvenio', headerName: 'ID Convenio', width: 150 },
   ];
 
