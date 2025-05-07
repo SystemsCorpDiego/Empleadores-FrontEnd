@@ -2,19 +2,19 @@ import * as locales from '@mui/material/locale';
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import {
   Box,
-  Typography,
+
   TextField,
   MenuItem,
   Button,
-  IconButton,
+
   createTheme,
 } from '@mui/material';
 import { StripedDataGrid, dataGridStyle } from '@/common/dataGridStyle';
 import EditIcon from '@mui/icons-material/Edit';
+import CancelIcon from '@mui/icons-material/Cancel';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import {
-  GridRowModes,
-  DataGrid,
+
   GridToolbarContainer,
   GridActionsCellItem,
   GridRowEditStopReasons,
@@ -24,61 +24,20 @@ import DownloadIcon from '@mui/icons-material/Download';
 import './Convenios.css';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
 import { UserContext } from '@/context/userContext';
-import AddIcon from '@mui/icons-material/Add';
+
 import { useNavigate } from 'react-router-dom';
 import Cheques from './cheques/cheques';
 import formatter from '@/common/formatter';
-// Datos de ejemplo para el DataGrid
-const conveniosData = [
-  {
-    id: 1,
-    fecha: 'MM/AAAA',
-    numero: 1,
-    deuda: 20000.0,
-    interes: 100.0,
-    saldo: 200.0,
-    total: 20100.0,
-    cantCuotas: 3,
-    medioPago: 'Cheque',
-    //cheques: '',
-    estado: 'Pendiente...',
-  },
-  {
-    id: 2,
-    fecha: 'MM/AAAA',
-    numero: 2,
-    deuda: 30000.0,
-    interes: 3000.0,
-    saldo: 33000.0,
-    total: 33000.0,
-    cantCuotas: 2,
-    medioPago: 'Cheque',
-    //cheques: [{ id: 1, numero: '123', monto: 5000.0, cuota: 2 }],
-    estado: 'Cheque Recibido',
-  },
-  {
-    id: 3,
-    fecha: 'MM/AAAA',
-    numero: 3,
-    deuda: 120000.0,
-    interes: 20000.0,
-    saldo: 140000.0,
-    total: 140000.0,
-    cantCuotas: 1,
-    medioPago: 'Cheque',
-    cheques: '',
-    estado: 'Cerrado',
-  },
-];
+import ConveniosService from './ConveniosApi';
+import { getRol } from '@/components/localStorage/localStorageService';
+import CheckIcon from '@mui/icons-material/Check';
+import TerminosYCondiciones from './TerminosYCondiciones/TerminosYCondiciones';
 
 // Columnas del DataGrid
 
 const crearNuevoRegistro = (props) => {
   const {
-    setRows,
-    rows,
-    setRowModesModel,
-    volverPrimerPagina,
+
     showQuickFilter,
     themeWithLocale,
   } = props;
@@ -94,24 +53,17 @@ const crearNuevoRegistro = (props) => {
 };
 
 export const Convenios = () => {
-  const [locale, setLocale] = useState('esES');
+
+  const locale = 'esES';
   const navigate = useNavigate();
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   const [open, setOpen] = useState(false);
-  const [cheques, setCheques] = useState([{ id: 1, numero: '', monto: '' }]);
-  const [chequesPorFila, setChequesPorFila] = useState({});
-  const [filaSeleccionada, setFilaSeleccionada] = useState(null);
-  const [total, setTotal] = useState(0);
+  const [rol, setRol] = useState('');
+  const [terminosYCondiciones, setTerminosYCondiciones] = useState(false);
 
-  const handleOpen = (row) => {
-    console.log(row.id);
-    setFilaSeleccionada(row.id);
-    console.log(row.total);
-    setTotal(Number(row.total) || 0);
-    console.log(total);
-    setOpen(true);
-  };
+  const total = 0;
+
   const handleClose = () => setOpen(false);
 
   const { paginationModel, setPaginationModel, pageSizeOptions } =
@@ -121,31 +73,68 @@ export const Convenios = () => {
     () => createTheme(theme, locales[locale]),
     [locale, theme],
   );
-/**
   useEffect(() => {
-    setRows(conveniosData);
-    //const inicialCheques = {};
-    //conveniosData.forEach((row) => {
-    //  inicialCheques[row.id] = row.cheques || [];
-    //});
-    //setChequesPorFila(inicialCheques);
+    const fetchData = async () => {
+      try {
+        setRol(getRol());
+        console.log('Rol:', rol);
+      } catch (error) {
+        console.error('Error fetching rol:', error);
+      }
+      try {
+        const data = await ConveniosService.getAllConvenios();
+        setRows(data);
+      } catch (error) {
+        console.error('Error fetching convenios:', error);
+      }
+    };
+    fetchData();
+    console.log(rows);
   }, []);
- */
-  const actualizarCheques = (chequesActualizados) => {
-    setChequesPorFila((prev) => ({
-      ...prev,
-      [filaSeleccionada]: chequesActualizados,
-    }));
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === filaSeleccionada
-          ? { ...row, cheques: chequesActualizados }
-          : row,
-      ),
-    );
+
+  const handleOpen = (row) => {
+    console.log(row);
+    setTerminosYCondiciones(true);
+    console.log(terminosYCondiciones);
+  }
+
+  const processRowUpdate = async (updatedRow, originalRow) => {
+    if (updatedRow.estado !== originalRow.estado) {
+      console.log('Estado:', updatedRow.estado, 'ID:', updatedRow.id);
+    }
+    try {
+      const respuesta = await ConveniosService.updateConvenio(updatedRow.id, updatedRow.estado);
+      console.log('Convenio actualizado:', respuesta);
+    } catch (error) {
+      console.error('Error al actualizar el convenio:', error);
+    }
+
+    return updatedRow;
   };
 
+  const handleCancelClick = (id) => () => {
+    setRowModesModel((prevRowModesModel) => ({
+      ...prevRowModesModel,
+      [id]: { mode: 'view', ignoreModifications: true },
+    }));
+  };
+
+  const handleSaveClick = (id) => () => {
+    setRowModesModel((prevRowModesModel) => ({
+      ...prevRowModesModel,
+      [id]: { mode: 'view' },
+    }));
+  };
+
+
   const columnas = [
+    {
+      field: 'cuit',
+      headerName: 'CUIT',
+      flex: 1.2,
+      hide: !useContext(UserContext).isAdmin, // Esconde la columna si el usuario no es admin
+    },
+    { field: 'razonSocial', headerName: 'Razón Social', flex: 1 },
     { field: 'fecha', headerName: 'Fecha', flex: 1 },
     { field: 'numero', headerName: 'N°', flex: 0.1, align: 'right' },
     {
@@ -176,7 +165,12 @@ export const Convenios = () => {
       align: 'right',
       valueFormatter: (params) => formatter.currency.format(params.value || 0),
     },
-    { field: 'cantCuotas', headerName: 'Cant. Cuotas', flex: 0.8, align: 'right' },
+    {
+      field: 'cantCuotas',
+      headerName: 'Cant. Cuotas',
+      flex: 0.8,
+      align: 'right',
+    },
     { field: 'medioPago', headerName: 'Medio Pago', flex: 1 },
     /*{
       field: 'cheque',
@@ -187,46 +181,80 @@ export const Convenios = () => {
           ? params.row.cheques.map((c) => c.numero).join('/ ')
           : 'Sin Cheques',
     },*/
-    { field: 'estado', headerName: 'Estado', flex: 1 },
+    {
+      field: 'estado',
+      headerName: 'Estado',
+      flex: 1,
+      editable: rol === 'OSPIM_EMPLEADO' ? true : false,
+      type: 'singleSelect',
+      valueOptions: ['Pendiente', 'Cerrado', 'Cheque Recibido'],
+    },
+
     {
       field: 'acciones',
       headerName: 'Acciones',
       type: 'actions',
       flex: 1.5,
-      getActions: ({ row }) => [
-        <GridActionsCellItem
-          icon={<DownloadIcon />}
-          label="Download"
-          title="Descargar"
-          sx={{ color: 'primary.main' }}
-          onClick={() => console.log(row)}
-        />,
-        <GridActionsCellItem
-          icon={<EditIcon />}
-          label="Editar"
-          title="Editar"
-          sx={{ color: 'primary.main' }}
-          onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}`)}
-          color="inherit"
-        />,
-        <GridActionsCellItem
-          icon={<AccountBalanceWalletIcon />}
-          label="Cheques"
-          title="Cheques"
-          sx={{ color: 'primary.main' }}
-          //onClick={() => handleOpen(row)}
-          onClick={() =>  navigate(`/dashboard/convenio/${row.numero}/cuotas`)}
-          color="inherit"
-        />,
-      ],
+      getActions: ({ id, row }) => {
+        const isInEditMode = rowModesModel[id]?.mode === 'edit';
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<CheckIcon />}
+              label="Guardar"
+              onClick={handleSaveClick(id)}
+              color="primary"
+            />,
+            <GridActionsCellItem
+              icon={<CancelIcon />}
+              label="Cancelar"
+              onClick={handleCancelClick(id)}
+              color="inherit"
+            />,
+          ];
+        }
+        return [
+          <GridActionsCellItem
+            icon={<DownloadIcon />}
+            label="Download"
+            title="Descargar"
+            sx={{ color: 'primary.main' }}
+            onClick={() => console.log(row)}
+          />,
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Editar"
+            title="Editar"
+            sx={{ color: 'primary.main' }}
+            onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}`)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            icon={<AccountBalanceWalletIcon />}
+            label="Cheques"
+            title="Cheques"
+            sx={{ color: 'primary.main' }}
+            onClick={() => navigate(`/dashboard/convenio/${row.numero}/cuotas`)}
+            color="inherit"
+          />,
+          ...(rol !== 'OSPIM_EMPLEADO'
+            ? [
+                <GridActionsCellItem
+                  icon={<CheckIcon />}
+                  label="Aceptar Terminos y condiciones"
+                  title="Aceptar Terminos y condiciones"
+                  sx={{ color: 'primary.main' }}
+                  color="inherit"
+                  onClick={() => handleOpen(row)}
+                />,
+              ]
+            : []),
+        ];
+      },
       sortable: false,
     },
   ];
 
-  useEffect(() => setRows(conveniosData), []);
-  const handleCancelClick = (row) => {
-    console.log('Acción cancelada para:', row);
-  };
 
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
@@ -246,16 +274,9 @@ export const Convenios = () => {
 
   return (
     <Box>
-      {/* Título */}
-      <Cheques
-        open={open}
-        handleClose={handleClose}
-        convenio={conveniosData.id}
-        cuota={conveniosData.cuota}
-        //cheques={chequesPorFila[filaSeleccionada] || []}
-        //setCheques={actualizarCheques}
-        total={total}
-      />
+      
+      <TerminosYCondiciones open={terminosYCondiciones} setOpen={setTerminosYCondiciones} />
+      
       <div className="convenios_container">
         <h1 className="mt-1em">Mis convenios</h1>
 

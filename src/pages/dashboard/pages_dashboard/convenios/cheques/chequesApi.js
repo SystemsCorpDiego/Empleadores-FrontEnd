@@ -11,10 +11,10 @@ const HTTP_MSG_MODI_ERROR = import.meta.env.VITE_HTTP_MSG_MODI_ERROR;
 const HTTP_MSG_BAJA_ERROR = import.meta.env.VITE_HTTP_MSG_BAJA_ERROR;
 const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
 
-const arregloCheques = [
+let arregloCheques = [
     { convenioId: 1, id: 1, numero: '123', monto: 5000.0, cuota: 2 },
-    { convenioId: 1, id: 2, numero: '123', monto: 10000.0, cuota: 3 },
-    { convenioId: 1, id: 3, numero: '123', monto: 15000.0, cuota: 4 },
+    { convenioId: 1, id: 2, numero: '123', monto: 5000.0, cuota: 2 },
+    { convenioId: 1, id: 3, numero: '123', monto: 5000.0, cuota: 2 },
   ];
 
 export const axiosCheques = {
@@ -81,15 +81,18 @@ export const actualizar = async (registro) => {
 };
 export const eliminar = async (id) => {
   try {
-    const data = await axiosCrud.eliminar(URL_ENTITY, id);
-    if (data && data.id) {
-      swal.showSuccess(HTTP_MSG_BAJA);
-      return data;
-    }
+    const chequeEliminado = arregloCheques.find((cheque) => cheque.id === id);
+    if (!chequeEliminado) return arregloCheques;
+
+    arregloCheques = arregloCheques.filter((cheque) => cheque.id !== id);
+
+    swal.showSuccess(HTTP_MSG_BAJA);
+    return arregloCheques;
   } catch (error) {
     swal.showErrorBackEnd(
       HTTP_MSG_BAJA_ERROR + ` (${URL_ENTITY} - status: ${error.status})`,
       error,
     );
+    return arregloCheques;
   }
 };

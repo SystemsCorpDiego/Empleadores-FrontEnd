@@ -3,6 +3,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
 import { consultar } from './CuotasApi';
 import Cheques from '../cheques/cheques';
+import formatter from '@/common/formatter';
 
 export const Cuotas = () => {
   const [cuotas, setCuotas] = useState([]);
@@ -44,9 +45,9 @@ export const Cuotas = () => {
 
   const columns = [
     { field: 'nro_cuota', headerName: 'Nro. Cuota', flex: 1 },
-    { field: 'importeCuota', headerName: 'Importe Cuota', flex: 1 },
+    { field: 'importeCuota', headerName: 'Importe Cuota', align: 'right', flex: 1, valueFormatter: (params) => formatter.currency.format(params.value || 0) },
     { field: 'cheques', headerName: 'Nro. Cheques', flex: 1 },
-    { field: 'totalCheques', headerName: 'Total Cheques', flex: 1 },
+    { field: 'totalCheques', headerName: 'Total Cheques', align: 'right', flex: 1,valueFormatter: (params) => formatter.currency.format(params.value || 0) },
     {
       field: 'acciones',
       headerName: 'Acciones',
@@ -80,6 +81,22 @@ export const Cuotas = () => {
         <DataGrid
           rows={cuotas || []}
           columns={columns}
+          getRowClassName={(params) =>
+            cuotas.indexOf(params.row) % 2 === 0 ? 'even' : 'odd'
+          }
+          sx={{
+            '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {
+              width: '8px',
+              visibility: 'visible',
+            },
+            '& .MuiDataGrid-virtualScroller::-webkit-scrollbar-thumb': {
+              backgroundColor: '#ccc',
+            },
+            '& .css-1iyq7zh-MuiDataGrid-columnHeaders': {
+              backgroundColor: '#1A76D2 !important',
+              color: 'white',
+            },
+          }}
           pageSize={5}
           rowsPerPageOptions={[5]}
           disableSelectionOnClick

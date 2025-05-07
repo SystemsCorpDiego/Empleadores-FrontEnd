@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import {
-    Modal,
-    Box,
+  Modal,
+  Box,
   Button,
   TextField,
   Dialog,
@@ -11,18 +11,19 @@ import {
   DialogTitle,
 } from '@mui/material';
 import { axiosCheques } from './chequesApi';
+import formatter from '@/common/formatter';
 
 const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
-
   const [cheques, setCheques] = useState([]);
-  const [openChequeNuevo, setOpenChequeNuevo] = useState(false);
+  const [openChequeDialog, setOpenChequeDialog] = useState(false);
   const [resta, setResta] = useState(total);
+  const [editing, setEditing] = useState(false);
 
   const [newCheque, setNewCheque] = useState({
     numero: '',
     monto: '',
-    cuota: '',
-    idConvenio: '',
+    cuota,
+    idConvenio: convenio,
   });
 
   useEffect(() => {
@@ -31,121 +32,155 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
       setCheques(response);
     };
     fetchCheques();
-  }, []);
+  }, [convenio, cuota]);
 
-    useEffect(() => {
-      const sumatoriaMontosCheques = cheques.reduce(
-        (acc, item) => acc + Number(item.monto || 0),
-        0,
-      );
-      console.log(cheques)
-      console.log('sumatoria monto cheques: ', sumatoriaMontosCheques)
-      console.log('total: ', total)
-      setResta(total - sumatoriaMontosCheques);
-      console.log(resta)
-    }, [cheques, total]);
+  useEffect(() => {
+    const totalCheques = cheques.reduce((sum, item) => sum + Number(item.monto || 0), 0);
+    setResta(total - totalCheques);
+  }, [cheques, total]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewCheque({ ...newCheque, [name]: value });
   };
 
-  const handleAddCheque = async () => {
-    const response = await axiosCheques.crear(newCheque);
-    setCheques([...cheques, response]);
-    setOpenChequeNuevo(false);
-    setNewCheque({ numero: '', monto: '', cuota: '', idConvenio: '' });
+  const handleSaveCheque = async () => {
+    let response;
+    if (editing) {
+      response = await axiosCheques.actualizar(newCheque);
+      setCheques(cheques.map((c) => (c.id === newCheque.id ? response : c)));
+    } else {
+      response = await axiosCheques.crear({ ...newCheque, cuota, idConvenio: convenio });
+      setCheques([...cheques, response]);
+    }
+    resetChequeForm();
+  };
+
+  const resetChequeForm = () => {
+    setNewCheque({ numero: '', monto: '', cuota, idConvenio: convenio });
+    setOpenChequeDialog(false);
+    setEditing(false);
+  };
+
+  const handleEditCheque = (id) => {
+    const cheque = cheques.find((c) => c.id === id);
+    setNewCheque(cheque);
+    setEditing(true);
+    setOpenChequeDialog(true);
+  };
+
+  const handleDeleteCheque = async (id) => {
+    const response = await axiosCheques.eliminar(id);
+    setCheques(response);
   };
 
   const columns = [
-    //{ field: 'id', headerName: 'ID', width: 90 },
-    { field: 'numero', headerName: 'Número Cuota', width: 150 },
-    { field: 'monto', headerName: 'Monto', width: 150 },
-    { field: 'cuota', headerName: 'Número Cheque', width: 150 },
-    //{ field: 'idConvenio', headerName: 'ID Convenio', width: 150 },
+    { field: 'cuota', headerName: 'Cuota', flex: 1, align:'center' },
+    { field: 'monto', headerName: 'Monto', flex: 1, align:'right', valueFormatter: (params) => formatter.currency.format(params.value || 0) },
+    { field: 'numero', headerName: 'Número Cheque', flex: 1, align:'center' },
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      flex: 1,
+      renderCell: (params) => (
+        <>
+          <Button variant="contained" color="primary" onClick={() => handleEditCheque(params.row.id)}>
+            Editar
+          </Button>
+
+          <Button variant="contained" color="primary" style={{ marginLeft: '5px' }}
+            onClick={() => handleDeleteCheque(params.row.id)}>
+            Eliminar
+          </Button>
+        </>
+      ),
+    },
   ];
 
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={open} onClose={handleClose} height={800}>
       <Box
         sx={{
           position: 'absolute',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: 500,
-          height: 700,
+          width: 800,
+          height: 650,
           bgcolor: 'background.paper',
           boxShadow: 24,
           p: 4,
           borderRadius: 2,
         }}
       >
-        <div style={{ height: 400, width: '100%' }}>
-        <h2 >Cheques convenio Nro {convenio} / Nro. Cuota {cuota} </h2>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => setOpenChequeNuevo(true)}
-          >
-            Crear Nuevo Cheque
-          </Button>
+        <h2>Cheques convenio Nro {convenio} / Cuota {cuota}</h2>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setOpenChequeDialog(true)}
+          disabled={resta <= 0}
+        >
+          Cargar Cheque
+        </Button>
+        <div style={{ height: 390, width: '100%', marginTop: 20 }}>
+
           <DataGrid
             rows={cheques}
             columns={columns}
             pageSize={4}
+            getRowId={(row) => row.id}
             rowsPerPageOptions={[5]}
-            getRowClassName={(params) =>
-                cheques.indexOf(params.row) % 2 === 0 ? 'even' : 'odd'
-              }
+            height={300}
+            sx={{
+              '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {
+                width: '8px',
+                visibility: 'visible',
+              },
+              '& .MuiDataGrid-virtualScroller::-webkit-scrollbar-thumb': {
+                backgroundColor: '#ccc',
+              },
+              '& .css-1iyq7zh-MuiDataGrid-columnHeaders': {
+                backgroundColor: '#1A76D2 !important',
+                color: 'white',
+              },
+            }}
           />
-          <Dialog open={openChequeNuevo} onClose={() => setOpenChequeNuevo(false)}>
-            <DialogTitle>Crear Nuevo Cheque</DialogTitle>
-            <DialogContent>
-              <TextField
-                margin="dense"
-                name="numero"
-                label="Número"
-                type="text"
-                fullWidth
-                value={newCheque.numero}
-                onChange={handleInputChange}
-              />
-              <TextField
-                margin="dense"
-                name="monto"
-                label="Monto"
-                type="number"
-                fullWidth
-                value={newCheque.monto}
-                onChange={handleInputChange}
-              />
-              <TextField
-                margin="dense"
-                name="cuota"
-                label="Cuota"
-                type="number"
-                fullWidth
-                value={newCheque.cuota}
-                onChange={handleInputChange}
-              />
-              
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setOpenChequeNuevo(false)} color="secondary">
-                Cancelar
-              </Button>
-              <Button onClick={handleAddCheque} color="primary">
-                Guardar
-              </Button>
-            </DialogActions>
-          </Dialog>
         </div>
-        <div style={{ marginTop: '150px' }}>
-          <h3>Total restante cuota 1: {resta}</h3>
-          <Button variant="contained" color="primary" onClick={handleClose}>
-            Cerrar
-          </Button>
+
+        <Dialog open={openChequeDialog} onClose={resetChequeForm}>
+          <DialogTitle>{editing ? 'Editar Cheque' : 'Nuevo Cheque'}</DialogTitle>
+          <DialogContent>
+            <TextField
+              margin="dense"
+              name="numero"
+              label="Número"
+              fullWidth
+              value={newCheque.numero}
+              onChange={handleInputChange}
+            />
+            <TextField
+              margin="dense"
+              name="monto"
+              label="Monto"
+              type="number"
+              fullWidth
+              value={newCheque.monto}
+              onChange={handleInputChange}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={resetChequeForm} color="secondary">
+              Cancelar
+            </Button>
+            <Button onClick={handleSaveCheque} color="primary">
+              Guardar
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <div style={{ marginTop: 30 }}>
+          <h3>Total restante: {resta}</h3>
+          <Button variant="outlined" onClick={handleClose}>Cerrar</Button>
         </div>
       </Box>
     </Modal>
