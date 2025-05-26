@@ -2,7 +2,7 @@ import { axiosCrud } from '@/components/axios/axiosCrud';
 import formatter from '@/common/formatter';
 import swal from '@/components/swal/swal';
 
-const URL_ENTITY = '/cheques';
+const URL_ENTITY = '/empresa';
 const HTTP_MSG_ALTA = import.meta.env.VITE_HTTP_MSG_ALTA;
 const HTTP_MSG_MODI = import.meta.env.VITE_HTTP_MSG_MODI;
 const HTTP_MSG_BAJA = import.meta.env.VITE_HTTP_MSG_BAJA;
@@ -63,11 +63,16 @@ export const axiosCuotas = {
         return eliminar(id);
     },
 };*/
-export const consultar = async (convenio) => {
+export const consultar = async (convenioId, empresaId) => {
     try {
-        const URL_API = `${URL_ENTITY}/${convenio}/`;
+        console.log(convenioId, empresaId)
+
+            
+        const URL_API = `${URL_ENTITY}/${empresaId}/convenios/${convenioId}/cuotas`;
         console.log(URL_API)
-        //const data = await axiosCrud.consultar(URL_API);
+        const data = await axiosCrud.consultar(URL_API);
+
+        console.log(data)
         console.log(arregloCuotas)
         return arregloCuotas || [];
     } catch (error) {

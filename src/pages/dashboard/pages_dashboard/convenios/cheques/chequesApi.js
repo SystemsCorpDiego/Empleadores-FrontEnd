@@ -2,7 +2,7 @@ import { axiosCrud } from '@/components/axios/axiosCrud';
 import formatter from '@/common/formatter';
 import swal from '@/components/swal/swal';
 
-const URL_ENTITY = '/cheques';
+const URL_ENTITY = '/empresa';
 const HTTP_MSG_ALTA = import.meta.env.VITE_HTTP_MSG_ALTA;
 const HTTP_MSG_MODI = import.meta.env.VITE_HTTP_MSG_MODI;
 const HTTP_MSG_BAJA = import.meta.env.VITE_HTTP_MSG_BAJA;
@@ -18,81 +18,88 @@ let arregloCheques = [
   ];
 
 export const axiosCheques = {
-  consultar: async function (UrlApi) {
-    return consultar(UrlApi);
+  consultar: async function (convenioId, cuotaId, empresaId) {
+    return consultar(convenioId, cuotaId, empresaId);
   },
 
-  crear: async function (oEntidad) {
-    return crear(oEntidad);
+  crear: async function (chequeBody, cuota, idConvenio, empresaId) {
+    return crear(chequeBody, cuota, idConvenio, empresaId);
   },
 
-  actualizar: async function (oEntidad) {
-    return actualizar(oEntidad);
+  actualizar: async function (chequeBody, empresaId, convenioId, cuotaId, chequeId) {
+    return actualizar(chequeBody, empresaId, convenioId, cuotaId, chequeId);
   },
 
-  eliminar: async function (id) {
-    return eliminar(id);
+  eliminar: async function (empresaId,convenioId,cuotaId,chequeId) {
+    return eliminar(empresaId,convenioId,cuotaId,chequeId);
   },
 };
-export const consultar = async (convenio, cuota) => {
+export const consultar = async (convenioId, cuotaId, empresaId) => {
   try {
-    const URL_API = `${URL_ENTITY}/${convenio}/${cuota}`;
-    console.log(URL_API)
-    //const data = await axiosCrud.consultar(URL_API);
-    console.log(arregloCheques)
-    return arregloCheques || [];
+    
+    const URL_API = `${URL_ENTITY}/${empresaId}/convenios/${convenioId}/cuotas/${cuotaId}/cheques`;
+    
+    const data = await axiosCrud.consultar(URL_API);
+    console.log(data);
+    return data || [];
   } catch (error) {
     swal.showErrorBackEnd(
-      HTTP_MSG_CONSUL_ERROR + ` (${URL_API} - status: ${error.status})`,
+      HTTP_MSG_CONSUL_ERROR + ` ( status: ${error.status})`,
       error,
     );
     return [];
   }
 };
-export const crear = async (registro) => {
+export const crear = async (chequeBody, cuota, idConvenio, empresaId) => {
+  const URL_API = `/empresa/${empresaId}/convenios/${idConvenio}/cuotas/${cuota}/cheques`
   try {
-    //const data = await axiosCrud.crear(URL_ENTITY, registro);
-    console.log(registro)
-    const data = { convenioId: 1, id: Math.random(100) * 1.2 , numero: registro.numero, monto: 15000.0, cuota: 4 }
+    
+    const body = {
+      'numero' : chequeBody.numero,
+      'fecha' : chequeBody.fecha,
+      'importe' :parseInt(chequeBody.importe, 10)}
+    
+      console.log(body)
+      const data = await axiosCrud.crear(URL_API, chequeBody);
+    
     if (data && data.id) {
+      await consultar(idConvenio, cuota, empresaId);
       swal.showSuccess(HTTP_MSG_ALTA);
       return data;
     }
   } catch (error) {
     swal.showErrorBackEnd(
-      HTTP_MSG_ALTA_ERROR + ` (${URL_ENTITY} - status: ${error.status})`,
+      HTTP_MSG_ALTA_ERROR + ` (${URL_API} - status: ${error.status})`,
       error,
     );
   }
 };
-export const actualizar = async (registro) => {
+export const actualizar = async (chequeBody, empresaId, convenioId, cuotaId, chequeId) => {
+  const URL_API = `/empresa/${empresaId}/convenios/${convenioId}/cuotas/${cuotaId}/cheques`
   try {
-    const data = await axiosCrud.actualizar(URL_ENTITY, registro);
-    if (data && data.id) {
-      swal.showSuccess(HTTP_MSG_MODI);
-      return data;
+    
+    console.log(chequeBody)
+    console.log(chequeId)
+    const body = {
+      'numero' : chequeBody.numero,
+      'fecha' : chequeBody.fecha,
+      'importe' :parseInt(chequeBody.importe, 10),
+      'id' : chequeId
     }
+
+    const data = await axiosCrud.actualizar(URL_API, body);
+    return data;
+    
   } catch (error) {
     swal.showErrorBackEnd(
-      HTTP_MSG_MODI_ERROR + ` (${URL_ENTITY} - status: ${error.status})`,
+      HTTP_MSG_MODI_ERROR + ` (${URL_API} - status: ${error.status})`,
       error,
     );
   }
 };
-export const eliminar = async (id) => {
-  try {
-    const chequeEliminado = arregloCheques.find((cheque) => cheque.id === id);
-    if (!chequeEliminado) return arregloCheques;
-
-    arregloCheques = arregloCheques.filter((cheque) => cheque.id !== id);
-
-    swal.showSuccess(HTTP_MSG_BAJA);
-    return arregloCheques;
-  } catch (error) {
-    swal.showErrorBackEnd(
-      HTTP_MSG_BAJA_ERROR + ` (${URL_ENTITY} - status: ${error.status})`,
-      error,
-    );
-    return arregloCheques;
-  }
+export const eliminar = async (empresaId,convenioId,cuotaId,chequeId) => {
+  const URL_API = `/empresa/${empresaId}/convenios/${convenioId}/cuotas/${cuotaId}/cheques`
+  await axiosCrud.eliminar(URL_API,chequeId);
+  
+  
 };

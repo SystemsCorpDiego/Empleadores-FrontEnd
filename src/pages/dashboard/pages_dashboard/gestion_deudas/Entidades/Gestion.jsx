@@ -16,6 +16,9 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import formatter from '@/common/formatter';
 import { GrillaSaldoAFavor } from '../Grillas/GrillaSaldoAFavor';
+import Swal from 'sweetalert2';
+import { generarConvenio } from './GestionApi';
+import { useNavigate } from 'react-router-dom';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,6 +48,7 @@ CustomTabPanel.propTypes = {
 
 export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   useContext(UserContext);
+  const navigate = useNavigate();
   const [actas, setActas] = useState([]); //Se usa para guardar las actas que vienen del backend
   const [selectedActas, setSelectedActas] = useState([]); //Se usa para guardar los ids de las actas seleccionadas
   const [totalActas, setTotalActas] = useState(0); //Se usa para mostrar en la cabecera del acordion
@@ -59,6 +63,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   const [saldosAFavor, setSaldosAFavor] = useState([])
   const [selectedSaldosAFavor, setSelectedSaldosAFavor] = useState([])
   const [totalSaldosAFavor, setTotalSaldosAFavor] = useState(0)
+  const [totalSaldosAFavorSelected, setTotalSaldosAFavorSelected] = useState(0); //Se usa para guardar el total de saldos a favor seleccionados
   const [detalleConvenio, setDetalleConvenio] = useState({
     importeDeDeuda: 0,
     interesesDeFinanciacion: 0,
@@ -68,13 +73,63 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     cantidadCuotas: 0,
     detalleCuota: [],
   }); //Propiedades del detalle convenio
-
+  const [showLoading, setShowLoading] = useState(false); // Estado para mostrar el loading
   const [noUsar, setNoUsar] = useState(true); // Estado que identifica si se utiliza el saldo a favor o no
   const [medioPago, setMedioPago] = useState('CHEQUE'); //Queda por si en algun momento se agrega otro medio de pago
+  const [totalDeuda, setTotalDeuda] = useState(0); //Se usa para mostrar el total de la deuda en el estado de deuda
+  const [importeDeDeuda, setImporteDeDeuda] = useState(0); //Se usa para mostrar el importe de la deuda en el estado de deuda
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    calcularDetalle();
+  }, [selectedActas, selectedDeclaracionesJuradas, selectedSaldosAFavor, cuotas, fechaIntencion]);
+
+  const handleGenerarConvenio = async () => {
+    
+    setShowLoading(true);
+    const bodyConvenio = {
+      entidad: ENTIDAD,
+      cantidadCuota: cuotas,
+      fechaPago: fechaIntencion ? fechaIntencion.format("YYYY-MM-DD") : null,
+      actas: selectedActas,
+      ddjjs: selectedDeclaracionesJuradas,
+      ajustes: selectedSaldosAFavor,
+    };
+
+    const camposNulos = Object.entries(bodyConvenio)
+      .filter(([clave, valor]) => valor === null)
+      .map(([clave]) => clave);
+
+    if (camposNulos.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: `Por favor, complete todos los campos requeridos: ${camposNulos.join(', ')}`,
+        confirmButtonText: 'Aceptar',
+      });
+      setShowLoading(false);
+    } else {
+      console.log("Todos los valores están definidos.");
+      console.log('Body Convenio:', bodyConvenio);
+      console.log('ID_EMPRESA:', ID_EMPRESA);
+      const respuesta = await generarConvenio(ID_EMPRESA, bodyConvenio);
+      Swal.fire({
+        icon: 'success',
+        title: '¡Convenio generado!',
+        text: 'Serás redirigido al resumen',
+        confirmButtonText: 'Aceptar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/dashboard/convenios');
+        }
+      });
+        setShowLoading(false);
+
+    }
+  };
 
   useEffect(() => {
     //TODO: cuando este evento se dispare se deben setear todas las selected declaracionesJuradas y todas las actas en sus
@@ -84,7 +139,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       setSelectedActas(idsActas);
       const idsdeclaracionesJuradas = declaracionesJuradas.map((objeto) => objeto.id);
       setSelectedDeclaracionesJuradas(idsdeclaracionesJuradas);
-      const idsSaldosAFavor =saldosAFavor.map((objeto) => objeto.id);
+      const idsSaldosAFavor = saldosAFavor.map((objeto) => objeto.id);
       setSelectedSaldosAFavor(idsSaldosAFavor)
     } else {
       setSelectedActas([]);
@@ -97,9 +152,10 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   useEffect(() => {
     const ATotal = actas
       .filter((item) => selectedActas.includes(item.id))
-      .reduce((acc, item) => (acc += item.estadoDeuda !== 'JUDICIALIZADO'? item.importeTotal : 0), 0);
+      .reduce((acc, item) => (acc += item.estadoDeuda !== 'JUDICIALIZADO' ? item.importeTotal : 0), 0);
     console.log('Esto es lo que se tendria que imprimir', ATotal);
     setTotalActas(ATotal);
+    console.log(selectedActas)
   }, [selectedActas]);
 
   useEffect(() => {
@@ -107,24 +163,39 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       .filter((item) => selectedDeclaracionesJuradas.includes(item.id))
       .reduce((acc, item) => (acc += item.importeTotal), 0);
     console.log('Esto es lo que se tendria que imprimir', BTotal);
+    console.log(selectedDeclaracionesJuradas)
     setTotalDeclaracionesJuradas(BTotal);
   }, [selectedDeclaracionesJuradas]);
-  
+
   useEffect(() => {
     const CTotal = saldosAFavor
-      .filter((item) => selectedSaldosAFavor.includes(item.id))
       .reduce((acc, item) => (acc += item.importe), 0);
     console.log('Esto es lo que se tendria que imprimir', CTotal);
     setTotalSaldosAFavor(CTotal);
+
+  }, [saldosAFavor]);
+
+  useEffect(() => {
+    const totalSaldosAFavorSelecteds = saldosAFavor
+      .filter((item) => selectedSaldosAFavor.includes(item.id))
+      .reduce((acc, item) => (acc += item.importe), 0);
+    console.log('Esto es lo que se tendria que imprimir', totalSaldosAFavorSelecteds);
+    setTotalSaldosAFavorSelected(totalSaldosAFavorSelecteds);
+    
   }, [selectedSaldosAFavor]);
 
   useEffect(() => {
-    const CTotal = convenios.reduce(
-      (acc, item) => (acc += item.totalActualizado),
-      0,
-    );
-    console.log('Esto es lo que se tendria que imprimir', CTotal);
-    setTotalConvenios(CTotal);
+    if (convenios) {
+      const CTotal = convenios.reduce(
+        (acc, item) => (acc += item.totalActualizado),
+        0,
+      );
+      console.log('Esto es lo que se tendria que imprimir', CTotal);
+      setTotalConvenios(CTotal);
+    }
+
+
+
   }, [convenios]);
 
   const fetchData = async () => {
@@ -139,7 +210,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       calcularDetalle();
 
       console.log('axiosdeclaracionesJuradas.getDeclaracionesJuradas - response:', response);
-      
+
       console.log(response['declaracionesJuradas'])
 
       setDeclaracionesJuradas(response['declaracionesJuradas']);
@@ -147,18 +218,23 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       setConvenios(response['convenios']);
       setSaldosAFavor(response['saldosAFavor'])
 
+
       const idsActas = response['actas'].map((objeto) => objeto.id);
       setSelectedActas(idsActas);
 
       const idsdeclaracionesJuradas = response['declaracionesJuradas'].map((objeto) => objeto.id);
       setSelectedDeclaracionesJuradas(idsdeclaracionesJuradas);
 
-      const idSelectedSaldosAFavor = response['saldosAFavor'].map((objeto)=> objeto.id);
+      const idSelectedSaldosAFavor = response['saldosAFavor'].map((objeto) => objeto.id);
       console.log(idSelectedSaldosAFavor)
       console.log(response['saldosAFavor'])
       setSelectedSaldosAFavor(idSelectedSaldosAFavor);
       console.log(selectedSaldosAFavor)
 
+      const totalDeudaCalculada =
+        response['declaracionesJuradas'].reduce((acc, dj) => acc + (dj.importeTotal || 0), 0) +
+        response['actas'].reduce((acc, acta) => acc + (acta.importeTotal || 0), 0);
+      setTotalDeuda(totalDeudaCalculada);
       //setSaldoAFavor(response['saldoAFavor']);
     } catch (error) {
       console.error('Error al obtener las declaracionesJuradas: ', error);
@@ -171,17 +247,32 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         entidad: 'UOMA',
         actas: selectedActas,
         declaracionesJuradas: selectedDeclaracionesJuradas,
-        convenios: convenios.map((convenio) => convenio.id),
-        cuotas: 2,
+        //convenios: convenios.map((convenio) => convenio.id),
+        cuotas: cuotas,
         medioDePago: 'CHEQUE',
         usarSaldoAFavor: true,
       };
+
+      const sumaDeclaracionesJuradas = declaracionesJuradas
+        .filter((dj) => selectedDeclaracionesJuradas.includes(dj.id))
+        .reduce((acc, dj) => acc + (dj.importeTotal || 0), 0);
+
+      const sumaActas = actas
+        .filter((acta) => selectedActas.includes(acta.id))
+        .reduce((acc, acta) => acc + (acta.importeTotal || 0), 0);
+
+    
+      console.log('Suma importeTotal declaraciones juradas seleccionadas:', sumaDeclaracionesJuradas);
+      console.log('Suma importeTotal actas seleccionadas:', sumaActas);
+
+      setImporteDeDeuda(sumaDeclaracionesJuradas + sumaActas);
 
       const response = await axiosGestionDeudas.getDetalleConvenio(
         ID_EMPRESA,
         'UOMA',
         body,
       );
+
       setDetalleConvenio(response);
     } catch (error) {
       console.error('Error al calcular el detalle: ', error);
@@ -195,7 +286,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           isCheckedEstadoDeDeduda={isCheckedEstadoDeDeduda}
           setIsCheckedEstadoDeDeduda={setIsCheckedEstadoDeDeduda}
           fecha_total={'09/07/2024'}
-          deuda={detalleConvenio.totalAPagar}
+          deuda={totalDeuda}
           saldo_a_favor={totalSaldosAFavor}
         ></EstadoDeDeuda>
         <Accordion>
@@ -255,7 +346,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
             />
           </AccordionDetails>
         </Accordion>
-        
+
         <Accordion>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -272,7 +363,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
                 Saldos a favor
               </Typography>
               <Typography variant="h6" color="primary">
-                TOTAL: {formatter.currencyString(totalSaldosAFavor)}
+                TOTAL: {formatter.currencyString(totalSaldosAFavorSelected * -1)}
               </Typography>
             </Box>
           </AccordionSummary>
@@ -284,18 +375,21 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
             />
           </AccordionDetails>
         </Accordion>
-      
+
         <OpcionesDePago
           cuotas={cuotas}
           setCuotas={setCuotas}
           fechaIntencion={fechaIntencion}
           setFechaIntencion={setFechaIntencion}
-          saldoAFavor={formatter.currencyString(totalSaldosAFavor)}
+          saldoAFavor={formatter.currencyString(totalSaldosAFavorSelected)}
           noUsar={noUsar}
           setNoUsar={setNoUsar}
           medioPago={medioPago}
+          importeDeDeuda={importeDeDeuda}
           detalleConvenio={detalleConvenio}
-          saldoAFavorUtilizado={totalSaldosAFavor}
+          saldoAFavorUtilizado={totalSaldosAFavorSelected}
+          handleGenerarConvenio={handleGenerarConvenio}
+          showLoading={showLoading}
         ></OpcionesDePago>
       </div>
     </div>

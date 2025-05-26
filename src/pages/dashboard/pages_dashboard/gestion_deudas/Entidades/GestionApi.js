@@ -5,7 +5,7 @@ import swal from '@/components/swal/swal';
 const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
 const HTTP_MSG_MODI = import.meta.env.VITE_HTTP_MSG_MODI;
 const HTTP_MSG_MODI_ERROR = import.meta.env.VITE_HTTP_MSG_MODI_ERROR;
-
+const VITE_HTTP_MSG_ALTA = import.meta.env.VITE_HTTP_MSG_ALTA;
 const emuRespuesta = {
   declaracionesJuradas: [
     {
@@ -116,13 +116,13 @@ const emuRespuesta = {
   ],
   saldosAFavor: [
     {
-      id:31,
+      id: 31,
       fecha: '2024-04-01',
       concepto: 'prueba',
       importe: 2000,
     },
     {
-      id:32,
+      id: 32,
       fecha: '2024-05-01',
       concepto: 'prueba',
       importe: 6000,
@@ -130,13 +130,16 @@ const emuRespuesta = {
   ],
 };
 
+
+
+
 const emuRespuestaDetalleConvenio = {
-  importeDeDeuda: 33000,
-  interesesDeFinanciacion: 230,
-  saldoAFavor: 200,
-  saldoAFavorUtilizado: 200,
-  totalAPagar: 33030,
-  cantidadCuotas: 3,
+  
+  importeInteres: 23020,
+  importeCuota: 21312,
+  
+  
+  /*
   detalleCuota: [
     {
       numero: 1,
@@ -154,6 +157,7 @@ const emuRespuestaDetalleConvenio = {
       vencimiento: '21/08/2024',
     },
   ],
+  */
 };
 
 const bodyConvenio = {
@@ -164,24 +168,46 @@ const bodyConvenio = {
   usarSaldoAFavor: true,
 };
 
+const ordenaGrillaPeriodo = (response) => {
+  console.log('response', response.declaracionesJuradas);
+  const agrupado = response.declaracionesJuradas.reduce((acc, curr) => {
+    const clave = `${curr.id}`;
+    if (!acc[clave]) {
+      acc[clave] = {
+        id: curr.id,
+        periodo: curr.periodo,
+        rectificativa: curr.rectificativa,
+        //intereses: curr.intereses,
+        //importeTotal: curr.importeTotal,
+      };
+    }
+    acc[clave][curr.aporteDescripcion] = curr.importe;
+    acc[clave].importeTotal = (acc[clave].importeTotal || 0) + curr.importe;
+    acc[clave].intereses = (acc[clave].intereses || 0) + curr.intereses;
+    return acc;
+  }, {});
+
+  console.log('agrupado', agrupado);
+  const resultado = Object.values(agrupado);
+  
+  response.declaracionesJuradas = resultado;
+
+  return response
+}
+
+export const getGestionDeuda = async (empresa_id, entidad) => {
+  const URL = `/empresa/${empresa_id}/deuda/entidad/${entidad}`;
+  const response = await axiosCrud.consultar(URL);
+  return response
+}
+
 export const getDeclaracionesJuradas = async (empresa_id, entidad) => {
   try {
-    const URL = `/empresa/${empresa_id}/boletas/gestion-deuda/${entidad}`;
-    //const response = axiosCrud.consultar(URL);
-    console.log('Llegamos a esta parte');
-    //return response;
-    switch (entidad) {
-      case 'AMTIMA':
-        return emuRespuesta;
-      case 'OSPIM':
-        return emuRespuesta;
-      case 'UOMA':
-        return emuRespuesta;
-      default:
-        console.log('Entidad invalida');
-    }
 
-    return emuRespuesta;
+    const response = await getGestionDeuda(empresa_id, entidad);
+    const grilaOrdenada = ordenaGrillaPeriodo(response);
+    return grilaOrdenada;
+
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
@@ -223,12 +249,15 @@ export const getDetalleConvenio = async (empresa_id, entidad, body) => {
   }
 };
 
-export const generarConvenio = async (empresa_id, body) => {
+
+export const generarConvenio = async (idEmpresa, bodyConvenio) => {
   try {
-    const URL = `sigeco/empresa/${idEmpresa}/deuda/entidad/${codigoEntidad}/convenio`;
-    //const response = axiosCrud.crear(URL,body);
-    //return reponse;
-    return 'OK';
+    const URL = `/empresa/${idEmpresa}/convenios`;
+    const response = await axiosCrud.crear(URL, bodyConvenio);
+    
+    
+    
+    return response;
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;

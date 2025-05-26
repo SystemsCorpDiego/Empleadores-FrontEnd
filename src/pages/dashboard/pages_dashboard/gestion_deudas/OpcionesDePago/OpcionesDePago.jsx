@@ -18,19 +18,22 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 //import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import formatter from '@/common/formatter';
+import { generarConvenio } from '../Entidades/GestionApi';
+import { ThreeCircles } from 'react-loader-spinner';
 
 export const OpcionesDePago = ({
   cuotas,
   setCuotas,
   fechaIntencion,
   setFechaIntencion,
-  saldoAFavor,
-  noUsar,
-  setNoUsar,
   medioPago,
   detalleConvenio,
-  saldoAFavorUtilizado
+  importeDeDeuda,
+  saldoAFavorUtilizado,
+  handleGenerarConvenio,
+  showLoading
 }) => {
+
   return (
     <Box p={3} sx={{ margin: '60px auto', padding: 0 }}>
       <Typography variant="h6" gutterBottom>
@@ -98,7 +101,7 @@ export const OpcionesDePago = ({
                 InputProps={{
                   readOnly: true,
                 }}
-                value={formatter.currencyString(detalleConvenio.interesesDeFinanciacion)}
+                value={formatter.currencyString(detalleConvenio.importeInteres)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -109,9 +112,9 @@ export const OpcionesDePago = ({
                 InputProps={{
                   readOnly: true,
                 }}
-                value={saldoAFavor}
+                value={formatter.currencyString(saldoAFavorUtilizado * -1)}
               />
-             {/** <FormControlLabel
+              {/** <FormControlLabel
                 control={
                   <Checkbox
                     checked={noUsar}
@@ -129,49 +132,76 @@ export const OpcionesDePago = ({
                 InputProps={{
                   readOnly: true,
                 }}
-                value={formatter.currencyString(detalleConvenio.totalAPagar)}
+                value={formatter.currencyString(importeDeDeuda + detalleConvenio.importeInteres)}
               />
             </Grid>
             <Grid item xs={12}>
-              <Button variant="contained" color="primary" fullWidth>
-                GENERAR
-              </Button>
+              {!showLoading && (<Button variant="contained" color="primary" fullWidth onClick={() => handleGenerarConvenio()}>
+                GUARDAR CONVENIO
+              </Button>)}
+
+              <ThreeCircles
+                visible={showLoading}
+                height="100"
+                width="100"
+                color="#1A76D2"
+                ariaLabel="three-circles-loading"
+                wrapperStyle={{
+                  margin: '15%',
+                  marginLeft: '50%',
+                }}
+                wrapperClass=""
+              />
             </Grid>
           </Grid>
         </Grid>
 
         <Grid item xs={12} md={6}>
-        <Box border={1} p={2}>
-      <Typography variant="h6">DETALLE DE CONVENIO</Typography>
-      <Typography variant="body1">Ud. está generando un convenio con la siguiente información:</Typography>
-      <Box component="div" >
-        <ul>
-          <li>Importe de deuda: {detalleConvenio.importeDeDeuda}</li>
-          <li>Intereses de financiación: {detalleConvenio.interesesDeFinanciacion}</li>
-          <li>Saldo a Favor utilizado: {saldoAFavorUtilizado}</li>
-          <li>Total a pagar: {detalleConvenio.totalAPagar}</li>
-          <li>Cantidad de cuotas: {detalleConvenio.cantidadCuotas}</li>
-        </ul>
-      </Box>
-      <table>
-        <thead>
-          <tr>
-            <th className='pr2'>Cuota Nº</th>
-            <th className='pr2'>Valor</th>
-            <th className='pr2'>Vencimiento</th>
-          </tr>
-        </thead>
-        <tbody>
-          {(detalleConvenio.detalleCuota || []).map((cuota) => (
-            <tr key={cuota.numero}>
-              <td className='pr2'>{cuota.numero}</td>
-              <td className='pr2'>{formatter.currencyString(cuota.valor)}     </td>
-              <td className='pr2'>{cuota.vencimiento}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </Box>
+          <Box border={1} p={2}>
+            <Typography variant="h6">DETALLE DE CONVENIO</Typography>
+            <Typography variant="body1">Ud. está generando un convenio con la siguiente información:</Typography>
+            <Box component="div" >
+              <ul>
+                <li>Importe de deuda: {formatter.currencyString(importeDeDeuda)}</li>
+                <li>Intereses de financiación: {formatter.currencyString(detalleConvenio.importeInteres)}</li>
+                <li>Saldo a Favor utilizado: {formatter.currencyString(saldoAFavorUtilizado * -1)}</li>
+                <li>Total a pagar: {formatter.currencyString(importeDeDeuda + detalleConvenio.importeInteres + saldoAFavorUtilizado)}</li>
+                <li>Cantidad de cuotas: {cuotas}</li>
+              </ul>
+            </Box>
+            <table>
+              <thead>
+                <tr>
+                  <th className='pr2'>Cuota Nº</th>
+                  <th className='pr2'>Valor</th>
+                  <th className='pr2'>Vencimiento</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: cuotas }, (_, i) => {
+                  const cuota = (detalleConvenio.detalleCuota || [])[i];
+                  return (
+                    <tr key={i + 1}>
+                      <td className='pr2'>{i + 1}</td>
+                      <td className='pr2'>{formatter.currencyString((importeDeDeuda + detalleConvenio.importeInteres + saldoAFavorUtilizado)/cuotas)}</td>
+                      {/* Calcular la fecha de vencimiento sumando i meses a la fecha de intención */}
+                      <td className='pr2'>
+                        {fechaIntencion
+                          ? fechaIntencion.clone().add(i, 'month').format("YYYY-MM-DD")
+                          : '-'}
+                      </td></tr>
+                  );
+                })}
+                {/*(detalleConvenio.detalleCuota || []).map((cuota) => (
+                  <tr key={cuota.numero}>
+                    <td className='pr2'>{cuota.numero}</td>
+                    <td className='pr2'>{formatter.currencyString(cuota.valor)}     </td>
+                    <td className='pr2'>{cuota.vencimiento}</td>
+                  </tr>
+                ))*/}
+              </tbody>
+            </table>
+          </Box>
         </Grid>
       </Grid>
     </Box>

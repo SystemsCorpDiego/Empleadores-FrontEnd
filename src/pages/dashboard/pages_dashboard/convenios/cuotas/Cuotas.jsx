@@ -1,33 +1,44 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
 import { consultar } from './CuotasApi';
 import Cheques from '../cheques/cheques';
 import formatter from '@/common/formatter';
+import localStorageService from '@/components/localStorage/localStorageService';
 
 export const Cuotas = () => {
   const [cuotas, setCuotas] = useState([]);
-  const [cuota, setCuota] = useState({})
-  const [numeroConvenio, setNumeroConvenio] = useState(1); // Cambia esto según tu lógica
-  const [open, setOpen] = useState(false);
+  const [cuota, setCuota] = useState(null)
+  const [numeroConvenio, setNumeroConvenio] = useState(null); // Cambia esto según tu lógica
   
+  const [open, setOpen] = useState(false);
+  const ID_EMPRESA = localStorageService.getEmpresaId();
 
-  useEffect(() => {
-    const pathParts = window.location.href.split('/');
-    const convenioFromPath = pathParts[pathParts.length - 2];
-    setNumeroConvenio(convenioFromPath);
-    const getCheques = async () => {
-      await consultar(numeroConvenio)
-        .then((response) => {
-          setCuotas(response);
-        })
-        .catch((error) => {
-          console.error('Error al consultar las cuotas:', error);
-        });
-    };
-    getCheques();
-    console.log(cuotas);
-  }, [numeroConvenio]);
+useEffect(() => {
+  const pathParts = window.location.href.split('/');
+  const convenioFromPath = pathParts[pathParts.length - 2];
+  
+  setNumeroConvenio(convenioFromPath);
+}, []);
+
+useEffect(() => {
+
+  const getCuotas = async () => {
+    console.log(numeroConvenio, ID_EMPRESA);
+    await consultar(numeroConvenio, ID_EMPRESA)
+      .then((response) => {
+        setCuotas(response);
+      })
+      .catch((error) => {
+        console.error('Error al consultar las cuotas:', error);
+      });
+  };
+  if (!numeroConvenio) return;
+  if (ID_EMPRESA === null) return;
+  getCuotas();
+}, [numeroConvenio]);
 
   const handleChequesClick = (cuotaId) => {
     // Lógica para acceder al componente de cheques
@@ -69,15 +80,17 @@ export const Cuotas = () => {
     <div className="convenios_container">
       <h1 className="mt-1em">Cuotas convenio Nro {numeroConvenio}</h1>
       <Box sx={{ height: 450, width: '100%' }}>
-        <Cheques
-          open={open}
-          handleClose={handleClose}
-          convenio={cuota.convenioId}
-          cuota={cuota.nro_cuota}
-          //cheques={chequesPorFila[filaSeleccionada] || []}
-          //setCheques={actualizarCheques}
-          total={cuota.importeCuota}
-        />
+        {cuota && (
+          <Cheques
+            open={open}
+            handleClose={handleClose}
+            convenio={cuota.convenioId}
+            cuota={cuota.nro_cuota}
+            //cheques={chequesPorFila[filaSeleccionada] || []}
+            //setCheques={actualizarCheques}
+            total={cuota.importeCuota}
+          />
+        )}
         <DataGrid
           rows={cuotas || []}
           columns={columns}

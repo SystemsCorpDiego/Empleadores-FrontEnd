@@ -32,7 +32,7 @@ import ConveniosService from './ConveniosApi';
 import { getRol } from '@/components/localStorage/localStorageService';
 import CheckIcon from '@mui/icons-material/Check';
 import TerminosYCondiciones from './TerminosYCondiciones/TerminosYCondiciones';
-
+import localStorageService from '@/components/localStorage/localStorageService';
 // Columnas del DataGrid
 
 const crearNuevoRegistro = (props) => {
@@ -61,7 +61,7 @@ export const Convenios = () => {
   const [open, setOpen] = useState(false);
   const [rol, setRol] = useState('');
   const [terminosYCondiciones, setTerminosYCondiciones] = useState(false);
-
+  const empresaId =  localStorageService.getEmpresaId(); // Cambia esto según tu lógica
   const total = 0;
 
   const handleClose = () => setOpen(false);
@@ -82,7 +82,7 @@ export const Convenios = () => {
         console.error('Error fetching rol:', error);
       }
       try {
-        const data = await ConveniosService.getAllConvenios();
+        const data = await ConveniosService.getAllConvenios(empresaId);
         setRows(data);
       } catch (error) {
         console.error('Error fetching convenios:', error);
@@ -234,7 +234,7 @@ export const Convenios = () => {
             label="Cheques"
             title="Cheques"
             sx={{ color: 'primary.main' }}
-            onClick={() => navigate(`/dashboard/convenio/${row.numero}/cuotas`)}
+            onClick={() => navigate(`/dashboard/convenio/${row.id}/cuotas`)}
             color="inherit"
           />,
           ...(rol !== 'OSPIM_EMPLEADO'

@@ -58,22 +58,23 @@ export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [],
             flex: 0.25,
           },
           {
-            field: 'fecha',
+            field: 'vigencia',
             headerName: 'Fecha',
             flex: 0.5,
           },
           {
-            field: 'concepto',
+            field: 'motivo',
             headerName: 'Concepto',
             flex: 0.8,
           },
           {
             field: 'importe',
             headerName: 'Importe',
+            headerAlign: 'right',
             align: 'right',
             flex: 1,
             valueFormatter: (params) =>
-              params.value ? formatter.currencyString(params.value) : '',
+              params.value ? formatter.currencyString(params.value * -1) : '',
           }
         ]}
         paginationModel={paginationModel}

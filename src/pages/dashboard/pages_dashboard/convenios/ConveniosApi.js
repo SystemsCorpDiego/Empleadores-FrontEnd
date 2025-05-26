@@ -1,6 +1,6 @@
 
 import { axiosCrud } from '@/components/axios/axiosCrud';
-const API_BASE_URL = 'https://api.example.com/convenios'; // Cambia esta URL por la de tu API
+const API_BASE_URL = ''; // Cambia esta URL por la de tu API
 
 const conveniosData = [
     {
@@ -52,10 +52,11 @@ const conveniosData = [
   
 
 const ConveniosService = {
-    getAllConvenios: async () => {
+    getAllConvenios: async (empresaId) => {
         try {
             //const response = await axiosCrud.consultar(`${API_BASE_URL}`);
-            const response = conveniosData
+            const URL = `/empresa/${empresaId}/convenios`;
+            const response = await axiosCrud.consultar(`${URL}`);
             //return response.data;
             return response || [];
         } catch (error) {

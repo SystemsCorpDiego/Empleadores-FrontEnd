@@ -12,30 +12,40 @@ import {
 } from '@mui/material';
 import { axiosCheques } from './chequesApi';
 import formatter from '@/common/formatter';
+import localStorageService from '@/components/localStorage/localStorageService';
 
 const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
+  const ID_EMPRESA = localStorageService.getEmpresaId();
+
   const [cheques, setCheques] = useState([]);
   const [openChequeDialog, setOpenChequeDialog] = useState(false);
   const [resta, setResta] = useState(total);
   const [editing, setEditing] = useState(false);
-
   const [newCheque, setNewCheque] = useState({
+    fecha: '',
+    id: 0,
     numero: '',
-    monto: '',
-    cuota,
-    idConvenio: convenio,
+    importe: '',
   });
 
+  // Cargar cheques al abrir
   useEffect(() => {
+    if (!convenio || !cuota || !ID_EMPRESA) {
+      console.warn('Valores insuficientes para consultar cheques', { convenio, cuota, ID_EMPRESA });
+      return;
+    }
+
     const fetchCheques = async () => {
-      const response = await axiosCheques.consultar(convenio, cuota);
+      const response = await axiosCheques.consultar(convenio, cuota, ID_EMPRESA);
       setCheques(response);
     };
-    fetchCheques();
-  }, [convenio, cuota]);
 
+    fetchCheques();
+  }, [convenio, cuota, ID_EMPRESA]);
+
+  // Calcular resta automáticamente
   useEffect(() => {
-    const totalCheques = cheques.reduce((sum, item) => sum + Number(item.monto || 0), 0);
+    const totalCheques = cheques.reduce((sum, item) => sum + Number(item.importe || 0), 0);
     setResta(total - totalCheques);
   }, [cheques, total]);
 
@@ -44,40 +54,87 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
     setNewCheque({ ...newCheque, [name]: value });
   };
 
-  const handleSaveCheque = async () => {
-    let response;
-    if (editing) {
-      response = await axiosCheques.actualizar(newCheque);
-      setCheques(cheques.map((c) => (c.id === newCheque.id ? response : c)));
-    } else {
-      response = await axiosCheques.crear({ ...newCheque, cuota, idConvenio: convenio });
-      setCheques([...cheques, response]);
-    }
-    resetChequeForm();
-  };
-
   const resetChequeForm = () => {
-    setNewCheque({ numero: '', monto: '', cuota, idConvenio: convenio });
+    setNewCheque({ fecha: '', id: 0, numero: '', importe: '' });
     setOpenChequeDialog(false);
     setEditing(false);
   };
 
+  const handleSaveCheque = async () => {
+    // Validación básica
+    if (!newCheque.numero || !newCheque.fecha || !newCheque.importe) {
+      alert("Completa todos los campos del cheque");
+      return;
+    }
+
+    try {
+      if (editing) {
+        await axiosCheques.actualizar({
+            numero: newCheque.numero,
+            fecha: newCheque.fecha,
+            importe: parseInt(newCheque.importe, 10),
+          },
+          ID_EMPRESA,
+          convenio,
+          cuota,
+          newCheque.id
+          );
+      } else {
+        await axiosCheques.crear(
+          {
+            numero: newCheque.numero,
+            fecha: newCheque.fecha,
+            importe: parseInt(newCheque.importe, 10),
+          },
+          cuota,
+          convenio,
+          ID_EMPRESA
+        );
+      }
+
+      resetChequeForm();
+
+      // Refrescar cheques
+      const updated = await axiosCheques.consultar(convenio, cuota, ID_EMPRESA);
+      setCheques(updated);
+    } catch (error) {
+      console.error('Error al guardar el cheque', error);
+    }
+  };
+
   const handleEditCheque = (id) => {
     const cheque = cheques.find((c) => c.id === id);
-    setNewCheque(cheque);
+    if (!cheque) return;
+    setNewCheque({
+      ...cheque,
+      importe: cheque.importe?.toString() || '',
+    });
     setEditing(true);
     setOpenChequeDialog(true);
   };
 
-  const handleDeleteCheque = async (id) => {
-    const response = await axiosCheques.eliminar(id);
-    setCheques(response);
+  const handleDeleteCheque = async (row) => {
+    try {
+      console.log('Eliminando cheque:', row);
+      console.log('Convenio:', convenio, 'Cuota:', cuota, 'ID Empresa:', ID_EMPRESA);
+      await axiosCheques.eliminar(ID_EMPRESA,convenio,cuota,row.id);
+      const updated = await axiosCheques.consultar(convenio, cuota, ID_EMPRESA);
+      setCheques(updated);
+    } catch (error) {
+      console.error('Error al eliminar el cheque', error);
+    }
   };
 
   const columns = [
-    { field: 'cuota', headerName: 'Cuota', flex: 1, align:'center' },
-    { field: 'monto', headerName: 'Monto', flex: 1, align:'right', valueFormatter: (params) => formatter.currency.format(params.value || 0) },
-    { field: 'numero', headerName: 'Número Cheque', flex: 1, align:'center' },
+    { field: 'fecha', headerName: 'Fecha', flex: 1, align: 'center' },
+    {
+      field: 'importe',
+      headerName: 'Monto',
+      flex: 1,
+      align: 'right',
+      valueFormatter: (params) => formatter.currency.format(params.value || 0),
+    },
+    { field: 'numero', headerName: 'Número Cheque', flex: 1, align: 'center' },
     {
       field: 'acciones',
       headerName: 'Acciones',
@@ -87,9 +144,12 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
           <Button variant="contained" color="primary" onClick={() => handleEditCheque(params.row.id)}>
             Editar
           </Button>
-
-          <Button variant="contained" color="primary" style={{ marginLeft: '5px' }}
-            onClick={() => handleDeleteCheque(params.row.id)}>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ marginLeft: '5px' }}
+            onClick={() => handleDeleteCheque(params.row)}
+          >
             Eliminar
           </Button>
         </>
@@ -98,7 +158,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
   ];
 
   return (
-    <Modal open={open} onClose={handleClose} height={800}>
+    <Modal open={open} onClose={handleClose}>
       <Box
         sx={{
           position: 'absolute',
@@ -114,6 +174,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
         }}
       >
         <h2>Cheques convenio Nro {convenio} / Cuota {cuota}</h2>
+
         <Button
           variant="contained"
           color="primary"
@@ -122,15 +183,14 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
         >
           Cargar Cheque
         </Button>
-        <div style={{ height: 390, width: '100%', marginTop: 20 }}>
 
+        <div style={{ height: 390, width: '100%', marginTop: 20 }}>
           <DataGrid
             rows={cheques}
             columns={columns}
             pageSize={4}
             getRowId={(row) => row.id}
             rowsPerPageOptions={[5]}
-            height={300}
             sx={{
               '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {
                 width: '8px',
@@ -152,19 +212,29 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
           <DialogContent>
             <TextField
               margin="dense"
+              name="fecha"
+              label="Fecha"
+              type="date"
+              fullWidth
+              value={newCheque.fecha || ''}
+              onChange={handleInputChange}
+              InputLabelProps={{ shrink: true }}
+            />
+            <TextField
+              margin="dense"
               name="numero"
               label="Número"
               fullWidth
-              value={newCheque.numero}
+              value={newCheque.numero || ''}
               onChange={handleInputChange}
             />
             <TextField
               margin="dense"
-              name="monto"
+              name="importe"
               label="Monto"
               type="number"
               fullWidth
-              value={newCheque.monto}
+              value={newCheque.importe || ''}
               onChange={handleInputChange}
             />
           </DialogContent>
@@ -179,7 +249,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
         </Dialog>
 
         <div style={{ marginTop: 30 }}>
-          <h3>Total restante: {resta}</h3>
+          <h3>Total restante: {formatter.currency.format(resta)}</h3>
           <Button variant="outlined" onClick={handleClose}>Cerrar</Button>
         </div>
       </Box>

@@ -59,7 +59,7 @@ export const EstadoDeDeuda = ({
               padding="8px"
             >
               <Typography variant="h6" color="success">
-                {formatter.currencyString(saldo_a_favor)}
+                {formatter.currencyString(saldo_a_favor * -1)}
               </Typography>
             </Box>
             <Typography variant="body2" align="center" color="textSecondary">
