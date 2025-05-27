@@ -239,7 +239,8 @@ export const getBoletasUsuarioInterno = async (entidad) => {
 export const getDetalleConvenio = async (empresa_id, body) => {
   try {
     const URL = `/empresa/${empresa_id}/convenios/calcular-cuota`;
-    if (body.fechaIntencionPago !== null){
+    console.log('body', body);
+    if (body.fechaIntencionPago !== null && body.fechaIntencionPago !== 'Invalid Date') {
       console.log('body', body);
       const response = await axiosCrud.crear(URL, body);
       return response ;
