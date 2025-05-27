@@ -101,7 +101,7 @@ export const OpcionesDePago = ({
                 InputProps={{
                   readOnly: true,
                 }}
-                value={formatter.currencyString(detalleConvenio.importeInteres)}
+                value={formatter.currencyString(detalleConvenio.importeInteresTotal)}
               />
             </Grid>
             <Grid item xs={12}>
