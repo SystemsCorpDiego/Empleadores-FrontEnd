@@ -138,7 +138,7 @@ export const Convenios = () => {
     { field: 'fecha', headerName: 'Fecha', flex: 1 },
     { field: 'numero', headerName: 'N°', flex: 0.1, align: 'right' },
     {
-      field: 'deuda',
+      field: 'capital',
       headerName: 'Deuda Original',
       flex: 1.2,
       align: 'right',
@@ -152,7 +152,7 @@ export const Convenios = () => {
       valueFormatter: (params) => formatter.currency.format(params.value || 0),
     },
     {
-      field: 'saldo',
+      field: 'saldoFavor',
       headerName: 'Sdo a Favor utilizado',
       flex: 1,
       align: 'right',
@@ -163,7 +163,13 @@ export const Convenios = () => {
       headerName: 'Total Convenio',
       flex: 0.8,
       align: 'right',
-      valueFormatter: (params) => formatter.currency.format(params.value || 0),
+      valueGetter: (params) => {
+      const capital = Number(params.row.capital) || 0;
+      const interes = Number(params.row.interes) || 0;
+      const saldoFavor = Number(params.row.saldoFavor) || 0;
+      return capital + interes + saldoFavor; //Se suma saldo a favor porque es un valor negativo
+      },
+      valueFormatter: (params) => formatter.currency.format(params.value || 0), 
     },
     {
       field: 'cantCuotas',
