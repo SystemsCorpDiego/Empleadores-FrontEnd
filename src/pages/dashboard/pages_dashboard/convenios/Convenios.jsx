@@ -61,7 +61,7 @@ export const Convenios = () => {
   const [open, setOpen] = useState(false);
   const [rol, setRol] = useState('');
   const [terminosYCondiciones, setTerminosYCondiciones] = useState(false);
-  const empresaId =  localStorageService.getEmpresaId(); // Cambia esto según tu lógica
+  const empresaId = localStorageService.getEmpresaId(); // Cambia esto según tu lógica
   const total = 0;
 
   const handleClose = () => setOpen(false);
@@ -135,7 +135,10 @@ export const Convenios = () => {
       hide: !useContext(UserContext).isAdmin, // Esconde la columna si el usuario no es admin
     },
     { field: 'razonSocial', headerName: 'Razón Social', flex: 1 },
-    { field: 'fecha', headerName: 'Fecha', flex: 1 },
+    {
+      field: 'fecha', headerName: 'Fecha', flex: 1, valueFormatter: (params) =>
+        params.value ? formatter.dateString(params.value) : '',
+    },
     { field: 'numero', headerName: 'N°', flex: 0.1, align: 'right' },
     {
       field: 'capital',
@@ -164,12 +167,12 @@ export const Convenios = () => {
       flex: 0.8,
       align: 'right',
       valueGetter: (params) => {
-      const capital = Number(params.row.capital) || 0;
-      const interes = Number(params.row.interes) || 0;
-      const saldoFavor = Number(params.row.saldoFavor) || 0;
-      return capital + interes + saldoFavor; //Se suma saldo a favor porque es un valor negativo
+        const capital = Number(params.row.capital) || 0;
+        const interes = Number(params.row.interes) || 0;
+        const saldoFavor = Number(params.row.saldoFavor) || 0;
+        return capital + interes + saldoFavor; //Se suma saldo a favor porque es un valor negativo
       },
-      valueFormatter: (params) => formatter.currency.format(params.value || 0), 
+      valueFormatter: (params) => formatter.currency.format(params.value || 0),
     },
     {
       field: 'cantCuotas',
@@ -245,15 +248,15 @@ export const Convenios = () => {
           />,
           ...(rol !== 'OSPIM_EMPLEADO'
             ? [
-                <GridActionsCellItem
-                  icon={<CheckIcon />}
-                  label="Aceptar Terminos y condiciones"
-                  title="Aceptar Terminos y condiciones"
-                  sx={{ color: 'primary.main' }}
-                  color="inherit"
-                  onClick={() => handleOpen(row)}
-                />,
-              ]
+              <GridActionsCellItem
+                icon={<CheckIcon />}
+                label="Aceptar Terminos y condiciones"
+                title="Aceptar Terminos y condiciones"
+                sx={{ color: 'primary.main' }}
+                color="inherit"
+                onClick={() => handleOpen(row)}
+              />,
+            ]
             : []),
         ];
       },
@@ -280,9 +283,9 @@ export const Convenios = () => {
 
   return (
     <Box>
-      
+
       <TerminosYCondiciones open={terminosYCondiciones} setOpen={setTerminosYCondiciones} />
-      
+
       <div className="convenios_container">
         <h1 className="mt-1em">Mis convenios</h1>
 
