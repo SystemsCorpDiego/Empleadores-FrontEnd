@@ -90,7 +90,7 @@ export const OpcionesDePago = ({
             </Grid>
           </Grid>
         </Grid>
-
+{/*
         <Grid item xs={12} md={6}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -114,15 +114,7 @@ export const OpcionesDePago = ({
                 }}
                 value={formatter.currencyString(saldoAFavorUtilizado * -1)}
               />
-              {/** <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={noUsar}
-                    onChange={() => setNoUsar(!noUsar)}
-                  />
-                }
-                label="No Usar"
-              /> */}
+
             </Grid>
             <Grid item xs={12} marginTop={'2.3em'}>
               <Typography variant="h6">TOTAL</Typography>
@@ -155,26 +147,61 @@ export const OpcionesDePago = ({
             </Grid>
           </Grid>
         </Grid>
+*/}
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={12}>
           <Box border={1} p={2}>
             <Typography variant="h6">DETALLE DE CONVENIO</Typography>
             <Typography variant="body1">Ud. está generando un convenio con la siguiente información:</Typography>
             <Box component="div" >
-              <ul>
+              <Grid container spacing={2} sx={{ mb: 2 }}>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Typography variant="body2"><strong>Importe de deuda:</strong></Typography>
+                  <Typography variant="body1">{formatter.currencyString(importeDeDeuda)}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Typography variant="body2"><strong>Saldo a Favor utilizado:</strong></Typography>
+                  <Typography variant="body1">{formatter.currencyString(saldoAFavorUtilizado * -1)}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Typography variant="body2"><strong>Monto a financiar:</strong></Typography>
+                  <Typography variant="body1">{formatter.currencyString(importeDeDeuda + saldoAFavorUtilizado)}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Typography variant="body2"><strong>Cantidad de cuotas:</strong></Typography>
+                  <Typography variant="body1">{cuotas}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Typography variant="body2"><strong>Intereses de financiación:</strong></Typography>
+                  <Typography variant="body1">{formatter.currencyString(detalleConvenio.importeInteresTotal)}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Typography variant="body2"><strong>Total a pagar:</strong></Typography>
+                  <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                    {formatter.currencyString(importeDeDeuda + detalleConvenio.importeInteresTotal + saldoAFavorUtilizado)}
+                  </Typography>
+                  
+                </Grid>
+              </Grid>
+             {/*<ul>
+                
                 <li>Importe de deuda: {formatter.currencyString(importeDeDeuda)}</li>
-                <li>Intereses de financiación: {formatter.currencyString(detalleConvenio.importeInteresTotal)}</li>
                 <li>Saldo a Favor utilizado: {formatter.currencyString(saldoAFavorUtilizado * -1)}</li>
-                <li>Total a pagar: {formatter.currencyString(importeDeDeuda + detalleConvenio.importeInteresTotal + saldoAFavorUtilizado)}</li>
+                <li>Monto a financiar: {formatter.currencyString(importeDeDeuda + saldoAFavorUtilizado)}</li>
                 <li>Cantidad de cuotas: {cuotas}</li>
-              </ul>
+                <li>Intereses de financiación: {formatter.currencyString(detalleConvenio.importeInteresTotal)}</li>
+                <li>Total a pagar: {formatter.currencyString(importeDeDeuda + detalleConvenio.importeInteresTotal + saldoAFavorUtilizado)}</li>
+                
+              </ul>*/}
             </Box>
+            <h4>Detalle cuotas</h4>
             <table>
               <thead>
                 <tr>
-                  <th className='pr2'>Cuota Nº</th>
-                  <th className='pr2'>Valor</th>
-                  <th className='pr2'>Vencimiento</th>
+                <th style={{ paddingRight: '64px' }}>Cuota Nº</th>
+                <th style={{ paddingRight: '64px' }}>Valor</th>
+                <th style={{ paddingRight: '64px' }}>Vencimiento</th>
+                  
                 </tr>
               </thead>
               <tbody>
@@ -187,7 +214,7 @@ export const OpcionesDePago = ({
                       {/* Calcular la fecha de vencimiento sumando i meses a la fecha de intención */}
                       <td className='pr2'>
                         {fechaIntencion
-                          ? fechaIntencion.clone().add(i, 'month').format("YYYY-MM-DD")
+                          ? fechaIntencion.clone().add(i, 'month').format("DD/MM/YYYY")
                           : '-'}
                       </td></tr>
                   );
@@ -202,6 +229,24 @@ export const OpcionesDePago = ({
               </tbody>
             </table>
           </Box>
+           <Grid item xs={12}>
+              {!showLoading && (<Button variant="contained" color="primary" fullWidth onClick={() => handleGenerarConvenio()}>
+                GUARDAR CONVENIO
+              </Button>)}
+
+              <ThreeCircles
+                visible={showLoading}
+                height="100"
+                width="100"
+                color="#1A76D2"
+                ariaLabel="three-circles-loading"
+                wrapperStyle={{
+                  margin: '15%',
+                  marginLeft: '50%',
+                }}
+                wrapperClass=""
+              />
+            </Grid>
         </Grid>
       </Grid>
     </Box>
