@@ -61,6 +61,8 @@ export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [],
             field: 'vigencia',
             headerName: 'Fecha',
             flex: 0.5,
+            valueFormatter: (params) =>
+              params.value ? formatter.dateString(params.value) : '',
           },
           {
             field: 'motivo',
