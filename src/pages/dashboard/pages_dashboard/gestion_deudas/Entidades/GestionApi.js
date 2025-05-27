@@ -236,12 +236,25 @@ export const getBoletasUsuarioInterno = async (entidad) => {
   return emuRespuesta;
 };
 
-export const getDetalleConvenio = async (empresa_id, entidad, body) => {
+export const getDetalleConvenio = async (empresa_id, body) => {
   try {
-    const URL = `/empresa/${empresa_id}/gestion-deuda/${entidad}/detalle-convenio`;
+    const URL = `/empresa/${empresa_id}/convenios/calcular-cuota`;
+    if (body.fechaIntencionPago !== null){
+      console.log('body', body);
+      const response = await axiosCrud.crear(URL, body);
+      return response ;
+    }
+    return {
+    "importeDeuda": 0,
+    "cantidadCuota": 1,
+    "fechaIntencionPago": "",
+    "importeCuota": 0,
+    "importeInteresTotal": 0 
+    };
+    //const URL = `/empresa/${empresa_id}/gestion-deuda/${entidad}/detalle-convenio`;
     //const reponse = axiosCrud.crear(URL,body)
     //return response;
-    return emuRespuestaDetalleConvenio;
+    
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;

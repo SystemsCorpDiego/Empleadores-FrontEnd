@@ -19,6 +19,7 @@ import { GrillaSaldoAFavor } from '../Grillas/GrillaSaldoAFavor';
 import Swal from 'sweetalert2';
 import { generarConvenio } from './GestionApi';
 import { useNavigate } from 'react-router-dom';
+import { use } from 'react';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -82,13 +83,13 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   useEffect(() => {
     fetchData();
   }, []);
-
+/*
   useEffect(() => {
     calcularDetalle();
   }, [selectedActas, selectedDeclaracionesJuradas, selectedSaldosAFavor, cuotas, fechaIntencion]);
-
+*/
   const handleGenerarConvenio = async () => {
-    
+
     setShowLoading(true);
     const bodyConvenio = {
       entidad: ENTIDAD,
@@ -126,7 +127,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           navigate('/dashboard/convenios');
         }
       });
-        setShowLoading(false);
+      setShowLoading(false);
 
     }
   };
@@ -181,7 +182,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       .reduce((acc, item) => (acc += item.importe), 0);
     console.log('Esto es lo que se tendria que imprimir', totalSaldosAFavorSelecteds);
     setTotalSaldosAFavorSelected(totalSaldosAFavorSelecteds);
-    
+
   }, [selectedSaldosAFavor]);
 
   useEffect(() => {
@@ -241,17 +242,13 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     }
   };
 
+  useEffect(() => {
+    calcularDetalle();
+  }, [selectedActas, selectedDeclaracionesJuradas, selectedSaldosAFavor, cuotas, fechaIntencion]);
+
   const calcularDetalle = async () => {
     try {
-      const body = {
-        entidad: 'UOMA',
-        actas: selectedActas,
-        declaracionesJuradas: selectedDeclaracionesJuradas,
-        //convenios: convenios.map((convenio) => convenio.id),
-        cuotas: cuotas,
-        medioDePago: 'CHEQUE',
-        usarSaldoAFavor: true,
-      };
+
 
       const sumaDeclaracionesJuradas = declaracionesJuradas
         .filter((dj) => selectedDeclaracionesJuradas.includes(dj.id))
@@ -261,17 +258,33 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         .filter((acta) => selectedActas.includes(acta.id))
         .reduce((acc, acta) => acc + (acta.importeTotal || 0), 0);
 
-    
+
       console.log('Suma importeTotal declaraciones juradas seleccionadas:', sumaDeclaracionesJuradas);
       console.log('Suma importeTotal actas seleccionadas:', sumaActas);
 
       setImporteDeDeuda(sumaDeclaracionesJuradas + sumaActas);
-
+      /*const body = {
+        entidad: 'UOMA',
+        actas: selectedActas,
+        declaracionesJuradas: selectedDeclaracionesJuradas,
+        //convenios: convenios.map((convenio) => convenio.id),
+        cuotas: cuotas,
+        medioDePago: 'CHEQUE',
+        usarSaldoAFavor: true,
+      };*/
+      const body = {
+        "importeDeuda": importeDeDeuda,
+        "cantidadCuota": cuotas,
+        "fechaIntencionPago": fechaIntencion
+          ? fechaIntencion.format("YYYY-MM-DD")
+          : null,
+      }
       const response = await axiosGestionDeudas.getDetalleConvenio(
         ID_EMPRESA,
-        'UOMA',
         body,
       );
+
+      
 
       setDetalleConvenio(response);
     } catch (error) {
@@ -279,6 +292,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     }
   };
 
+  
   return (
     <div className="container_grilla">
       <div className="mb-4em">

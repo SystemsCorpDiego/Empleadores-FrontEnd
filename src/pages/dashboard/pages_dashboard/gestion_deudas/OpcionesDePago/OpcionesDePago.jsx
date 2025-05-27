@@ -132,7 +132,7 @@ export const OpcionesDePago = ({
                 InputProps={{
                   readOnly: true,
                 }}
-                value={formatter.currencyString(importeDeDeuda + detalleConvenio.importeInteres)}
+                value={formatter.currencyString(importeDeDeuda + detalleConvenio.importeInteresTotal + saldoAFavorUtilizado)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -163,9 +163,9 @@ export const OpcionesDePago = ({
             <Box component="div" >
               <ul>
                 <li>Importe de deuda: {formatter.currencyString(importeDeDeuda)}</li>
-                <li>Intereses de financiación: {formatter.currencyString(detalleConvenio.importeInteres)}</li>
+                <li>Intereses de financiación: {formatter.currencyString(detalleConvenio.importeInteresTotal)}</li>
                 <li>Saldo a Favor utilizado: {formatter.currencyString(saldoAFavorUtilizado * -1)}</li>
-                <li>Total a pagar: {formatter.currencyString(importeDeDeuda + detalleConvenio.importeInteres + saldoAFavorUtilizado)}</li>
+                <li>Total a pagar: {formatter.currencyString(importeDeDeuda + detalleConvenio.importeInteresTotal + saldoAFavorUtilizado)}</li>
                 <li>Cantidad de cuotas: {cuotas}</li>
               </ul>
             </Box>
@@ -179,11 +179,11 @@ export const OpcionesDePago = ({
               </thead>
               <tbody>
                 {Array.from({ length: cuotas }, (_, i) => {
-                  const cuota = (detalleConvenio.detalleCuota || [])[i];
+                  //const cuota = (detalleConvenio.detalleCuota || [])[i];
                   return (
                     <tr key={i + 1}>
                       <td className='pr2'>{i + 1}</td>
-                      <td className='pr2'>{formatter.currencyString((importeDeDeuda + detalleConvenio.importeInteres + saldoAFavorUtilizado)/cuotas)}</td>
+                      <td className='pr2'>{formatter.currencyString((importeDeDeuda + detalleConvenio.importeInteresTotal + saldoAFavorUtilizado)/cuotas)}</td>
                       {/* Calcular la fecha de vencimiento sumando i meses a la fecha de intención */}
                       <td className='pr2'>
                         {fechaIntencion
