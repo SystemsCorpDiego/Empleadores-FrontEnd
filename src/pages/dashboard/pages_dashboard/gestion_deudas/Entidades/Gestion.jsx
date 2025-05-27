@@ -263,17 +263,10 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       console.log('Suma importeTotal actas seleccionadas:', sumaActas);
 
       setImporteDeDeuda(sumaDeclaracionesJuradas + sumaActas);
-      /*const body = {
-        entidad: 'UOMA',
-        actas: selectedActas,
-        declaracionesJuradas: selectedDeclaracionesJuradas,
-        //convenios: convenios.map((convenio) => convenio.id),
-        cuotas: cuotas,
-        medioDePago: 'CHEQUE',
-        usarSaldoAFavor: true,
-      };*/
+      
+
       const body = {
-        "importeDeuda": importeDeDeuda,
+        "importeDeuda": sumaDeclaracionesJuradas + sumaActas,
         "cantidadCuota": cuotas,
         "fechaIntencionPago": fechaIntencion
           ? fechaIntencion.format("YYYY-MM-DD")
