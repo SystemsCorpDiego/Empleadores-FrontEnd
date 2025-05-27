@@ -258,15 +258,18 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         .filter((acta) => selectedActas.includes(acta.id))
         .reduce((acc, acta) => acc + (acta.importeTotal || 0), 0);
 
+      const sumaSaldosAFavor = saldosAFavor
+        .filter((saldo) => selectedSaldosAFavor.includes(saldo.id))
+        .reduce((acc, saldo) => acc + (saldo.importe || 0), 0);
 
       console.log('Suma importeTotal declaraciones juradas seleccionadas:', sumaDeclaracionesJuradas);
       console.log('Suma importeTotal actas seleccionadas:', sumaActas);
-
+      console.log('Suma importe saldos a favor seleccionados:', sumaSaldosAFavor);
       setImporteDeDeuda(sumaDeclaracionesJuradas + sumaActas);
       
 
       const body = {
-        "importeDeuda": sumaDeclaracionesJuradas + sumaActas,
+        "importeDeuda": sumaDeclaracionesJuradas + sumaActas + sumaSaldosAFavor,
         "cantidadCuota": cuotas,
         "fechaIntencionPago": fechaIntencion
           ? fechaIntencion.format("YYYY-MM-DD")
