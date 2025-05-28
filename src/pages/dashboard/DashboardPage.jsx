@@ -263,7 +263,7 @@ const DashboardPage = () => {
                     {open && <span className="icon-link">Ajustes</span>}
                   </NavLink>
                 )}
-                {rolFuncionalidades.ROLES && (
+                {rolFuncionalidades.GESTION_ROLES && (
                   <NavLink to="./roles" className="icon-container">
                     <CoPresentIcon className="icon-link" />{' '}
                     {open && <span className="icon-link">Roles</span>}
