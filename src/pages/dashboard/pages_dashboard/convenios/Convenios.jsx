@@ -196,7 +196,7 @@ export const Convenios = () => {
       flex: 1,
       editable: rol === 'OSPIM_EMPLEADO' ? true : false,
       type: 'singleSelect',
-      valueOptions: ['Pendiente', 'Cerrado', 'Cheque Recibido'],
+      valueOptions: ['Pendiente en recepción de cheque', 'Cheque Recibido', 'Cheque Rechazado'],
     },
 
     {
@@ -235,7 +235,7 @@ export const Convenios = () => {
             label="Editar"
             title="Editar"
             sx={{ color: 'primary.main' }}
-            onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}`)}
+            onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/editar/${row.entidad}/convenio/${row.id}`)}
             color="inherit"
           />,
           <GridActionsCellItem

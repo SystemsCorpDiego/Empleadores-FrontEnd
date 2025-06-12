@@ -54,11 +54,26 @@ export const GestionDeudas = () => {
     () => createTheme(theme, locales[locale]),
     [locale, theme],
   );
-  const handleChangeTabState = (event, value) => setTabState(value);
+  const handleChangeTabState = (event, value) =>  window.location.hash.includes('/editar') || setTabState(value);
 
   useEffect(() => {
-    console.log(id);
-  }, []);
+      // Usar window.location.hash para rutas basadas en hash
+      if (window.location.hash.includes('/editar')) {
+        const hash = window.location.hash; // Ejemplo: #/dashboard/gestiondeuda/3/editar/UOMA
+        const pathParts = hash.replace(/^#\/?/, '').split('/');
+        const editarIndex = pathParts.indexOf('editar');
+        console.log('Editar index:', editarIndex);
+        console.log(editarIndex, pathParts);
+        if (editarIndex > 0 && pathParts.length > editarIndex + 1) {
+          const entidad = pathParts[editarIndex + 1];
+          // Puedes usar la variable 'entidad' según lo necesites
+          console.log('Entidad encontrada en la URL:', entidad);
+          setTabState(entidad === 'OSPIM' ? 1 : entidad === 'AMTIMA' ? 2 : 0);
+        }
+      }
+      
+      console.log(id);
+    }, []);
 
   return (
     <div className="gestion_deudas_container">
@@ -80,7 +95,12 @@ export const GestionDeudas = () => {
                 marginTop: '50px',
               }}
             >
-              <Tabs value={tabState} onChange={handleChangeTabState}>
+              <Tabs
+                value={tabState}
+                onChange={handleChangeTabState}
+                
+                
+              >
                 <Tab
                   label="UOMA"
                   {...a11yProps(0)}

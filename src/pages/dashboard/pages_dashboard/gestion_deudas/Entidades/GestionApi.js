@@ -134,11 +134,11 @@ const emuRespuesta = {
 
 
 const emuRespuestaDetalleConvenio = {
-  
+
   importeInteres: 23020,
   importeCuota: 21312,
-  
-  
+
+
   /*
   detalleCuota: [
     {
@@ -170,33 +170,49 @@ const bodyConvenio = {
 
 const ordenaGrillaPeriodo = (response) => {
   console.log('response', response.declaracionesJuradas);
-  const agrupado = response.declaracionesJuradas.reduce((acc, curr) => {
-    const clave = `${curr.id}`;
-    if (!acc[clave]) {
-      acc[clave] = {
-        id: curr.id,
-        periodo: curr.periodo,
-        rectificativa: curr.rectificativa,
-        //intereses: curr.intereses,
-        //importeTotal: curr.importeTotal,
-      };
-    }
-    acc[clave][curr.aporteDescripcion] = curr.importe;
-    acc[clave].importeTotal = (acc[clave].importeTotal || 0) + curr.importe;
-    acc[clave].intereses = (acc[clave].intereses || 0) + curr.intereses;
-    return acc;
-  }, {});
+  if (response.declaracionesJuradas !== null || response.declaracionesJuradas.length !== 0) {
+    const agrupado = response.declaracionesJuradas.reduce((acc, curr) => {
+      const clave = `${curr.id}`;
+      if (!acc[clave]) {
+        acc[clave] = {
+          id: curr.id,
+          periodo: curr.periodo,
+          rectificativa: curr.rectificativa,
+          //intereses: curr.intereses,
+          //importeTotal: curr.importeTotal,
+        };
+      }
+      acc[clave][curr.aporteDescripcion] = curr.importe;
+      acc[clave].importeTotal = (acc[clave].importeTotal || 0) + curr.importe;
+      acc[clave].intereses = (acc[clave].intereses || 0) + curr.intereses;
+      return acc;
+    }, {});
 
-  console.log('agrupado', agrupado);
-  const resultado = Object.values(agrupado);
-  
-  response.declaracionesJuradas = resultado;
+    console.log('agrupado', agrupado);
+    const resultado = Object.values(agrupado);
 
+    response.declaracionesJuradas = resultado;
+  } else {
+    response.declaracionesJuradas = [];
+  }
+  if (response.actas === null || response.actas.length === 0) {
+    response.actas = [];
+  }
+  if (response.saldosAFavor === null || response.saldosAFavor.length === 0) {
+    response.saldosAFavor = [];
+  }
   return response
 }
 
 export const getGestionDeuda = async (empresa_id, entidad) => {
   const URL = `/empresa/${empresa_id}/deuda/entidad/${entidad}`;
+  const response = await axiosCrud.consultar(URL);
+  return response
+}
+
+export const getGestionEditar = async (empresa_id, convenioId) => {
+  const URL = `/empresa/${empresa_id}/convenios/${convenioId}/deudaDto`;
+  
   const response = await axiosCrud.consultar(URL);
   return response
 }
@@ -243,19 +259,19 @@ export const getDetalleConvenio = async (empresa_id, body) => {
     if (body.fechaIntencionPago !== null && body.fechaIntencionPago !== 'Invalid Date') {
       console.log('body', body);
       const response = await axiosCrud.crear(URL, body);
-      return response ;
+      return response;
     }
     return {
-    "importeDeuda": 0,
-    "cantidadCuota": 1,
-    "fechaIntencionPago": "",
-    "importeCuota": 0,
-    "importeInteresTotal": 0 
+      "importeDeuda": 0,
+      "cantidadCuota": 1,
+      "fechaIntencionPago": "",
+      "importeCuota": 0,
+      "importeInteresTotal": 0
     };
     //const URL = `/empresa/${empresa_id}/gestion-deuda/${entidad}/detalle-convenio`;
     //const reponse = axiosCrud.crear(URL,body)
     //return response;
-    
+
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
@@ -268,9 +284,9 @@ export const generarConvenio = async (idEmpresa, bodyConvenio) => {
   try {
     const URL = `/empresa/${idEmpresa}/convenios`;
     const response = await axiosCrud.crear(URL, bodyConvenio);
-    
-    
-    
+
+
+
     return response;
   } catch (error) {
     const HTTP_MSG =
@@ -279,7 +295,30 @@ export const generarConvenio = async (idEmpresa, bodyConvenio) => {
   }
 };
 
+const getDeclaracionesJuradasEditar = async (empresa_id, convenioId) => {
+  try {
+    console.log('estoy en declaracionesJuradasEditar');
+    console.log('covenioId', convenioId);
+    console.log('getDeclaracionesJuradasEditar');
+    console.log('empresa_id', empresa_id);
+    //const empresa_id = localStorage.getItem('empresaId');
+    const response = await getGestionEditar(empresa_id, convenioId);
+    console.log('response', response);
+    const grilaOrdenada = ordenaGrillaPeriodo(response);
+    return grilaOrdenada;
+
+  } catch (error) {
+    const HTTP_MSG =
+      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
+    swal.showErrorBackEnd(HTTP_MSG, error);
+    //sacar cuando este el back
+
+    //sacar cuando este el back
+  }
+}
+
 export const axiosGestionDeudas = {
   getDeclaracionesJuradas,
   getDetalleConvenio,
+  getDeclaracionesJuradasEditar
 };

@@ -103,6 +103,7 @@ const AppRouter = () => {
           <Route path="aportes" element={<Aportes />} />
           <Route path="gestiondeuda" element={<GestionDeudas />} />
           <Route path="gestiondeuda/:id" element={<GestionDeudas />} />
+          <Route path="gestiondeuda/:id/editar/:entidad/convenio/:convenioid" element={<GestionDeudas />} />
           <Route path="convenio/:id/cuotas" element={<Cuotas />} />
 
           <Route path="convenios" element={<Convenios />} />
