@@ -8,7 +8,7 @@ import { GrillaPeriodo } from '../Grillas/GrillaPeriodos';
 import { EstadoDeDeuda } from '../EstadoDeDeuda/EstadoDeDeuda';
 import { OpcionesDePago } from '../OpcionesDePago/OpcionesDePago';
 import { axiosGestionDeudas } from './GestionApi';
-
+import moment from 'moment';
 import Accordion from '@mui/material/Accordion';
 import AccordionActions from '@mui/material/AccordionActions';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -256,12 +256,24 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       }
 
       console.log(response)
+      
+
       calcularDetalle();
 
       console.log('axiosdeclaracionesJuradas.getDeclaracionesJuradas - response:', response);
 
       console.log(response['declaracionesJuradas'])
 
+      //console.log('fecha de intencion de pago: ', dayjs(response.intencionPago))
+      if (response.intencionPago){
+        setFechaIntencion(response.intencionPago ? moment(response.intencionPago) : null);
+      }
+      if (response.cuotas) {
+        setCuotas(response.cuotas);
+      } else {
+        setCuotas(1);
+      }
+      
       setDeclaracionesJuradas(response['declaracionesJuradas']);
       setActas(response['actas']);
       setConvenios(response['convenios']);

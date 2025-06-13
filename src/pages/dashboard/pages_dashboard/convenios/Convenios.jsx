@@ -63,6 +63,11 @@ export const Convenios = () => {
   const [terminosYCondiciones, setTerminosYCondiciones] = useState(false);
   const empresaId = localStorageService.getEmpresaId(); // Cambia esto según tu lógica
   const total = 0;
+  const [filtros, setFiltros] = useState({
+    estado: 'Todos',
+    fechaDesde: '',
+    fechaHasta: '',
+  });
 
   const handleClose = () => setOpen(false);
 
@@ -281,6 +286,44 @@ export const Convenios = () => {
     }));
   };
 
+  const handleBuscar = (filtros) => {
+    const { estado, fechaDesde, fechaHasta } = filtros;
+    let filteredRows = rows;
+
+    if (estado && estado !== 'Todos') {
+      filteredRows = filteredRows.filter((row) => row.estado === estado);
+    }
+
+    if (fechaDesde) {
+      filteredRows = filteredRows.filter((row) => new Date(row.fecha) >= new Date(fechaDesde));
+    }
+
+    if (fechaHasta) {
+      filteredRows = filteredRows.filter((row) => new Date(row.fecha) <= new Date(fechaHasta));
+    }
+
+    setRows(filteredRows);
+  }
+  const handleExportar = (filtros) => {
+    const { estado, fechaDesde, fechaHasta } = filtros;
+    let filteredRows = rows;
+
+    if (estado && estado !== 'Todos') {
+      filteredRows = filteredRows.filter((row) => row.estado === estado);
+    }
+
+    if (fechaDesde) {
+      filteredRows = filteredRows.filter((row) => new Date(row.fecha) >= new Date(fechaDesde));
+    }
+
+    if (fechaHasta) {
+      filteredRows = filteredRows.filter((row) => new Date(row.fecha) <= new Date(fechaHasta));
+    }
+
+    // Aquí puedes implementar la lógica para exportar los datos filtrados
+    console.log('Exportando datos:', filteredRows);
+  };
+
   return (
     <Box>
 
@@ -294,7 +337,8 @@ export const Convenios = () => {
           <TextField
             label="Estado"
             select
-            defaultValue="Todos"
+            value={filtros.estado}
+            onChange={(e) => setFiltros({ ...filtros, estado: e.target.value })}
             sx={{ width: 150 }}
           >
             <MenuItem value="Todos">Todos</MenuItem>
@@ -307,6 +351,8 @@ export const Convenios = () => {
             label="Fecha desde"
             type="date"
             InputLabelProps={{ shrink: true }}
+            value={filtros.fechaDesde}
+            onChange={(e) => setFiltros({ ...filtros, fechaDesde: e.target.value })}
             sx={{ width: 180 }}
           />
 
@@ -314,17 +360,18 @@ export const Convenios = () => {
             label="Fecha hasta"
             type="date"
             InputLabelProps={{ shrink: true }}
+            value={filtros.fechaHasta}
+            onChange={(e) => setFiltros({ ...filtros, fechaHasta: e.target.value })}
             sx={{ width: 180 }}
           />
 
-          <Button variant="contained" color="primary">
+          <Button variant="contained" color="primary" onClick={() => handleBuscar(filtros)}>
             Buscar
           </Button>
-          <Button variant="contained" color="primary">
+          <Button variant="contained" color="primary" onClick={() => handleExportar(filtros)}>
             Exportar
           </Button>
         </Box>
-
         {/* DataGrid */}
         <Box sx={{ height: 450, width: '100%' }}>
           <ThemeProvider theme={themeWithLocale}>

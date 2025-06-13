@@ -49,8 +49,8 @@ export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [],
             headerName: '',
             renderCell: (params) => (
               <Checkbox
-                checked={selectedSaldosAFavor.includes(params.id)}
-                onChange={() => handleSelectionChange(params.id)}
+          checked={params.row.convenioAjusteId !== null}
+          onChange={() => handleSelectionChange(params.id)}
               />
             ),
             headerCheckboxSelection: true,
