@@ -26,11 +26,11 @@ import { UserContext } from '@/context/userContext';
 export const Aportes = () => {
   const [locale, setLocale] = useState('esES');
   const [categorias, setCategorias] = useState([]);
-  
+
   const [camaras, setCamaras] = useState([]);
   const [rows, setRows] = useState([]);
   const [aportes, setAportes] = useState([])
-  const [entidades, setEntidades] = useState(['UOMA','AMTIMA','OSPIM']);
+  const [entidades, setEntidades] = useState(['UOMA', 'AMTIMA', 'OSPIM', '']);
   const [rowModesModel, setRowModesModel] = useState({});
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
@@ -57,7 +57,7 @@ export const Aportes = () => {
 
   const consultaAportesRows = async () => {
     const response = await axiosAportes.consultar();
-    setRows(response);
+    setRows(sanitizeRows(response));
   };
 
   const getEntidades = async () => {
@@ -150,6 +150,23 @@ export const Aportes = () => {
       setRows(rows.filter((reg) => reg.id !== row.id));
     }
   };
+
+  function sanitizeRows(rows) {
+    return rows.map(row => ({
+      ...row,
+      entidad: row.entidad ?? '',
+      aporte: row.aporte ?? '',
+      socio: row.socio ?? false,
+      calculoTipo: row.calculoTipo ?? '',
+      calculoValor: row.calculoValor ?? '',
+      calculoBase: row.calculoBase ?? '',
+      camara: row.camara ?? '',
+      camaraCategoria: row.camaraCategoria ?? 'A',
+      camaraAntiguedad: row.camaraAntiguedad ?? '',
+      desde: row.desde ?? '',
+      hasta: row.hasta ?? '',
+    }));
+  }
 
   const processRowUpdate = async (newRow, oldRow) => {
     let bOk = false;
@@ -271,12 +288,13 @@ export const Aportes = () => {
       field: 'entidad',
       headerName: 'Entidad',
       type: 'singleSelect',
-      valueOptions: entidades,
+      valueOptions: entidades.map(e => e ?? ''),
       flex: 1,
       headerAlign: 'left',
       editable: true,
       align: 'left',
       headerClassName: 'header--cell',
+      valueGetter: (params) => params.row.entidad ?? '',
     },
     {
       field: 'aporte',
@@ -284,15 +302,13 @@ export const Aportes = () => {
       type: 'singleSelect',
       valueOptions: (params) => {
         if (aportes) {
-          const filteredCategories = aportes
-            .filter((item) => item?.entidad === params.row?.entidad)
-            .map((item) => item.codigo);
-          filteredCategories.push('');
-          return [...new Set(filteredCategories)];
+          const filtered = aportes.filter(item => item?.entidad === params.row?.entidad).map(item => item.codigo);
+          filtered.push('');
+          return [...new Set(filtered)];
         }
-        return [];
+        return [''];
       },
-      valueGetter: (params) => params.row.aporte || '',
+      valueGetter: (params) => params.row.aporte ?? '',
       editable: true,
       flex: 1,
       headerAlign: 'left',
@@ -307,14 +323,13 @@ export const Aportes = () => {
         { value: true, label: 'Si' },
         { value: false, label: 'No' },
       ],
+      valueGetter: (params) => params.row.socio ?? false,
       editable: true,
       flex: 1,
       headerAlign: 'left',
       headerClassName: 'header--cell',
       align: 'left',
-      valueFormatter: ({ value }) => {
-        return value ? 'Si' : 'No';
-      },
+      valueFormatter: ({ value }) => value ? 'Si' : 'No',
     },
     {
       field: 'calculoTipo',
@@ -325,6 +340,7 @@ export const Aportes = () => {
         { value: 'PO', label: 'Porcentaje' },
         { value: 'EN', label: 'Entero' },
       ],
+      valueGetter: (params) => params.row.calculoTipo ?? '',
       flex: 1,
       headerAlign: 'left',
       align: 'left',
@@ -338,9 +354,9 @@ export const Aportes = () => {
       headerAlign: 'right',
       align: 'right',
       headerClassName: 'header--cell',
+      valueGetter: (params) => params.row.calculoValor ?? '',
       valueFormatter: ({ value }) => {
-        if (value === '') return '';
-        if (value === null) return '';
+        if (value === '' || value === null) return '';
         return formatter.currency.format(value || 0);
       },
     },
@@ -349,16 +365,16 @@ export const Aportes = () => {
       headerName: 'Cálculo Base',
       flex: 1,
       editable: true,
-      headerAlign: 'left',
       type: 'singleSelect',
+      headerAlign: 'left',
       align: 'left',
       headerClassName: 'header--cell',
+      valueGetter: (params) => params.row.calculoBase ?? '',
       valueOptions: [
         { value: 'PJ', label: 'Paritaria Jornal' },
         { value: 'PS', label: 'Paritaria Salarial' },
         { value: 'RE', label: 'Remunerativo' },
         { value: '', label: '' },
-
       ],
     },
     {
@@ -369,7 +385,7 @@ export const Aportes = () => {
       valueOptions: camaras,
       editable: true,
       headerAlign: 'left',
-      valueGetter: (params) => params.row.camara || '',
+      valueGetter: (params) => params.row.camara ?? '',
       align: 'left',
       headerClassName: 'header--cell',
     },
@@ -381,15 +397,13 @@ export const Aportes = () => {
       type: 'singleSelect',
       valueOptions: (params) => {
         if (categorias) {
-          const filteredCategories = categorias
-            .filter((item) => item?.camara === params.row?.camara)
-            .map((item) => item.categoria);
-          filteredCategories.push('');
-          return [...new Set(filteredCategories)];
+          const filtered = categorias.filter(item => item?.camara === params.row?.camara).map(item => item.categoria);
+          filtered.push('');
+          return [...new Set(filtered)];
         }
-        return [];
+        return [''];
       },
-      valueGetter: (params) => params.row.camaraCategoria || 'A',
+      valueGetter: (params) => params.row.camaraCategoria ?? 'A',
       headerAlign: 'left',
       align: 'left',
       headerClassName: 'header--cell',
@@ -399,6 +413,7 @@ export const Aportes = () => {
       headerName: 'Antigüedad',
       flex: 1,
       editable: true,
+      valueGetter: (params) => params.row.camaraAntiguedad ?? '',
       headerAlign: 'left',
       align: 'left',
       headerClassName: 'header--cell',
@@ -409,12 +424,11 @@ export const Aportes = () => {
       flex: 1,
       editable: true,
       type: 'date',
+      valueGetter: (params) => params.row.desde ?? '',
       headerAlign: 'left',
       align: 'left',
       headerClassName: 'header--cell',
-      valueFormatter: (params) => {
-        return formatter.dateString(params.value);
-      },
+      valueFormatter: (params) => formatter.dateString(params.value),
     },
     {
       field: 'hasta',
@@ -422,12 +436,11 @@ export const Aportes = () => {
       editable: true,
       flex: 1,
       type: 'date',
+      valueGetter: (params) => params.row.hasta ?? '',
       headerAlign: 'left',
       align: 'left',
       headerClassName: 'header--cell',
-      valueFormatter: (params) => {
-        return formatter.dateString(params.value);
-      },
+      valueFormatter: (params) => formatter.dateString(params.value),
     },
   ];
 
