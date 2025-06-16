@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { UserContext } from '@/context/userContext';
 import { Box, Checkbox } from '@mui/material';
 import formatter from '@/common/formatter';
@@ -14,6 +14,17 @@ import './Grilla.css';
 export const GrillaActas = ({ actas, selectedActas, setSelectedActas }) => {
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
+
+    useEffect(() => {
+      const preselected = actas
+        .filter((item) => item.convenioActaId !== null && item.convenioActaId !== undefined)
+        .map((item) => item.id);
+  
+      if (preselected.length > 0 && preselected.some(id => !selectedActas.includes(id))) {
+        setSelectedActas((prev) => Array.from(new Set([...prev, ...preselected])));
+      }
+  
+    }, []);
 
   const handleSelectionChange = (id) => {
     setSelectedActas((prevSelected) => {

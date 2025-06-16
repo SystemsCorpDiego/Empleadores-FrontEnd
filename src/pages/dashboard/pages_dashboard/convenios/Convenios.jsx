@@ -33,6 +33,7 @@ import { getRol } from '@/components/localStorage/localStorageService';
 import CheckIcon from '@mui/icons-material/Check';
 import TerminosYCondiciones from './TerminosYCondiciones/TerminosYCondiciones';
 import localStorageService from '@/components/localStorage/localStorageService';
+//import { getConveniosByDateAndState } from './ConveniosApi';
 // Columnas del DataGrid
 
 const crearNuevoRegistro = (props) => {
@@ -64,12 +65,12 @@ export const Convenios = () => {
   const empresaId = localStorageService.getEmpresaId(); // Cambia esto según tu lógica
   const total = 0;
   const [filtros, setFiltros] = useState({
-    estado: 'Todos',
+    estado: 'TODOS',
     fechaDesde: '',
     fechaHasta: '',
   });
 
-  const handleClose = () => setOpen(false);
+  //const handleClose = () => setOpen(false);
 
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
@@ -175,7 +176,7 @@ export const Convenios = () => {
         const capital = Number(params.row.capital) || 0;
         const interes = Number(params.row.interes) || 0;
         const saldoFavor = Number(params.row.saldoFavor) || 0;
-        return capital + interes + saldoFavor; //Se suma saldo a favor porque es un valor negativo
+        return capital + interes - saldoFavor; //Se suma saldo a favor porque es un valor negativo
       },
       valueFormatter: (params) => formatter.currency.format(params.value || 0),
     },
@@ -287,9 +288,17 @@ export const Convenios = () => {
   };
 
   const handleBuscar = (filtros) => {
-    const { estado, fechaDesde, fechaHasta } = filtros;
+    //const { estado, fechaDesde, fechaHasta } = filtros;
     let filteredRows = rows;
 
+    ConveniosService.getConveniosByDateAndState(filtros, empresaId)
+      .then((data) => {
+        setRows(data);
+      })
+      .catch((error) => {
+        console.error('Error al filtrar convenios:', error);
+      });
+    /*
     if (estado && estado !== 'Todos') {
       filteredRows = filteredRows.filter((row) => row.estado === estado);
     }
@@ -301,14 +310,14 @@ export const Convenios = () => {
     if (fechaHasta) {
       filteredRows = filteredRows.filter((row) => new Date(row.fecha) <= new Date(fechaHasta));
     }
-
+    */
     setRows(filteredRows);
   }
   const handleExportar = (filtros) => {
     const { estado, fechaDesde, fechaHasta } = filtros;
     let filteredRows = rows;
 
-    if (estado && estado !== 'Todos') {
+    if (estado && estado !== 'TODOS') {
       filteredRows = filteredRows.filter((row) => row.estado === estado);
     }
 
@@ -341,10 +350,10 @@ export const Convenios = () => {
             onChange={(e) => setFiltros({ ...filtros, estado: e.target.value })}
             sx={{ width: 150 }}
           >
-            <MenuItem value="Todos">Todos</MenuItem>
-            <MenuItem value="Pendiente">Pendiente</MenuItem>
-            <MenuItem value="Cheque Recibido">Cheque Recibido</MenuItem>
-            <MenuItem value="Cerrado">Cerrado</MenuItem>
+            <MenuItem value="TODOS">Todos</MenuItem>
+            <MenuItem value="PENDIENTE">Pendiente</MenuItem>
+            <MenuItem value="CHEQUERECIBIDO">Cheque Recibido</MenuItem>
+            <MenuItem value="CERRADO">Cerrado</MenuItem>
           </TextField>
 
           <TextField

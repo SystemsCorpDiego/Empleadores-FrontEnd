@@ -81,7 +81,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   const [importeDeDeuda, setImporteDeDeuda] = useState(0); //Se usa para mostrar el importe de la deuda en el estado de deuda
   const [fechaDelDia, setFechaDelDia] = useState(null); //Se usa para guardar la fecha del dia actual
   const [convenio_id, setConvenioId] = useState(null); //Se usa para guardar el id del convenio si se esta editando
-  
+
   useEffect(() => {
     const isEditar = window.location.hash.includes('/editar');
     console.log('isEditar:', isEditar);
@@ -111,7 +111,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         .map((objeto) => objeto.id);
       setSelectedSaldosAFavor(idsSaldosAFavor);
     }
-      ;
+    ;
   }, []);
   /*
     useEffect(() => {
@@ -162,6 +162,47 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     }
   };
 
+  const handleActualizarConvenio = async () => {
+    setShowLoading(true);
+    const bodyConvenio = {
+      entidad: ENTIDAD,
+      cantidadCuota: cuotas,
+      fechaPago: fechaIntencion ? fechaIntencion.format("YYYY-MM-DD") : null,
+      actas: selectedActas,
+      ddjjs: selectedDeclaracionesJuradas,
+      ajustes: selectedSaldosAFavor,
+    };
+    const camposNulos = Object.entries(bodyConvenio)
+      .filter(([clave, valor]) => valor === null)
+      .map(([clave]) => clave);
+    if (camposNulos.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: `Por favor, complete todos los campos requeridos: ${camposNulos.join(', ')}`,
+        confirmButtonText: 'Aceptar',
+      });
+      setShowLoading(false);
+    } else {
+      console.log("Todos los valores están definidos.");
+      console.log('Body Convenio:', bodyConvenio);
+      console.log('ID_EMPRESA:', ID_EMPRESA);
+      console.log('CONVENIOID:', convenio_id);
+      const respuesta = await axiosGestionDeudas.putActualizarConvenio(ID_EMPRESA, convenio_id, bodyConvenio);
+      Swal.fire({
+        icon: 'success',
+        title: '¡Convenio actualizado!',
+        text: 'Serás redirigido al resumen',
+        confirmButtonText: 'Aceptar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/dashboard/convenios');
+        }
+      });
+      setShowLoading(false);
+    }
+  };
+
   useEffect(() => {
     //TODO: cuando este evento se dispare se deben setear todas las selected declaracionesJuradas y todas las actas en sus
     // respectivos arreglos
@@ -175,7 +216,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       console.log('Estoy en el if de isCheckedEstadoDeDeduda')
     }
 
-  else {
+    else {
       setSelectedActas([]);
       setSelectedDeclaracionesJuradas([]);
       setSelectedSaldosAFavor([]);
@@ -247,7 +288,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         );
       } else {
         const parts = window.location.hash.split('/');
-      //console.log(parts[parts.indexOf('convenio') + 1])
+        //console.log(parts[parts.indexOf('convenio') + 1])
         const CONVENIOID = parts[parts.indexOf('convenio') + 1];
         response = await axiosGestionDeudas.getDeclaracionesJuradasEditar(
           ID_EMPRESA,
@@ -256,7 +297,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       }
 
       console.log(response)
-      
+
 
       calcularDetalle();
 
@@ -265,7 +306,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       console.log(response['declaracionesJuradas'])
 
       //console.log('fecha de intencion de pago: ', dayjs(response.intencionPago))
-      if (response.intencionPago){
+      if (response.intencionPago) {
         setFechaIntencion(response.intencionPago ? moment(response.intencionPago) : null);
       }
       if (response.cuotas) {
@@ -273,7 +314,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       } else {
         setCuotas(1);
       }
-      
+
       setDeclaracionesJuradas(response['declaracionesJuradas']);
       setActas(response['actas']);
       setConvenios(response['convenios']);
@@ -459,6 +500,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           detalleConvenio={detalleConvenio}
           saldoAFavorUtilizado={totalSaldosAFavorSelected}
           handleGenerarConvenio={handleGenerarConvenio}
+          handleActualizarConvenio={handleActualizarConvenio}
+          isEditar={window.location.hash.includes('/editar')}
           showLoading={showLoading}
         ></OpcionesDePago>
       </div>

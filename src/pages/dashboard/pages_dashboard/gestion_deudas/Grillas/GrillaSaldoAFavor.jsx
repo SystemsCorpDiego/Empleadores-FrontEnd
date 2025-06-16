@@ -15,19 +15,28 @@ export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [],
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
 
-    const handleSelectionChange = (id) => {
-        setSelectedSaldosAFavor((prevSelected) => {
-          console.log(prevSelected);
-          if (prevSelected.includes(id)) {
-            return prevSelected.filter((selectedId) => selectedId !== id);
-          } else {
-            return [...prevSelected, id];
-          }
-        });
-    
-      };
+  const handleSelectionChange = (id) => {
+    setSelectedSaldosAFavor((prevSelected) => {
+      console.log(prevSelected);
+      if (prevSelected.includes(id)) {
+        return prevSelected.filter((selectedId) => selectedId !== id);
+      } else {
+        return [...prevSelected, id];
+      }
+    });
 
-        useEffect(() => {  console.log(selectedSaldosAFavor) }, [selectedSaldosAFavor]);
+  };
+
+  useEffect(() => {
+    const preselected = saldoAFavor
+      .filter((item) => item.convenioAjusteId !== null && item.convenioAjusteId !== undefined)
+      .map((item) => item.id);
+
+    if (preselected.length > 0 && preselected.some(id => !selectedSaldosAFavor.includes(id))) {
+      setSelectedSaldosAFavor((prev) => Array.from(new Set([...prev, ...preselected])));
+    }
+
+  }, []);
 
 
   return (
@@ -49,8 +58,9 @@ export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [],
             headerName: '',
             renderCell: (params) => (
               <Checkbox
-          checked={params.row.convenioAjusteId !== null}
-          onChange={() => handleSelectionChange(params.id)}
+                checked={selectedSaldosAFavor.includes(params.id)}
+                //checked={params.row.convenioAjusteId !== null}
+                onChange={() => handleSelectionChange(params.id)}
               />
             ),
             headerCheckboxSelection: true,

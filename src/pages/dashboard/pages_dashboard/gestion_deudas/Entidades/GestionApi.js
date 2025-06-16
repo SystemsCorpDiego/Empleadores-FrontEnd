@@ -297,10 +297,7 @@ export const generarConvenio = async (idEmpresa, bodyConvenio) => {
 
 const getDeclaracionesJuradasEditar = async (empresa_id, convenioId) => {
   try {
-    console.log('estoy en declaracionesJuradasEditar');
-    console.log('covenioId', convenioId);
-    console.log('getDeclaracionesJuradasEditar');
-    console.log('empresa_id', empresa_id);
+    
     //const empresa_id = localStorage.getItem('empresaId');
     const response = await getGestionEditar(empresa_id, convenioId);
     console.log('response', response);
@@ -317,8 +314,23 @@ const getDeclaracionesJuradasEditar = async (empresa_id, convenioId) => {
   }
 }
 
+const putActualizarConvenio = async (empresa_id, convenioId, body) => {
+  try {
+    const URL = `/empresa/${empresa_id}/convenios/${convenioId}`;
+    
+    const response = await axiosCrud.actualizar(URL, body);
+    swal.showSuccessBackEnd(HTTP_MSG_MODI, response);
+    return response;
+  } catch (error) {
+    const HTTP_MSG =
+      HTTP_MSG_MODI_ERROR + ` (${URL} - status: ${error.status})`;
+    swal.showErrorBackEnd(HTTP_MSG, error);
+  }
+}
+
 export const axiosGestionDeudas = {
   getDeclaracionesJuradas,
   getDetalleConvenio,
-  getDeclaracionesJuradasEditar
+  getDeclaracionesJuradasEditar,
+  putActualizarConvenio
 };

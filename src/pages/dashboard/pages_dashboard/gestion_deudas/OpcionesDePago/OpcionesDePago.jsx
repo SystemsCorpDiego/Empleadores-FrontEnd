@@ -34,6 +34,8 @@ export const OpcionesDePago = ({
   importeDeDeuda,
   saldoAFavorUtilizado,
   handleGenerarConvenio,
+  handleActualizarConvenio,
+  isEditar,
   showLoading
 }) => {
   return (
@@ -102,7 +104,7 @@ export const OpcionesDePago = ({
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2"><strong>Saldo a Favor utilizado:</strong></Typography>
-                <Typography variant="body1">{formatter.currencyString(saldoAFavorUtilizado * -1)}</Typography>
+                <Typography variant="body1">{formatter.currencyString(saldoAFavorUtilizado)}</Typography>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2"><strong>Monto a financiar:</strong></Typography>
@@ -150,7 +152,7 @@ export const OpcionesDePago = ({
 
             <Grid item xs={12}>
               {!showLoading && (
-                <Button variant="contained" color="primary" fullWidth onClick={handleGenerarConvenio}>
+                <Button variant="contained" color="primary" fullWidth onClick={isEditar ? handleActualizarConvenio : handleGenerarConvenio}>
                   GUARDAR CONVENIO
                 </Button>
               )}

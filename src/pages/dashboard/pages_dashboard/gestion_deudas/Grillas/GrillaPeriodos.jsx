@@ -33,8 +33,20 @@ export const GrillaPeriodo = ({ declaracionesJuradas, selectedDeclaracionesJurad
       }
     });
     console.log(aporteSolidario, cuotaSocial, art46)
-  }, [declaracionesJuradas]);
+    
 
+  }, [declaracionesJuradas]);
+  
+  useEffect(() => {
+    const preselected = declaracionesJuradas
+      .filter((item) => item.convenioDdjjId !== null && item.convenioDdjjId !== undefined)
+      .map((item) => item.id);
+
+    if (preselected.length > 0 && preselected.some(id => !selectedDeclaracionesJuradas.includes(id))) {
+      setSelectedDeclaracionesJuradas((prev) => Array.from(new Set([...prev, ...preselected])));
+    }
+
+  }, []);
 
   const handleSelectionChange = (id) => {
     setSelectedDeclaracionesJuradas((prevSelected) => {

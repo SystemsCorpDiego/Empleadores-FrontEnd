@@ -65,6 +65,24 @@ const ConveniosService = {
         }
     },
 
+    getConveniosByDateAndState: async (filtro, empresaId) => {
+        const { fechaDesde, fechaHasta, estado } = filtro;
+        console.log('fechaDesde:', fechaDesde);
+        console.log('fechaHasta:', fechaHasta);
+        console.log('fechaHasta == null:', fechaHasta == '');
+        console.log('estado:', estado);
+        
+        try {
+            const response = await axiosCrud.consultar(
+                `${API_BASE_URL}convenios?${fechaDesde == '' ?   '' : 'desde=' }${fechaDesde}&${fechaHasta == '' ?   '' : 'hasta' }${fechaHasta}&${estado == '' || estado == 'TODOS'?   '' : 'estado=' }${estado}&empresaId=${empresaId}`
+            );
+            return response || [];
+        } catch (error) {
+            console.error('Error fetching convenios by date and state:', error);
+            throw error;
+        }
+    },
+
     getConvenioById: async (id) => {
         try {
             const response = await axiosCrud.consultar(`${API_BASE_URL}/${id}`);
