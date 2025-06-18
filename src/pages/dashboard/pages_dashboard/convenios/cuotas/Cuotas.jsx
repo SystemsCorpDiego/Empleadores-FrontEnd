@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
@@ -8,10 +8,12 @@ import Cheques from '../cheques/cheques';
 import formatter from '@/common/formatter';
 import localStorageService from '@/components/localStorage/localStorageService';
 
+
 export const Cuotas = () => {
+  const navigate = useNavigate();
   const [cuotas, setCuotas] = useState([]);
   const [cuota, setCuota] = useState(null)
-  const [numeroConvenio, setNumeroConvenio] = useState(null); // Cambia esto según tu lógica
+  const [numeroConvenio, setNumeroConvenio] = useState(null); 
   
   const [open, setOpen] = useState(false);
   const ID_EMPRESA = localStorageService.getEmpresaId();
@@ -40,10 +42,7 @@ useEffect(() => {
   getCuotas();
 }, [numeroConvenio]);
 
-  const handleChequesClick = (cuotaId) => {
-    // Lógica para acceder al componente de cheques
-    console.log(`Accediendo a cheques de la cuota con ID: ${cuotaId}`);
-  };
+  
 
   const handleOpen = (row) => {
     console.log(row);
@@ -115,6 +114,14 @@ useEffect(() => {
           disableSelectionOnClick
         />
       </Box>
+      <Button
+        variant="contained"
+        color="primary"
+        style={{ marginTop: '1em' }}
+        onClick={() => navigate('/dashboard/convenios')}
+      >
+        Mis convenios
+      </Button>
     </div>
   );
 };
