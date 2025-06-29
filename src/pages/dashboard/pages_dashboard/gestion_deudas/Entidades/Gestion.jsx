@@ -75,6 +75,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     detalleCuota: [],
   }); //Propiedades del detalle convenio
   const [showLoading, setShowLoading] = useState(false); // Estado para mostrar el loading
+  const [showLoadingDetalle, setShowLoadingDetalle] = useState(false); // Estado para mostrar el loading del detalle
   const [noUsar, setNoUsar] = useState(true); // Estado que identifica si se utiliza el saldo a favor o no
   const [medioPago, setMedioPago] = useState('CHEQUE'); //Queda por si en algun momento se agrega otro medio de pago
   const [totalDeuda, setTotalDeuda] = useState(0); //Se usa para mostrar el total de la deuda en el estado de deuda
@@ -206,6 +207,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   useEffect(() => {
     //TODO: cuando este evento se dispare se deben setear todas las selected declaracionesJuradas y todas las actas en sus
     // respectivos arreglos
+    setShowLoadingDetalle(true);
     if (isCheckedEstadoDeDeduda) {
       const idsActas = actas.map((objeto) => objeto.id);
       setSelectedActas(idsActas);
@@ -221,45 +223,53 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       setSelectedDeclaracionesJuradas([]);
       setSelectedSaldosAFavor([]);
     }
+    setShowLoadingDetalle(false);
   }, [isCheckedEstadoDeDeduda]);
 
 
   useEffect(() => {
+    setShowLoadingDetalle(true);
     const ATotal = actas
       .filter((item) => selectedActas.includes(item.id))
       .reduce((acc, item) => (acc += item.estadoDeuda !== 'JUDICIALIZADO' ? item.importeTotal : 0), 0);
     console.log('Esto es lo que se tendria que imprimir', ATotal);
     setTotalActas(ATotal);
     console.log(selectedActas)
+    setShowLoadingDetalle(false);
   }, [selectedActas]);
 
   useEffect(() => {
+    setShowLoadingDetalle(true);
     const BTotal = declaracionesJuradas
       .filter((item) => selectedDeclaracionesJuradas.includes(item.id))
       .reduce((acc, item) => (acc += item.importeTotal), 0);
     console.log('Esto es lo que se tendria que imprimir', BTotal);
     console.log(selectedDeclaracionesJuradas)
     setTotalDeclaracionesJuradas(BTotal);
+    setShowLoadingDetalle(false);
   }, [selectedDeclaracionesJuradas]);
 
   useEffect(() => {
+    setShowLoadingDetalle(true);
     const CTotal = saldosAFavor
       .reduce((acc, item) => (acc += item.importe), 0);
     console.log('Esto es lo que se tendria que imprimir', CTotal);
     setTotalSaldosAFavor(CTotal);
-
+    setShowLoadingDetalle(false);
   }, [saldosAFavor]);
 
   useEffect(() => {
+    setShowLoadingDetalle(true);
     const totalSaldosAFavorSelecteds = saldosAFavor
       .filter((item) => selectedSaldosAFavor.includes(item.id))
       .reduce((acc, item) => (acc += item.importe), 0);
     console.log('Esto es lo que se tendria que imprimir', totalSaldosAFavorSelecteds);
     setTotalSaldosAFavorSelected(totalSaldosAFavorSelecteds);
-
+    setShowLoadingDetalle(false);
   }, [selectedSaldosAFavor]);
 
   useEffect(() => {
+    setShowLoadingDetalle(true);
     if (convenios) {
       const CTotal = convenios.reduce(
         (acc, item) => (acc += item.totalActualizado),
@@ -268,7 +278,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       console.log('Esto es lo que se tendria que imprimir', CTotal);
       setTotalConvenios(CTotal);
     }
-
+    setShowLoadingDetalle(false);
 
 
   }, [convenios]);

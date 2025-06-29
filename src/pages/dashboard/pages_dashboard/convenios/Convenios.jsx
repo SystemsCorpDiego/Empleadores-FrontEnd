@@ -95,6 +95,7 @@ export const Convenios = () => {
       }
     };
     fetchData();
+    console.log('Este es el rol', rol)
     console.log(rows);
   }, []);
 
@@ -137,10 +138,11 @@ export const Convenios = () => {
     {
       field: 'cuit',
       headerName: 'CUIT',
+      visible: rol == 'OSPIM_EMPLEADO' ? true : false ,
       flex: 1.2,
       hide: !useContext(UserContext).isAdmin, // Esconde la columna si el usuario no es admin
     },
-    { field: 'razonSocial', headerName: 'Razón Social', flex: 1 },
+    { field: 'razonSocial', headerName: 'Razón Social', flex: 1, visible: rol == 'OSPIM_EMPLEADO'? true : false },
     {
       field: 'fecha', headerName: 'Fecha', flex: 1, valueFormatter: (params) =>
         params.value ? formatter.dateString(params.value) : '',

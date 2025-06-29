@@ -235,55 +235,7 @@ export const Aportes = () => {
   };
 
   const columns = [
-    {
-      field: 'actions',
-      type: 'actions',
-      headerName: 'Acciones',
-      flex: 1,
-      cellClassName: 'actions',
-      headerAlign: 'center',
-      align: 'center',
-      headerClassName: 'header--cell',
-      getActions: ({ row }) => {
-        const isInEditMode =
-          rowModesModel[rows.indexOf(row)]?.mode === GridRowModes.Edit;
 
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<SaveIcon />}
-              label="Save"
-              sx={{
-                color: 'primary.main',
-              }}
-              onClick={handleSaveClick(row)}
-            />,
-            <GridActionsCellItem
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(row)}
-              color="inherit"
-            />,
-          ];
-        }
-        return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(row)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(row)}
-            color="inherit"
-          />,
-        ];
-      },
-    },
     {
       field: 'entidad',
       headerName: 'Entidad',
@@ -441,6 +393,55 @@ export const Aportes = () => {
       align: 'left',
       headerClassName: 'header--cell',
       valueFormatter: (params) => formatter.dateString(params.value),
+    },
+        {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Acciones',
+      flex: 1,
+      cellClassName: 'actions',
+      headerAlign: 'center',
+      align: 'center',
+      headerClassName: 'header--cell',
+      getActions: ({ row }) => {
+        const isInEditMode =
+          rowModesModel[rows.indexOf(row)]?.mode === GridRowModes.Edit;
+
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<SaveIcon />}
+              label="Save"
+              sx={{
+                color: 'primary.main',
+              }}
+              onClick={handleSaveClick(row)}
+            />,
+            <GridActionsCellItem
+              icon={<CancelIcon />}
+              label="Cancel"
+              className="textPrimary"
+              onClick={handleCancelClick(row)}
+              color="inherit"
+            />,
+          ];
+        }
+        return [
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(row)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={handleDeleteClick(row)}
+            color="inherit"
+          />,
+        ];
+      },
     },
   ];
 
