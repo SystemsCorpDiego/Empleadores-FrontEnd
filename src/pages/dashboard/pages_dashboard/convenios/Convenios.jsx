@@ -33,6 +33,8 @@ import { getRol } from '@/components/localStorage/localStorageService';
 import CheckIcon from '@mui/icons-material/Check';
 import TerminosYCondiciones from './TerminosYCondiciones/TerminosYCondiciones';
 import localStorageService from '@/components/localStorage/localStorageService';
+import { consultar as consultarCuotas } from './cuotas/CuotasApi';
+//import { consultarCuotas } from './cuotas/CuotasApi';
 //import { getConveniosByDateAndState } from './ConveniosApi';
 // Columnas del DataGrid
 
@@ -133,6 +135,70 @@ export const Convenios = () => {
     }));
   };
 
+const handleDownload = (row) => async () => {
+  console.log('Descargando cuotas para el convenio:', row.id);
+  try {
+    const cuotas = await consultarCuotas(row.id, empresaId);
+    if (!Array.isArray(cuotas)) throw new Error('Formato de cuotas inesperado');
+
+    const convenioInfo = {
+      convenioId: row.id,
+      fecha: row.fecha,
+      numero: row.numero,
+      capital: row.capital,
+      interes: row.interes,
+      saldoFavor: row.saldoFavor,
+      medioPago: row.medioPago,
+      estado: row.estado,
+    };
+
+    const allRows = cuotas.map((cuota) => ({
+      ...convenioInfo,
+      nroCuota: cuota.nro_cuota,
+      importeCuota: cuota.importeCuota,
+      cheques: cuota.cheques,
+      totalCheques: cuota.totalCheques,
+    }));
+
+    const headerMap = {
+      convenioId: 'ID Convenio',
+      fecha: 'Fecha',
+      numero: 'Numero',
+      capital: 'Deuda Original',
+      interes: 'Intereses Financieros',
+      saldoFavor: 'Saldo a Favor',
+      medioPago: 'Medio de Pago',
+      estado: 'Estado',
+      nroCuota: 'Numero de Cuota',
+      importeCuota: 'Importe de Cuota',
+      cheques: 'Cheques',
+      totalCheques: 'Total Cheques',
+    };
+
+    const headers = Object.keys(headerMap);
+    const headerLabels = headers.map((key) => headerMap[key]);
+
+    const csvContent = [
+      headerLabels.join(','), // encabezados legibles
+      ...allRows.map((r) =>
+        headers.map((h) => `"${String(r[h] ?? '').replace(/"/g, '""')}"`).join(',')
+      ),
+    ].join('\r\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `convenio_${row.id}_cuotas.csv`;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch (error) {
+    console.error('Error generando CSV:', error);
+    alert('Ocurrió un error al descargar las cuotas del convenio.');
+  }
+};
 
   const columnas = [
     {
@@ -236,7 +302,7 @@ export const Convenios = () => {
             label="Download"
             title="Descargar"
             sx={{ color: 'primary.main' }}
-            onClick={() => console.log(row)}
+            onClick={handleDownload(row)}
           />,
           <GridActionsCellItem
             icon={<EditIcon />}
