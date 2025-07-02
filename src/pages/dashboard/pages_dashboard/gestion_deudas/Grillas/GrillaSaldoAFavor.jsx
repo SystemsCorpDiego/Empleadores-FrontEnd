@@ -86,7 +86,7 @@ export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [],
             align: 'right',
             flex: 1,
             valueFormatter: (params) =>
-              params.value ? formatter.currencyString(params.value * -1) : '',
+              params.value ? formatter.currencyString(params.value) : '',
           }
         ]}
         paginationModel={paginationModel}

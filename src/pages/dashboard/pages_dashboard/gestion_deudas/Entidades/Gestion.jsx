@@ -380,7 +380,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
 
 
       const body = {
-        "importeDeuda": sumaDeclaracionesJuradas + sumaActas + sumaSaldosAFavor,
+        "importeDeuda": sumaDeclaracionesJuradas + sumaActas - sumaSaldosAFavor,
         "cantidadCuota": cuotas,
         "fechaIntencionPago": fechaIntencion
           ? fechaIntencion.format("YYYY-MM-DD")
@@ -484,7 +484,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
                 Saldos a favor
               </Typography>
               <Typography variant="h6" color="primary">
-                TOTAL: {formatter.currencyString(totalSaldosAFavorSelected * -1)}
+                TOTAL: {formatter.currencyString(totalSaldosAFavorSelected)}
               </Typography>
             </Box>
           </AccordionSummary>

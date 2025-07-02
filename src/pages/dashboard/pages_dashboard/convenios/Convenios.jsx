@@ -213,7 +213,7 @@ const handleDownload = (row) => async () => {
       field: 'fecha', headerName: 'Fecha', flex: 1, valueFormatter: (params) =>
         params.value ? formatter.dateString(params.value) : '',
     },
-    { field: 'numero', headerName: 'N°', flex: 0.1, align: 'right' },
+    { field: 'numero', headerName: 'Numero Convenio', flex: 0.1, align: 'right' },
     {
       field: 'capital',
       headerName: 'Deuda Original',
@@ -249,8 +249,8 @@ const handleDownload = (row) => async () => {
       valueFormatter: (params) => formatter.currency.format(params.value || 0),
     },
     {
-      field: 'cantCuotas',
-      headerName: 'Cant. Cuotas',
+      field: 'cuotas',
+      headerName: 'Cuotas',
       flex: 0.8,
       align: 'right',
     },
@@ -338,6 +338,136 @@ const handleDownload = (row) => async () => {
     },
   ];
 
+  const columnas_empleador = [
+
+    {
+      field: 'fecha', headerName: 'Fecha', flex: .8, valueFormatter: (params) =>
+        params.value ? formatter.dateString(params.value) : '',
+    },
+    { field: 'numero', headerName: 'Nro Convenio', flex: 1, align: 'right' },
+    {
+      field: 'capital',
+      headerName: 'Deuda Original',
+      flex: 1,
+      align: 'right',
+      valueFormatter: (params) => formatter.currency.format(params.value || 0),
+    },
+    {
+      field: 'interes',
+      headerName: 'Intereses Financ.',
+      flex: 1,
+      align: 'right',
+      valueFormatter: (params) => formatter.currency.format(params.value || 0),
+    },
+    {
+      field: 'saldoFavor',
+      headerName: 'Sdo a Favor utilizado',
+      flex: 1,
+      align: 'right',
+      valueFormatter: (params) => formatter.currency.format(params.value || 0),
+    },
+    {
+      field: 'total',
+      headerName: 'Total Convenio',
+      flex: 0.8,
+      align: 'right',
+      valueGetter: (params) => {
+        const capital = Number(params.row.capital) || 0;
+        const interes = Number(params.row.interes) || 0;
+        const saldoFavor = Number(params.row.saldoFavor) || 0;
+        return capital + interes - saldoFavor; //Se suma saldo a favor porque es un valor negativo
+      },
+      valueFormatter: (params) => formatter.currency.format(params.value || 0),
+    },
+    {
+      field: 'cuotas',
+      headerName: 'Cuotas',
+      flex: 0.8,
+      align: 'right',
+    },
+    { field: 'medioPago', headerName: 'Medio Pago', flex: 1 },
+    /*{
+      field: 'cheque',
+      headerName: 'N° Cheque',
+      flex: 1,
+      valueGetter: (params) =>
+        params.row.cheques && params.row.cheques.length > 0
+          ? params.row.cheques.map((c) => c.numero).join('/ ')
+          : 'Sin Cheques',
+    },*/
+    {
+      field: 'estado',
+      headerName: 'Estado',
+      flex: 1,
+      editable: rol === 'OSPIM_EMPLEADO' ? true : false,
+      type: 'singleSelect',
+      valueOptions: ['Pendiente en recepción de cheque', 'Cheque Recibido', 'Cheque Rechazado'],
+    },
+
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      type: 'actions',
+      flex: 1.5,
+      getActions: ({ id, row }) => {
+        const isInEditMode = rowModesModel[id]?.mode === 'edit';
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<CheckIcon />}
+              label="Guardar"
+              onClick={handleSaveClick(id)}
+              color="primary"
+            />,
+            <GridActionsCellItem
+              icon={<CancelIcon />}
+              label="Cancelar"
+              onClick={handleCancelClick(id)}
+              color="inherit"
+            />,
+          ];
+        }
+        return [
+          <GridActionsCellItem
+            icon={<DownloadIcon />}
+            label="Download"
+            title="Descargar"
+            sx={{ color: 'primary.main' }}
+            onClick={handleDownload(row)}
+          />,
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Editar"
+            title="Editar"
+            sx={{ color: 'primary.main' }}
+            onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/editar/${row.entidad}/convenio/${row.id}`)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            icon={<AccountBalanceWalletIcon />}
+            label="Cheques"
+            title="Cheques"
+            sx={{ color: 'primary.main' }}
+            onClick={() => navigate(`/dashboard/convenio/${row.id}/cuotas`)}
+            color="inherit"
+          />,
+          ...(rol !== 'OSPIM_EMPLEADO'
+            ? [
+              <GridActionsCellItem
+                icon={<CheckIcon />}
+                label="Aceptar Terminos y condiciones"
+                title="Aceptar Terminos y condiciones"
+                sx={{ color: 'primary.main' }}
+                color="inherit"
+                onClick={() => handleOpen(row)}
+              />,
+            ]
+            : []),
+        ];
+      },
+      sortable: false,
+    },
+  ];
 
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
@@ -454,7 +584,7 @@ const handleDownload = (row) => async () => {
           <ThemeProvider theme={themeWithLocale}>
             <StripedDataGrid
               rows={rows}
-              columns={columnas}
+              columns={ rol == 'OSPIM_EMPLEADO' ? columnas : columnas_empleador}
               getRowClassName={(params) =>
                 rows.indexOf(params.row) % 2 === 0 ? 'even' : 'odd'
               }

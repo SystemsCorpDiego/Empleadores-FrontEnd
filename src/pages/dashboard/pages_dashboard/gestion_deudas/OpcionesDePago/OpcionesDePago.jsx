@@ -20,6 +20,7 @@ import moment from 'moment';
 import formatter from '@/common/formatter';
 import { ThreeCircles } from 'react-loader-spinner';//import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import 'moment/locale/es'; // Importa el locale español de moment
+import { useEffect } from 'react';
 
 moment.locale('es');
 
@@ -38,6 +39,7 @@ export const OpcionesDePago = ({
   isEditar,
   showLoading
 }) => {
+
   return (
     <Box p={3} sx={{ margin: '60px auto', padding: 0 }}>
       <Typography variant="h6" gutterBottom>OPCIONES DE PAGO</Typography>
@@ -108,7 +110,7 @@ export const OpcionesDePago = ({
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2"><strong>Monto a financiar:</strong></Typography>
-                <Typography variant="body1">{formatter.currencyString(importeDeDeuda + saldoAFavorUtilizado)}</Typography>
+                <Typography variant="body1">{formatter.currencyString(importeDeDeuda - saldoAFavorUtilizado)}</Typography>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2"><strong>Cantidad de cuotas:</strong></Typography>
@@ -121,7 +123,7 @@ export const OpcionesDePago = ({
               <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2"><strong>Total a pagar:</strong></Typography>
                 <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                  {formatter.currencyString(importeDeDeuda + detalleConvenio.importeInteresTotal + saldoAFavorUtilizado)}
+                  {formatter.currencyString(importeDeDeuda + detalleConvenio.importeInteresTotal)}
                 </Typography>
               </Grid>
             </Grid>
