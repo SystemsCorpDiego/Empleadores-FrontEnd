@@ -31,6 +31,7 @@ useEffect(() => {
     console.log(numeroConvenio, ID_EMPRESA);
     await consultar(numeroConvenio, ID_EMPRESA)
       .then((response) => {
+        console.log('Cuotas response:', response);
         setCuotas(response);
       })
       .catch((error) => {
@@ -54,10 +55,11 @@ useEffect(() => {
   };
 
   const columns = [
-    { field: 'nro_cuota', headerName: 'Nro. Cuota', flex: 1 },
-    { field: 'importeCuota', headerName: 'Importe Cuota', align: 'right', flex: 1, valueFormatter: (params) => formatter.currency.format(params.value || 0) },
-    { field: 'cheques', headerName: 'Nro. Cheques', flex: 1 },
-    { field: 'totalCheques', headerName: 'Total Cheques', align: 'right', flex: 1,valueFormatter: (params) => formatter.currency.format(params.value || 0) },
+    { field: 'numero', headerName: 'Nro. Cuota', flex: 1 },
+    { field: 'importe', headerName: 'Importe Cuota', align: 'right', flex: 1, valueFormatter: (params) => formatter.currency.format(params.value || 0) },
+    { field: 'chequesNro', headerName: 'Nro. Cheques', flex: 1 },
+    { field: 'chequesTotal', headerName: 'Total Cheques', align: 'right', flex: 1,valueFormatter: (params) => formatter.currency.format(params.value || 0) },
+    { field: 'vencimiento', headerName: 'Fecha Vencimiento', flex: 1 },
     {
       field: 'acciones',
       headerName: 'Acciones',
@@ -83,11 +85,11 @@ useEffect(() => {
           <Cheques
             open={open}
             handleClose={handleClose}
-            convenio={cuota.convenioId}
-            cuota={cuota.nro_cuota}
+            convenio={numeroConvenio}
+            cuota={cuota.numero}
             //cheques={chequesPorFila[filaSeleccionada] || []}
             //setCheques={actualizarCheques}
-            total={cuota.importeCuota}
+            total={cuota.importe}
           />
         )}
         <DataGrid

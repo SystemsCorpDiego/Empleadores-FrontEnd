@@ -74,7 +74,7 @@ export const consultar = async (convenioId, empresaId) => {
 
         console.log(data)
         console.log(arregloCuotas)
-        return arregloCuotas || [];
+        return data || [];
     } catch (error) {
         swal.showErrorBackEnd(
             HTTP_MSG_CONSUL_ERROR + ` (${URL_API} - status: ${error.status})`,
