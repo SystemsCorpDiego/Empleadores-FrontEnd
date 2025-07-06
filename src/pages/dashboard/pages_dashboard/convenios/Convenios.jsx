@@ -72,6 +72,12 @@ export const Convenios = () => {
     fechaHasta: '',
   });
 
+  const KVESTADOS ={
+    "PRCH": "Pendiente en recepción de cheque",
+    "CHRECI": "Cheque recibido",
+    "CHRECH": "Cheque rechazado"
+  };
+
   //const handleClose = () => setOpen(false);
 
   const { paginationModel, setPaginationModel, pageSizeOptions } =
@@ -112,7 +118,7 @@ export const Convenios = () => {
       console.log('Estado:', updatedRow.estado, 'ID:', updatedRow.id);
     }
     try {
-      const respuesta = await ConveniosService.updateConvenio(updatedRow.id, updatedRow.estado);
+      const respuesta = await ConveniosService.updateConvenio(updatedRow);
       console.log('Convenio actualizado:', respuesta);
     } catch (error) {
       console.error('Error al actualizar el convenio:', error);
@@ -128,11 +134,14 @@ export const Convenios = () => {
     }));
   };
 
-  const handleSaveClick = (id) => () => {
+  const handleSaveClick = (id, row) => () => {
     setRowModesModel((prevRowModesModel) => ({
       ...prevRowModesModel,
       [id]: { mode: 'view' },
     }));
+
+    console.log('Guardando cambios para el convenio:', rows[id]);
+
   };
 
 const handleDownload = (row) => async () => {
@@ -270,7 +279,11 @@ const handleDownload = (row) => async () => {
       flex: 1,
       editable: rol === 'OSPIM_EMPLEADO' ? true : false,
       type: 'singleSelect',
-      valueOptions: ['Pendiente en recepción de cheque', 'Cheque Recibido', 'Cheque Rechazado'],
+      valueOptions: Object.entries(KVESTADOS).map(([key, value]) => ({
+        value: key,
+        label: value,
+      })),
+      valueFormatter: (params) => KVESTADOS[params.value] || params.value,
     },
 
     {
@@ -399,9 +412,12 @@ const handleDownload = (row) => async () => {
       field: 'estado',
       headerName: 'Estado',
       flex: 1,
-      editable: rol === 'OSPIM_EMPLEADO' ? true : false,
-      type: 'singleSelect',
-      valueOptions: ['Pendiente en recepción de cheque', 'Cheque Recibido', 'Cheque Rechazado'],
+      editable: false,
+      valueOptions: Object.entries(KVESTADOS).map(([key, value]) => ({
+      value: key,
+      label: value,
+      })),
+      valueFormatter: (params) => KVESTADOS[params.value] || params.value,
     },
 
     {
@@ -416,7 +432,7 @@ const handleDownload = (row) => async () => {
             <GridActionsCellItem
               icon={<CheckIcon />}
               label="Guardar"
-              onClick={handleSaveClick(id)}
+              onClick={handleSaveClick(id, row)}
               color="primary"
             />,
             <GridActionsCellItem

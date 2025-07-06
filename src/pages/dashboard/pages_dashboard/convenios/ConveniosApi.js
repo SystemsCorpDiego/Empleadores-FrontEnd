@@ -1,7 +1,8 @@
 
 import { axiosCrud } from '@/components/axios/axiosCrud';
 const API_BASE_URL = ''; // Cambia esta URL por la de tu API
-
+import { getRol } from '@/components/localStorage/localStorageService';
+import oAxios from '@components/axios/axiosInstace';
 const conveniosData = [
     {
       id: 1,
@@ -55,7 +56,14 @@ const ConveniosService = {
     getAllConvenios: async (empresaId) => {
         try {
             //const response = await axiosCrud.consultar(`${API_BASE_URL}`);
-            const URL = `/empresa/${empresaId}/convenios`;
+            let URL = ''
+            const rol = getRol();
+            if(rol == 'OSPIM_EMPLEADO') {
+                URL = `/convenios`
+            }else{
+                URL = `/empresa/${empresaId}/convenios`;
+            }
+            
             const response = await axiosCrud.consultar(`${URL}`);
             //return response.data;
             return response || [];
@@ -103,15 +111,15 @@ const ConveniosService = {
         }
     },
 
-    updateConvenio: async (id, estado) => {
+    updateConvenio: async (updatedRow) => {
         try {
-            const objeto ={
-                estado: estado
-            }
 
-            return objeto
-            //const response = await axiosCrud.actualizar(`${API_BASE_URL}/${id}`, objeto);
-            //return response.data;
+            const URL = `/convenios/${updatedRow.id}/estado-set/${updatedRow.estado}`;
+            //return objeto
+            const response = await oAxios.post(URL, {});
+            console.log('Convenio actualizado:', response);
+            //const response = await axiosCrud.crear(`${API_BASE_URL}/${id}`, objeto);
+            return response;
         } catch (error) {
             console.error(`Error updating convenio with ID ${id}:`, error);
             throw error;
