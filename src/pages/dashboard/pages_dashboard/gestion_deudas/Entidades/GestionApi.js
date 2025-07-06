@@ -1,6 +1,7 @@
 import oAxios from '@components/axios/axiosInstace';
 import { axiosCrud } from '@/components/axios/axiosCrud';
 import swal from '@/components/swal/swal';
+import Swal from 'sweetalert2';
 
 const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
 const HTTP_MSG_MODI = import.meta.env.VITE_HTTP_MSG_MODI;
@@ -207,12 +208,30 @@ const ordenaGrillaPeriodo = (response) => {
 export const getGestionDeuda = async (empresa_id, entidad) => {
   const URL = `/empresa/${empresa_id}/deuda/entidad/${entidad}`;
   const response = await axiosCrud.consultar(URL);
+  console.log(response)
+  if (
+    response &&
+    response.declaracionesJuradas &&
+    response.actas &&
+    response.saldosAFavor &&
+    response.declaracionesJuradas.length === 0 &&
+    response.actas.length === 0 &&
+    response.saldosAFavor.length === 0
+  ) {
+
+    Swal.fire({
+      icon: 'info',
+      title: 'Sin Deuda',
+      text: 'No se registra deuda al día de la fecha',
+    });
+
+  }
   return response
 }
 
 export const getGestionEditar = async (empresa_id, convenioId) => {
   const URL = `/empresa/${empresa_id}/convenios/${convenioId}/deudaDto`;
-  
+
   const response = await axiosCrud.consultar(URL);
   return response
 }
@@ -297,7 +316,7 @@ export const generarConvenio = async (idEmpresa, bodyConvenio) => {
 
 const getDeclaracionesJuradasEditar = async (empresa_id, convenioId) => {
   try {
-    
+
     //const empresa_id = localStorage.getItem('empresaId');
     const response = await getGestionEditar(empresa_id, convenioId);
     console.log('response', response);
@@ -317,7 +336,7 @@ const getDeclaracionesJuradasEditar = async (empresa_id, convenioId) => {
 const putActualizarConvenio = async (empresa_id, convenioId, body) => {
   try {
     const URL = `/empresa/${empresa_id}/convenios/${convenioId}`;
-    
+
     const response = await axiosCrud.actualizar(URL, body);
     swal.showSuccessBackEnd(HTTP_MSG_MODI, response);
     return response;

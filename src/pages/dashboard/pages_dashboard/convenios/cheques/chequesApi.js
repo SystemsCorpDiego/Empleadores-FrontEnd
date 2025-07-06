@@ -57,7 +57,9 @@ export const crear = async (chequeBody, cuota, idConvenio, empresaId) => {
     const body = {
       'numero' : chequeBody.numero,
       'fecha' : chequeBody.fecha,
-      'importe' :parseInt(chequeBody.importe, 10)}
+      'importe': parseFloat(chequeBody.importe).toFixed(2)
+    }
+     //'importe' :parseInt(chequeBody.importe, 10)}
     
       console.log(body)
       const data = await axiosCrud.crear(URL_API, chequeBody);
@@ -80,10 +82,11 @@ export const actualizar = async (chequeBody, empresaId, convenioId, cuotaId, che
     
     console.log(chequeBody)
     console.log(chequeId)
+    console.log(chequeBody.importe)
     const body = {
       'numero' : chequeBody.numero,
       'fecha' : chequeBody.fecha,
-      'importe' :parseInt(chequeBody.importe, 10),
+      'importe': chequeBody.importe,//parseFloat(chequeBody.importe),
       'id' : chequeId
     }
 

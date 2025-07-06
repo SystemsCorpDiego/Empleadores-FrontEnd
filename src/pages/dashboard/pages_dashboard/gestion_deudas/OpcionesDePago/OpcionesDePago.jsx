@@ -72,6 +72,7 @@ export const OpcionesDePago = ({
                     format="DD/MM/YYYY"
                     value={fechaIntencion}
                     onChange={(newValue) => setFechaIntencion(newValue)}
+                    minDate={moment()}
                     slotProps={{
                       textField: {
                         inputProps: { placeholder: 'DD/MM/YYYY' }

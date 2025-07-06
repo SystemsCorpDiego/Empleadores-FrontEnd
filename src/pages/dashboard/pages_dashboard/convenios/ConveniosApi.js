@@ -3,6 +3,7 @@ import { axiosCrud } from '@/components/axios/axiosCrud';
 const API_BASE_URL = ''; // Cambia esta URL por la de tu API
 import { getRol } from '@/components/localStorage/localStorageService';
 import oAxios from '@components/axios/axiosInstace';
+
 const conveniosData = [
     {
       id: 1,
@@ -65,6 +66,7 @@ const ConveniosService = {
             }
             
             const response = await axiosCrud.consultar(`${URL}`);
+
             //return response.data;
             return response || [];
         } catch (error) {

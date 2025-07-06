@@ -72,7 +72,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
         await axiosCheques.actualizar({
             numero: newCheque.numero,
             fecha: newCheque.fecha,
-            importe: parseInt(newCheque.importe, 10),
+            importe: parseFloat(newCheque.importe.replace(",", ".")),
           },
           ID_EMPRESA,
           convenio,
@@ -84,7 +84,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
           {
             numero: newCheque.numero,
             fecha: newCheque.fecha,
-            importe: parseInt(newCheque.importe, 10),
+            importe: parseFloat(newCheque.importe.replace(",", ".")), // Asegurarse de que importe sea un número con dos decimales
           },
           cuota,
           convenio,
