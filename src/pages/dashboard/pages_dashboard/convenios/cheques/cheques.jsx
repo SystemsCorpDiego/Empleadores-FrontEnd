@@ -14,7 +14,7 @@ import { axiosCheques } from './chequesApi';
 import formatter from '@/common/formatter';
 import localStorageService from '@/components/localStorage/localStorageService';
 
-const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
+const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total }) => {
   const ID_EMPRESA = localStorageService.getEmpresaId();
 
   const [cheques, setCheques] = useState([]);
@@ -30,13 +30,14 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
 
   // Cargar cheques al abrir
   useEffect(() => {
-    if (!convenio || !cuota || !ID_EMPRESA) {
-      console.warn('Valores insuficientes para consultar cheques', { convenio, cuota, ID_EMPRESA });
+    console.log('Cargando cheques para convenio:', convenio, 'cuota:', cuotaId, 'ID Empresa:', ID_EMPRESA);
+    if (!convenio || !cuotaId || !ID_EMPRESA) {
+      console.warn('Valores insuficientes para consultar cheques', { convenio, cuotaId, ID_EMPRESA });
       return;
     }
 
     const fetchCheques = async () => {
-      const response = await axiosCheques.consultar(convenio, cuota, ID_EMPRESA);
+      const response = await axiosCheques.consultar(convenio, cuotaId, ID_EMPRESA);
       setCheques(response);
     };
 
@@ -76,7 +77,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
           },
           ID_EMPRESA,
           convenio,
-          cuota,
+          cuotaId,
           newCheque.id
           );
       } else {
@@ -86,7 +87,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
             fecha: newCheque.fecha,
             importe: parseFloat(newCheque.importe.replace(",", ".")), // Asegurarse de que importe sea un número con dos decimales
           },
-          cuota,
+          cuotaId,
           convenio,
           ID_EMPRESA
         );
@@ -95,7 +96,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
       resetChequeForm();
 
       // Refrescar cheques
-      const updated = await axiosCheques.consultar(convenio, cuota, ID_EMPRESA);
+      const updated = await axiosCheques.consultar(convenio, cuotaId, ID_EMPRESA);
       setCheques(updated);
     } catch (error) {
       console.error('Error al guardar el cheque', error);
@@ -116,9 +117,9 @@ const Cheques = ({ open, handleClose, convenio, cuota, total }) => {
   const handleDeleteCheque = async (row) => {
     try {
       console.log('Eliminando cheque:', row);
-      console.log('Convenio:', convenio, 'Cuota:', cuota, 'ID Empresa:', ID_EMPRESA);
-      await axiosCheques.eliminar(ID_EMPRESA,convenio,cuota,row.id);
-      const updated = await axiosCheques.consultar(convenio, cuota, ID_EMPRESA);
+      console.log('Convenio:', convenio, 'Cuota:', cuotaId, 'ID Empresa:', ID_EMPRESA);
+      await axiosCheques.eliminar(ID_EMPRESA,convenio,cuotaId,row.id);
+      const updated = await axiosCheques.consultar(convenio, cuotaId, ID_EMPRESA);
       setCheques(updated);
     } catch (error) {
       console.error('Error al eliminar el cheque', error);

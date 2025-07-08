@@ -92,7 +92,7 @@ export const GestionDeudas = () => {
               sx={{
                 borderBottom: 1,
                 borderColor: 'divider',
-                marginTop: '50px',
+                marginTop: '20px',
               }}
             >
               <Tabs

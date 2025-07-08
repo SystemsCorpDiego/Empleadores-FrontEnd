@@ -87,6 +87,7 @@ useEffect(() => {
             handleClose={handleClose}
             convenio={numeroConvenio}
             cuota={cuota.numero}
+            cuotaId={cuota.id}
             //cheques={chequesPorFila[filaSeleccionada] || []}
             //setCheques={actualizarCheques}
             total={cuota.importe}
