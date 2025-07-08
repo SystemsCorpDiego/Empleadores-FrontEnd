@@ -8,128 +8,119 @@ const HTTP_MSG_MODI = import.meta.env.VITE_HTTP_MSG_MODI;
 const HTTP_MSG_MODI_ERROR = import.meta.env.VITE_HTTP_MSG_MODI_ERROR;
 const VITE_HTTP_MSG_ALTA = import.meta.env.VITE_HTTP_MSG_ALTA;
 const emuRespuesta = {
-  declaracionesJuradas: [
+  "id": 20,
+  "entidad": "UOMA",
+  "empresaId": "836",
+  "cuit": "30537582916",
+  "razonSocial": "PUEBA 30537582916",
+  "deuda": 994435.14,
+  "interes": 7359340.84,
+  "saldoFavor": 100000,
+  "intencionPago": "2025-06-20",
+  "cuotas": 3,
+  "medioPago": "CHEQUE",
+  "convenioNro": null,
+  "actas": [],
+  "declaracionesJuradas": [
     {
-      id: 1233,
-      periodo: '2024-04-01',
-      rectificativa: 10,
-      aporteCodigo: 'Cuota Social',
-      aporteDescripcion: '',
-      importe: 20.0,
-      interes: 176.8,
-      importeTotal: 196.8,
+      "convenioDdjjId": 57,
+      "id": 7872028,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "ART46",
+      "aporteDescripcion": "Art. 46",
+      "importe": 14056.78,
+      "intereses": 4566.08,
+      "importeTotal": 18622.86
     },
     {
-      id: 9312,
-      periodo: '2024-04-01',
-      rectificativa: 10,
-      aporteCodigo: 'UOMACS',
-      aporteDescripcion: 'Cuota Social UOMA',
-      importe: 20.0,
-      interes: 176.8,
-      importeTotal: 196.8,
+      "convenioDdjjId": 57,
+      "id": 7872028,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "UOMAAS",
+      "aporteDescripcion": "Aporte Solidario UOMA",
+      "importe": 353000,
+      "intereses": 110121.96,
+      "importeTotal": 463121.96
     },
+    {
+      "convenioDdjjId": 57,
+      "id": 7872028,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "UOMACS",
+      "aporteDescripcion": "Cuota Social UOMA",
+      "importe": 353000,
+      "intereses": 114647.52,
+      "importeTotal": 467647.52
+    },
+    {
+      "convenioDdjjId": 57,
+      "id": 7872028,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "UOMACU",
+      "aporteDescripcion": "Cuota Usufructo",
+      "importe": 34000,
+      "intereses": 11042.8,
+      "importeTotal": 45042.8
+    },
+      {
+      "convenioDdjjId": null,
+      "id": 7872027,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "ART46",
+      "aporteDescripcion": "Art. 46",
+      "importe": 14056.78,
+      "intereses": 4566.08,
+      "importeTotal": 18622.86
+    },
+    {
+      "convenioDdjjId": null,
+      "id": 7872027,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "UOMAAS",
+      "aporteDescripcion": "Aporte Solidario UOMA",
+      "importe": 353000,
+      "intereses": 110121.96,
+      "importeTotal": 463121.96
+    },
+    {
+      "convenioDdjjId": null,
+      "id": 7872027,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "UOMACS",
+      "aporteDescripcion": "Cuota Social UOMA",
+      "importe": 353000,
+      "intereses": 114647.52,
+      "importeTotal": 467647.52
+    },
+    {
+      "convenioDdjjId": null,
+      "id": 7872027,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "UOMACU",
+      "aporteDescripcion": "Cuota Usufructo",
+      "importe": 34000,
+      "intereses": 11042.8,
+      "importeTotal": 45042.8
+    }
   ],
-  actas: [
+  "saldosAFavor": [
     {
-      id: 95,
-      estadoDeuda: 'JUDICIALIZADO',
-      nroActa: '123',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 100,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '124',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 101,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '125',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 102,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '126',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 103,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '127',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 104,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '128',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 105,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '129',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-  ],
-  convenios: [
-    {
-      id: 1,
-      estado: 'PENDIENTE',
-      nroConvenio: 1,
-      nroCuota: 2,
-      totalCuota: 234,
-      intereses: 42,
-      totalActualizado: 276,
-    },
-    {
-      id: 2,
-      estado: 'PENDIENTE',
-      nroConvenio: 1,
-      nroCuota: 3,
-      totalCuota: 234,
-      intereses: 42,
-      totalActualizado: 276,
-    },
-  ],
-  saldosAFavor: [
-    {
-      id: 31,
-      fecha: '2024-04-01',
-      concepto: 'prueba',
-      importe: 2000,
-    },
-    {
-      id: 32,
-      fecha: '2024-05-01',
-      concepto: 'prueba',
-      importe: 6000,
-    },
-  ],
-};
+      "convenioAjusteId": 70,
+      "id": 9243,
+      "motivo": "O",
+      "importe": -100000,
+      "vigencia": "2025-01-01"
+    }
+  ]
+}
 
 
 
@@ -177,6 +168,7 @@ const ordenaGrillaPeriodo = (response) => {
       if (!acc[clave]) {
         acc[clave] = {
           id: curr.id,
+          convenioDdjjId: curr.convenioDdjjId,
           periodo: curr.periodo,
           rectificativa: curr.rectificativa,
           //intereses: curr.intereses,
@@ -234,6 +226,7 @@ export const getGestionEditar = async (empresa_id, convenioId) => {
 
   const response = await axiosCrud.consultar(URL);
   return response
+  //return emuRespuesta
 }
 
 export const getDeclaracionesJuradas = async (empresa_id, entidad) => {
@@ -320,7 +313,10 @@ const getDeclaracionesJuradasEditar = async (empresa_id, convenioId) => {
     //const empresa_id = localStorage.getItem('empresaId');
     const response = await getGestionEditar(empresa_id, convenioId);
     console.log('response', response);
+    
     const grilaOrdenada = ordenaGrillaPeriodo(response);
+    //const grilaOrdenada = ordenaGrillaPeriodo(emuRespuesta);
+    console.log('grilaOrdenada', grilaOrdenada);
     return grilaOrdenada;
 
   } catch (error) {

@@ -36,17 +36,6 @@ export const GrillaPeriodo = ({ declaracionesJuradas, selectedDeclaracionesJurad
     
 
   }, [declaracionesJuradas]);
-  
-  useEffect(() => {
-    const preselected = declaracionesJuradas
-      .filter((item) => item.convenioDdjjId !== null && item.convenioDdjjId !== undefined)
-      .map((item) => item.id);
-
-    if (preselected.length > 0 && preselected.some(id => !selectedDeclaracionesJuradas.includes(id))) {
-      setSelectedDeclaracionesJuradas((prev) => Array.from(new Set([...prev, ...preselected])));
-    }
-
-  }, []);
 
   const handleSelectionChange = (id) => {
     setSelectedDeclaracionesJuradas((prevSelected) => {
@@ -76,9 +65,11 @@ export const GrillaPeriodo = ({ declaracionesJuradas, selectedDeclaracionesJurad
             field: 'selection',
             headerName: '',
             renderCell: (params) => {
+              console.log('params', params);
+              console.log('selectedDeclaracionesJuradas', selectedDeclaracionesJuradas);
               return (
                 <Checkbox
-                  checked={selectedDeclaracionesJuradas.includes(params.id)}
+                  checked={selectedDeclaracionesJuradas.includes(params.id) }
                   onChange={() => handleSelectionChange(params.id)}
                 />
               )

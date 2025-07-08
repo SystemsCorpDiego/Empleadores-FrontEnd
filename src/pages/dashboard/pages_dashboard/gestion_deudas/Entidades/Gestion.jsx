@@ -247,7 +247,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     console.log(selectedDeclaracionesJuradas)
     setTotalDeclaracionesJuradas(BTotal);
     setShowLoadingDetalle(false);
-  }, [selectedDeclaracionesJuradas]);
+  }, [selectedDeclaracionesJuradas,ENTIDAD]);
 
   useEffect(() => {
     setShowLoadingDetalle(true);
@@ -256,7 +256,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     console.log('Esto es lo que se tendria que imprimir', CTotal);
     setTotalSaldosAFavor(CTotal);
     setShowLoadingDetalle(false);
-  }, [saldosAFavor]);
+  }, [saldosAFavor,ENTIDAD]);
 
   useEffect(() => {
     setShowLoadingDetalle(true);
@@ -266,7 +266,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     console.log('Esto es lo que se tendria que imprimir', totalSaldosAFavorSelecteds);
     setTotalSaldosAFavorSelected(totalSaldosAFavorSelecteds);
     setShowLoadingDetalle(false);
-  }, [selectedSaldosAFavor]);
+  }, [selectedSaldosAFavor,ENTIDAD]);
 
   useEffect(() => {
     setShowLoadingDetalle(true);
@@ -304,6 +304,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           ID_EMPRESA,
           CONVENIOID
         );
+        console.log('Estoy en editar');
+        console.log('response:', response);
       }
 
       console.log(response)
@@ -334,13 +336,38 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       const idsActas = response['actas'].map((objeto) => objeto.id);
       setSelectedActas(idsActas);
 
-      const idsdeclaracionesJuradas = response['declaracionesJuradas'].map((objeto) => objeto.id);
-      setSelectedDeclaracionesJuradas(idsdeclaracionesJuradas);
+     const preselectedActas = response['actas']
+        .filter((item) => item.convenioActaId !== null && item.convenioActaId !== undefined)
+        .map((item) => item.id);
+      console.log('Preselected IDs:', preselected);
+      if (preselected.length > 0 && preselected.some(id => !selectedActas.includes(id))) {
+        setSelectedActas((prev) => Array.from(new Set([...prev, ...preselectedActas])));
+      }
 
-      const idSelectedSaldosAFavor = response['saldosAFavor'].map((objeto) => objeto.id);
-      console.log(idSelectedSaldosAFavor)
+
+
+
+      //const idsdeclaracionesJuradas = response['declaracionesJuradas'].map((objeto) => objeto.id);
+      //setSelectedDeclaracionesJuradas(idsdeclaracionesJuradas);
+      const preselected = response['declaracionesJuradas']
+        .filter((item) => item.convenioDdjjId !== null && item.convenioDdjjId !== undefined)
+        .map((item) => item.id);
+      console.log('Preselected IDs:', preselected);
+      if (preselected.length > 0 && preselected.some(id => !selectedDeclaracionesJuradas.includes(id))) {
+        setSelectedDeclaracionesJuradas((prev) => Array.from(new Set([...prev, ...preselected])));
+      }
+
+      const preselectedAjustes = response['saldosAFavor']
+        .filter((item) => item.convenioAjusteId !== null && item.convenioAjusteId !== undefined)
+        .map((item) => item.id);
+      console.log('PreselectedAjustes IDs:', preselectedAjustes);
+      if (preselectedAjustes.length > 0 && preselectedAjustes.some(id => !selectedDeclaracionesJuradas.includes(id))) {
+        setSelectedSaldosAFavor((prev) => Array.from(new Set([...prev, ...preselectedAjustes])));
+      }
+      //const idSelectedSaldosAFavor = response['saldosAFavor'].map((objeto) => objeto.id);
+      //console.log(idSelectedSaldosAFavor)
       console.log(response['saldosAFavor'])
-      setSelectedSaldosAFavor(idSelectedSaldosAFavor);
+      //setSelectedSaldosAFavor(idSelectedSaldosAFavor);
       console.log(selectedSaldosAFavor)
 
       const totalDeudaCalculada =
@@ -352,6 +379,13 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       console.error('Error al obtener las declaracionesJuradas: ', error);
     }
   };
+
+  useEffect(() => {
+    const totalDeudaCalculada =
+      declaracionesJuradas.reduce((acc, dj) => acc + (dj.importeTotal || 0), 0) +
+      actas.reduce((acc, acta) => acc + (acta.importeTotal || 0), 0);
+    setTotalDeuda(totalDeudaCalculada);
+  }, [ENTIDAD, declaracionesJuradas, actas]);
 
   useEffect(() => {
     calcularDetalle();
