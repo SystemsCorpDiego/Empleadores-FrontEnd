@@ -247,7 +247,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     console.log(selectedDeclaracionesJuradas)
     setTotalDeclaracionesJuradas(BTotal);
     setShowLoadingDetalle(false);
-  }, [selectedDeclaracionesJuradas,ENTIDAD]);
+  }, [selectedDeclaracionesJuradas, ENTIDAD]);
 
   useEffect(() => {
     setShowLoadingDetalle(true);
@@ -256,7 +256,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     console.log('Esto es lo que se tendria que imprimir', CTotal);
     setTotalSaldosAFavor(CTotal);
     setShowLoadingDetalle(false);
-  }, [saldosAFavor,ENTIDAD]);
+  }, [saldosAFavor, ENTIDAD]);
 
   useEffect(() => {
     setShowLoadingDetalle(true);
@@ -266,7 +266,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     console.log('Esto es lo que se tendria que imprimir', totalSaldosAFavorSelecteds);
     setTotalSaldosAFavorSelected(totalSaldosAFavorSelecteds);
     setShowLoadingDetalle(false);
-  }, [selectedSaldosAFavor,ENTIDAD]);
+  }, [selectedSaldosAFavor, ENTIDAD]);
 
   useEffect(() => {
     setShowLoadingDetalle(true);
@@ -336,36 +336,50 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       const idsActas = response['actas'].map((objeto) => objeto.id);
       setSelectedActas(idsActas);
 
-     const preselectedActas = response['actas']
-        .filter((item) => item.convenioActaId !== null && item.convenioActaId !== undefined)
-        .map((item) => item.id);
-      console.log('Preselected IDs:', preselected);
-      if (preselected.length > 0 && preselected.some(id => !selectedActas.includes(id))) {
-        setSelectedActas((prev) => Array.from(new Set([...prev, ...preselectedActas])));
+
+
+      if (editar) {
+        const preselectedActas = response['actas']
+          .filter((item) => item.convenioActaId !== null && item.convenioActaId !== undefined)
+          .map((item) => item.id);
+        
+        if (preselectedActas.length > 0 && preselectedActas.some(id => !selectedActas.includes(id))) {
+          setSelectedActas((prev) => Array.from(new Set([...prev, ...preselectedActas])));
+        }
+        console.log('Preselected IDs:', preselectedActas);
+
+        const preselected = response['declaracionesJuradas']
+          .filter((item) => item.convenioDdjjId !== null && item.convenioDdjjId !== undefined)
+          .map((item) => item.id);
+
+        if (preselected.length > 0 && preselected.some(id => !selectedDeclaracionesJuradas.includes(id))) {
+          setSelectedDeclaracionesJuradas((prev) => Array.from(new Set([...prev, ...preselected])));
+        }
+        console.log(response['declaracionesJuradas'])
+        console.log('Preselected IDs:', preselected);
+
+        const preselectedAjustes = response['saldosAFavor']
+          .filter((item) => item.convenioAjusteId !== null && item.convenioAjusteId !== undefined)
+          .map((item) => item.id);
+        
+        if (preselectedAjustes.length > 0 && preselectedAjustes.some(id => !selectedDeclaracionesJuradas.includes(id))) {
+          setSelectedSaldosAFavor((prev) => Array.from(new Set([...prev, ...preselectedAjustes])));
+        }
+        console.log('PreselectedAjustes IDs:', preselectedAjustes);
+      } else {
+        const idsActas = response['actas'].map((objeto) => objeto.id);
+        setSelectedActas(idsActas);
+
+        const idsdeclaracionesJuradas = response['declaracionesJuradas'].map((objeto) => objeto.id);
+        setSelectedDeclaracionesJuradas(idsdeclaracionesJuradas);
+
+        const idSelectedSaldosAFavor = response['saldosAFavor'].map((objeto) => objeto.id);
+        setSelectedSaldosAFavor(idSelectedSaldosAFavor);
+        //console.log(idSelectedSaldosAFavor)
       }
 
 
 
-
-      //const idsdeclaracionesJuradas = response['declaracionesJuradas'].map((objeto) => objeto.id);
-      //setSelectedDeclaracionesJuradas(idsdeclaracionesJuradas);
-      const preselected = response['declaracionesJuradas']
-        .filter((item) => item.convenioDdjjId !== null && item.convenioDdjjId !== undefined)
-        .map((item) => item.id);
-      console.log('Preselected IDs:', preselected);
-      if (preselected.length > 0 && preselected.some(id => !selectedDeclaracionesJuradas.includes(id))) {
-        setSelectedDeclaracionesJuradas((prev) => Array.from(new Set([...prev, ...preselected])));
-      }
-
-      const preselectedAjustes = response['saldosAFavor']
-        .filter((item) => item.convenioAjusteId !== null && item.convenioAjusteId !== undefined)
-        .map((item) => item.id);
-      console.log('PreselectedAjustes IDs:', preselectedAjustes);
-      if (preselectedAjustes.length > 0 && preselectedAjustes.some(id => !selectedDeclaracionesJuradas.includes(id))) {
-        setSelectedSaldosAFavor((prev) => Array.from(new Set([...prev, ...preselectedAjustes])));
-      }
-      //const idSelectedSaldosAFavor = response['saldosAFavor'].map((objeto) => objeto.id);
-      //console.log(idSelectedSaldosAFavor)
       console.log(response['saldosAFavor'])
       //setSelectedSaldosAFavor(idSelectedSaldosAFavor);
       console.log(selectedSaldosAFavor)
