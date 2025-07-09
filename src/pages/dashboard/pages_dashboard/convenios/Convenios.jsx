@@ -65,6 +65,7 @@ export const Convenios = () => {
   const [rol, setRol] = useState('');
   const [terminosYCondiciones, setTerminosYCondiciones] = useState(false);
   const empresaId = localStorageService.getEmpresaId(); // Cambia esto según tu lógica
+  const [rowTyC, setRowTyC] = useState(null);
   const total = 0;
   const [filtros, setFiltros] = useState({
     estado: 'TODOS',
@@ -75,7 +76,9 @@ export const Convenios = () => {
   const KVESTADOS ={
     "PRCH": "Pendiente en recepción de cheque",
     "CHRECI": "Cheque recibido",
-    "CHRECH": "Cheque rechazado"
+    "CHRECH": "Cheque rechazado",
+    "PRES": "Presentado",
+    "APROB": "Aprobado"
   };
 
   //const handleClose = () => setOpen(false);
@@ -87,8 +90,8 @@ export const Convenios = () => {
     () => createTheme(theme, locales[locale]),
     [locale, theme],
   );
-  useEffect(() => {
-    const fetchData = async () => {
+
+  const fetchData = async () => {
       try {
         setRol(getRol());
         console.log('Rol:', rol);
@@ -102,14 +105,28 @@ export const Convenios = () => {
         console.error('Error fetching convenios:', error);
       }
     };
+
+  useEffect(() => {
+    
     fetchData();
     console.log('Este es el rol', rol)
     console.log(rows);
   }, []);
 
+  // Solución al problema de rowTyC undefined en TerminosYCondiciones
+  useEffect(() => {
+    // Cuando terminosYCondiciones se abre, rowTyC ya está actualizado
+    if (terminosYCondiciones) {
+      console.log('rowTyC actualizado para TerminosYCondiciones:', rowTyC);
+    }
+  }, [terminosYCondiciones, rowTyC]);
   const handleOpen = (row) => {
     console.log(row);
+    setRowTyC(row);
+    console.log('Row para Terminos y Condiciones:', rowTyC);
     setTerminosYCondiciones(true);
+    
+
     console.log(terminosYCondiciones);
   }
 
@@ -309,6 +326,7 @@ const handleDownload = (row) => async () => {
             />,
           ];
         }
+        // Solo mostrar el botón "Aceptar Terminos y condiciones" si el estado NO es 'PRES'
         return [
           <GridActionsCellItem
             icon={<DownloadIcon />}
@@ -333,17 +351,20 @@ const handleDownload = (row) => async () => {
             onClick={() => navigate(`/dashboard/convenio/${row.id}/cuotas`)}
             color="inherit"
           />,
-          ...(rol !== 'OSPIM_EMPLEADO'
+          ...( 
+
+            rol !== 'OSPIM_EMPLEADO'
             ? [
-              <GridActionsCellItem
-                icon={<CheckIcon />}
-                label="Aceptar Terminos y condiciones"
-                title="Aceptar Terminos y condiciones"
-                sx={{ color: 'primary.main' }}
-                color="inherit"
-                onClick={() => handleOpen(row)}
-              />,
-            ]
+          <GridActionsCellItem
+            icon={<CheckIcon />}
+            label="Aceptar Terminos y condiciones"
+            title="Aceptar Terminos y condiciones"
+            sx={{ color: 'primary.main' }}
+            color="inherit"
+            
+            onClick={() => handleOpen(row)}
+          />,
+              ]
             : []),
         ];
       },
@@ -467,7 +488,7 @@ const handleDownload = (row) => async () => {
             onClick={() => navigate(`/dashboard/convenio/${row.id}/cuotas`)}
             color="inherit"
           />,
-          ...(rol !== 'OSPIM_EMPLEADO'
+          ...(rol !== 'OSPIM_EMPLEADO' && row.estado !== 'PRES' && row.estado !== 'Presentado'
             ? [
               <GridActionsCellItem
                 icon={<CheckIcon />}
@@ -550,7 +571,7 @@ const handleDownload = (row) => async () => {
   return (
     <Box>
 
-      <TerminosYCondiciones open={terminosYCondiciones} setOpen={setTerminosYCondiciones} />
+      {(rowTyC !== undefined && rowTyC !== null) && (<TerminosYCondiciones open={terminosYCondiciones} setOpen={setTerminosYCondiciones} rowTyC={rowTyC} setRowTyC={setRowTyC} fetchData={fetchData}/>)}
 
       <div className="convenios_container">
         <h1 className="mt-1em">Mis convenios</h1>

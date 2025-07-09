@@ -128,6 +128,18 @@ const ConveniosService = {
         }
     },
 
+    aceptarTerminosYCondiciones: async (updatedRow) => {
+        console.log('Aceptando términos y condiciones para convenio:', updatedRow);
+        
+        try {
+            const response = await oAxios.post(`/convenios/${updatedRow.id}/estado-set/PRES`, {});
+            return response.data;
+        } catch (error) {
+            console.error(`Error accepting terms and conditions for convenio with ID ${id}:`, error);
+            throw error;
+        }
+    },
+
     deleteConvenio: async (id) => {
         try {
             const response = await axiosCrud.eliminar(`${API_BASE_URL}/${id}`);
