@@ -17,7 +17,11 @@ export const axiosCrud = {
     return axiosCrearFormData(UrlApi, oEntidad)
   },
 
-  actualizar: async function (UrlApi, oEntidad) {
+  actualizar: async function (UrlApi, oEntidad, id) {
+    return axiosActualizar(UrlApi, oEntidad, id);
+  },
+
+  actualizarN: async function (UrlApi, oEntidad) {
     return axiosActualizar(UrlApi, oEntidad);
   },
 
@@ -133,9 +137,17 @@ export const axiosCrearN = async (UrlApi, oEntidad) => {
   }
 };
 
-export const axiosActualizar = async (UrlApi, oEntidad) => {
-  const pkId = oEntidad.id;
-  const URL = `${UrlApi}/${pkId}`;
+
+
+export const axiosActualizar = async (UrlApi, oEntidad, ID) => {
+  let pkId = oEntidad.id;
+  let URL = `${UrlApi}/${pkId}`;
+  
+  if (ID !== undefined && ID !== null) {
+    pkId = ID;
+    URL = `${UrlApi}/${ID}`;
+  }
+  
   //console.log(URL);
   try {
     delete oEntidad.id;

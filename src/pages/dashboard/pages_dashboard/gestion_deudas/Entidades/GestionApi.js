@@ -331,9 +331,15 @@ const getDeclaracionesJuradasEditar = async (empresa_id, convenioId) => {
 
 const putActualizarConvenio = async (empresa_id, convenioId, body) => {
   try {
-    const URL = `/empresa/${empresa_id}/convenios/${convenioId}`;
+    const URL = `/empresa/${empresa_id}/convenios`;
+    if (body.hasOwnProperty('entidad')) {
+      delete body.entidad;
+    }
+    const response = await axiosCrud.actualizar(URL, body, convenioId);
+    //const reponse = await oAxios.put(URL, body);
+    
 
-    const response = await axiosCrud.actualizar(URL, body);
+
     swal.showSuccessBackEnd(HTTP_MSG_MODI, response);
     return response;
   } catch (error) {
