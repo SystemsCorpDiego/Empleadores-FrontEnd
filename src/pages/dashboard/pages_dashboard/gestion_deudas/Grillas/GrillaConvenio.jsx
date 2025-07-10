@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useContext } from 'react';
 import { UserContext } from '@/context/userContext';
 import { Box } from '@mui/material';
 import formatter from '@/common/formatter';
+import { esES } from '@mui/x-data-grid';
 import {
   DataGrid,
   GridToolbarContainer,
@@ -10,9 +11,9 @@ import {
   GridToolbarExport,
 } from '@mui/x-data-grid';
 
-export const GrillaConvenio = ({ convenios,  }) => {
-	const { paginationModel, setPaginationModel, pageSizeOptions } =
-  useContext(UserContext);
+export const GrillaConvenio = ({ convenios, }) => {
+  const { paginationModel, setPaginationModel, pageSizeOptions } =
+    useContext(UserContext);
   return (
     <Box
       style={{ height: 400 }}
@@ -27,7 +28,7 @@ export const GrillaConvenio = ({ convenios,  }) => {
       <DataGrid
         rows={convenios ? convenios : []}
         columns={[
-					{ field: 'estado', headerName: 'Estado', flex: 1 },
+          { field: 'estado', headerName: 'Estado', flex: 1 },
           {
             field: 'nroConvenio',
             headerName: 'Nro. Convenio',
@@ -52,7 +53,7 @@ export const GrillaConvenio = ({ convenios,  }) => {
             flex: 1,
             align: 'right',
             valueFormatter: (params) =>
-							params.value ? formatter.currencyString(params.value) : ''
+              params.value ? formatter.currencyString(params.value) : ''
           },
 
           {
@@ -61,7 +62,7 @@ export const GrillaConvenio = ({ convenios,  }) => {
             flex: 1,
             align: 'right',
             valueFormatter: (params) =>
-							params.value ? formatter.currencyString(params.value) : ''
+              params.value ? formatter.currencyString(params.value) : ''
           },
         ]}
         paginationModel={paginationModel}
@@ -77,6 +78,14 @@ export const GrillaConvenio = ({ convenios,  }) => {
           ),
         }}
         localeText={{
+          ...esES.components.MuiDataGrid.defaultProps.localeText,
+          toolbarDensity: 'Densidad',
+          toolbarDensityLabel: 'Densidad',
+          toolbarDensityCompact: 'Compacto',
+          toolbarDensityStandard: 'Estándar',
+          toolbarDensityComfortable: 'Cómodo',
+          footerRowsPerPage: 'Filas por página',
+          noRowsLabel: 'Sin filas',
           toolbarColumns: 'Columnas',
           toolbarFilters: 'Filtros',
           toolbarExport: 'Exportar',

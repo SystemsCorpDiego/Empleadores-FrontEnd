@@ -9,6 +9,8 @@ import {
   GridToolbarFilterButton,
   GridToolbarExport,
 } from '@mui/x-data-grid';
+import { esES } from '@mui/x-data-grid';
+
 import './Grilla.css';
 
 export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [], setSelectedSaldosAFavor }) => {
@@ -102,6 +104,14 @@ export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [],
           ),
         }}
         localeText={{
+          ...esES.components.MuiDataGrid.defaultProps.localeText,
+          toolbarDensity: 'Densidad',
+          toolbarDensityLabel: 'Densidad',
+          toolbarDensityCompact: 'Compacto',
+          toolbarDensityStandard: 'Estándar',
+          toolbarDensityComfortable: 'Cómodo',
+          footerRowsPerPage: 'Filas por página',
+          noRowsLabel: 'Sin filas',
           toolbarColumns: 'Columnas',
           toolbarFilters: 'Filtros',
           toolbarExport: 'Exportar',

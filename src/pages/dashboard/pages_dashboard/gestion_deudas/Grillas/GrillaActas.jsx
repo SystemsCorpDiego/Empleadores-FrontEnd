@@ -2,6 +2,7 @@ import { useEffect, useContext } from 'react';
 import { UserContext } from '@/context/userContext';
 import { Box, Checkbox } from '@mui/material';
 import formatter from '@/common/formatter';
+import { esES } from '@mui/x-data-grid';
 import {
   DataGrid,
   GridToolbarContainer,
@@ -130,6 +131,14 @@ export const GrillaActas = ({ actas, selectedActas, setSelectedActas }) => {
           ),
         }}
         localeText={{
+                        ...esES.components.MuiDataGrid.defaultProps.localeText,
+                        toolbarDensity: 'Densidad',
+                        toolbarDensityLabel: 'Densidad',
+                        toolbarDensityCompact: 'Compacto',
+                        toolbarDensityStandard: 'Estándar',
+                        toolbarDensityComfortable: 'Cómodo',
+                        footerRowsPerPage: 'Filas por página',
+                        noRowsLabel: 'Sin filas',
           toolbarColumns: 'Columnas',
           toolbarFilters: 'Filtros',
           toolbarExport: 'Exportar',

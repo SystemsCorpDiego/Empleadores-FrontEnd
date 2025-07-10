@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '@/context/userContext';
 import { Box, Checkbox } from '@mui/material';
 import formatter from '@/common/formatter';
+import { esES } from '@mui/x-data-grid';
+
 import {
   DataGrid,
   GridToolbarContainer,
@@ -33,7 +35,7 @@ export const GrillaPeriodo = ({ declaracionesJuradas, selectedDeclaracionesJurad
       }
     });
     console.log(aporteSolidario, cuotaSocial, art46)
-    
+
 
   }, [declaracionesJuradas]);
 
@@ -69,7 +71,7 @@ export const GrillaPeriodo = ({ declaracionesJuradas, selectedDeclaracionesJurad
               console.log('selectedDeclaracionesJuradas', selectedDeclaracionesJuradas);
               return (
                 <Checkbox
-                  checked={selectedDeclaracionesJuradas.includes(params.id) }
+                  checked={selectedDeclaracionesJuradas.includes(params.id)}
                   onChange={() => handleSelectionChange(params.id)}
                 />
               )
@@ -109,7 +111,7 @@ export const GrillaPeriodo = ({ declaracionesJuradas, selectedDeclaracionesJurad
             field: 'Cuota Social UOMA', headerName: 'Cuota Social UOMA', flex: 1.4,
             headerAlign: 'right',
             align: 'right',
-            
+
             valueFormatter: (params) => {
               return formatter.currencyString(params?.value) || 0.00;
             }
@@ -152,6 +154,14 @@ export const GrillaPeriodo = ({ declaracionesJuradas, selectedDeclaracionesJurad
           ),
         }}
         localeText={{
+          ...esES.components.MuiDataGrid.defaultProps.localeText,
+          toolbarDensity: 'Densidad',
+          toolbarDensityLabel: 'Densidad',
+          toolbarDensityCompact: 'Compacto',
+          toolbarDensityStandard: 'Estándar',
+          toolbarDensityComfortable: 'Cómodo',
+          footerRowsPerPage: 'Filas por página',
+          noRowsLabel: 'Sin filas',
           toolbarColumns: 'Columnas',
           toolbarFilters: 'Filtros',
           toolbarExport: 'Exportar',
