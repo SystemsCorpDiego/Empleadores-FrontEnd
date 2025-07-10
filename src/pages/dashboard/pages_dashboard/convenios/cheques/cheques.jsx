@@ -206,7 +206,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total }) => {
   const todayStr = `${yyyy}-${mm}-${dd}`;
 
   // Validar que la fecha sea mayor o igual a hoy
-  const isFechaInvalida = newCheque.fecha && newCheque.fecha < todayStr;
+  const isFechaInvalida = !!newCheque.fecha && newCheque.fecha < todayStr;
 
   return (
     <Modal open={open} onClose={handleClose}>
