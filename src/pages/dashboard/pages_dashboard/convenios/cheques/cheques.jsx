@@ -13,6 +13,9 @@ import {
 import { axiosCheques } from './chequesApi';
 import formatter from '@/common/formatter';
 import localStorageService from '@/components/localStorage/localStorageService';
+import Swal from 'sweetalert2';
+import './cheques.css'
+import { esES } from '@mui/x-data-grid';
 
 const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total }) => {
   const ID_EMPRESA = localStorageService.getEmpresaId();
@@ -64,22 +67,59 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total }) => {
   const handleSaveCheque = async () => {
     // Validación básica
     if (!newCheque.numero || !newCheque.fecha || !newCheque.importe) {
-      alert("Completa todos los campos del cheque");
+      //document.body.style.setProperty('z-index', '9999', 'important');
+      await Swal.fire({
+        icon: 'warning',
+        title: 'Campos incompletos',
+        text: 'Completa todos los campos del cheque',
+        confirmButtonText: 'Aceptar',
+        allowOutsideClick: true,
+        allowEscapeKey: true,
+        backdrop: true,
+        customClass: {
+          popup: 'custom-zindex-swal',
+        },
+        willOpen: (popup) => {
+          popup.style.zIndex = '9999';
+        },
+      });
+      //alert("Completa todos los campos del cheque");
+      return;
+    }
+
+    if (newCheque.importe < 0) {
+      //document.body.style.setProperty('z-index', '9999', 'important');
+      await Swal.fire({
+        icon: 'warning',
+        title: 'Monto negativo',
+        text: 'El monto del cheque no puede ser negativo',
+        confirmButtonText: 'Aceptar',
+        allowOutsideClick: true,
+        allowEscapeKey: true,
+        backdrop: true,
+        customClass: {
+          popup: 'custom-zindex-swal',
+        },
+        willOpen: (popup) => {
+          popup.style.zIndex = '9999';
+        },
+      });
+      //alert("Completa todos los campos del cheque");
       return;
     }
 
     try {
       if (editing) {
         await axiosCheques.actualizar({
-            numero: newCheque.numero,
-            fecha: newCheque.fecha,
-            importe: parseFloat(newCheque.importe.replace(",", ".")),
-          },
+          numero: newCheque.numero,
+          fecha: newCheque.fecha,
+          importe: parseFloat(newCheque.importe.replace(",", ".")),
+        },
           ID_EMPRESA,
           convenio,
           cuotaId,
           newCheque.id
-          );
+        );
       } else {
         await axiosCheques.crear(
           {
@@ -118,7 +158,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total }) => {
     try {
       console.log('Eliminando cheque:', row);
       console.log('Convenio:', convenio, 'Cuota:', cuotaId, 'ID Empresa:', ID_EMPRESA);
-      await axiosCheques.eliminar(ID_EMPRESA,convenio,cuotaId,row.id);
+      await axiosCheques.eliminar(ID_EMPRESA, convenio, cuotaId, row.id);
       const updated = await axiosCheques.consultar(convenio, cuotaId, ID_EMPRESA);
       setCheques(updated);
     } catch (error) {
@@ -158,6 +198,16 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total }) => {
     },
   ];
 
+  // Obtener la fecha de hoy en formato YYYY-MM-DD
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  const todayStr = `${yyyy}-${mm}-${dd}`;
+
+  // Validar que la fecha sea mayor o igual a hoy
+  const isFechaInvalida = newCheque.fecha && newCheque.fecha < todayStr;
+
   return (
     <Modal open={open} onClose={handleClose}>
       <Box
@@ -192,6 +242,16 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total }) => {
             pageSize={4}
             getRowId={(row) => row.id}
             rowsPerPageOptions={[5]}
+            localeText={{
+              ...esES.components.MuiDataGrid.defaultProps.localeText,
+              toolbarDensity: 'Densidad',
+              toolbarDensityLabel: 'Densidad',
+              toolbarDensityCompact: 'Compacto',
+              toolbarDensityStandard: 'Estándar',
+              toolbarDensityComfortable: 'Cómodo',
+              footerRowsPerPage: 'Filas por página',
+              noRowsLabel: 'Sin filas'
+            }}
             sx={{
               '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {
                 width: '8px',
@@ -220,6 +280,9 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total }) => {
               value={newCheque.fecha || ''}
               onChange={handleInputChange}
               InputLabelProps={{ shrink: true }}
+              inputProps={{ min: todayStr }}
+              error={isFechaInvalida}
+              helperText={isFechaInvalida ? 'La fecha no puede ser menor a hoy' : ''}
             />
             <TextField
               margin="dense"
@@ -243,7 +306,11 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total }) => {
             <Button onClick={resetChequeForm} color="secondary">
               Cancelar
             </Button>
-            <Button onClick={handleSaveCheque} color="primary">
+            <Button
+              onClick={handleSaveCheque}
+              color="primary"
+              disabled={isFechaInvalida}
+            >
               Guardar
             </Button>
           </DialogActions>
