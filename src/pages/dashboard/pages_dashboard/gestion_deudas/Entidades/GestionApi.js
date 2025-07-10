@@ -4,9 +4,8 @@ import swal from '@/components/swal/swal';
 import Swal from 'sweetalert2';
 
 const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
-const HTTP_MSG_MODI = import.meta.env.VITE_HTTP_MSG_MODI;
 const HTTP_MSG_MODI_ERROR = import.meta.env.VITE_HTTP_MSG_MODI_ERROR;
-const VITE_HTTP_MSG_ALTA = import.meta.env.VITE_HTTP_MSG_ALTA;
+const VITE_HTTP_MSG_ALTA_ERROR = import.meta.env.VITE_HTTP_MSG_ALTA_ERROR;
 const emuRespuesta = {
   "id": 20,
   "entidad": "UOMA",
@@ -66,7 +65,7 @@ const emuRespuesta = {
       "intereses": 11042.8,
       "importeTotal": 45042.8
     },
-      {
+    {
       "convenioDdjjId": null,
       "id": 7872027,
       "periodo": "2025-01-01",
@@ -122,44 +121,6 @@ const emuRespuesta = {
   ]
 }
 
-
-
-
-const emuRespuestaDetalleConvenio = {
-
-  importeInteres: 23020,
-  importeCuota: 21312,
-
-
-  /*
-  detalleCuota: [
-    {
-      numero: 1,
-      valor: 11010,
-      vencimiento: '21/07/2024',
-    },
-    {
-      numero: 2,
-      valor: 11010,
-      vencimiento: '21/08/2024',
-    },
-    {
-      numero: 3,
-      valor: 11010,
-      vencimiento: '21/08/2024',
-    },
-  ],
-  */
-};
-
-const bodyConvenio = {
-  actas: [1, 2, 3], //acta_id
-  periodos: [], //fecha o id boleta o id DDJJ
-  cantCuotas: 1,
-  fechaIntencionDePago: '2024-01-31',
-  usarSaldoAFavor: true,
-};
-
 const ordenaGrillaPeriodo = (response) => {
   console.log('response', response.declaracionesJuradas);
   if (response.declaracionesJuradas !== null || response.declaracionesJuradas.length !== 0) {
@@ -171,8 +132,6 @@ const ordenaGrillaPeriodo = (response) => {
           convenioDdjjId: curr.convenioDdjjId,
           periodo: curr.periodo,
           rectificativa: curr.rectificativa,
-          //intereses: curr.intereses,
-          //importeTotal: curr.importeTotal,
         };
       }
       acc[clave][curr.aporteDescripcion] = curr.importe;
@@ -296,8 +255,12 @@ export const generarConvenio = async (idEmpresa, bodyConvenio) => {
   try {
     const URL = `/empresa/${idEmpresa}/convenios`;
     const response = await axiosCrud.crear(URL, bodyConvenio);
-
-
+    if (response && Object.keys(response).length > 0) {
+      return true;
+    }
+    else {
+      swal.showErrorBackEnd(VITE_HTTP_MSG_ALTA_ERROR, response);
+    }
 
     return response;
   } catch (error) {
@@ -313,7 +276,7 @@ const getDeclaracionesJuradasEditar = async (empresa_id, convenioId) => {
     //const empresa_id = localStorage.getItem('empresaId');
     const response = await getGestionEditar(empresa_id, convenioId);
     console.log('response', response);
-    
+
     const grilaOrdenada = ordenaGrillaPeriodo(response);
     //const grilaOrdenada = ordenaGrillaPeriodo(emuRespuesta);
     console.log('grilaOrdenada', grilaOrdenada);
@@ -337,11 +300,25 @@ const putActualizarConvenio = async (empresa_id, convenioId, body) => {
     }
     const response = await axiosCrud.actualizar(URL, body, convenioId);
     //const reponse = await oAxios.put(URL, body);
-    
+    console.log('response', response);
 
+    if (response === false) {
+      swal.showErrorBackEnd(HTTP_MSG_MODI_ERROR, response);
+      return response;
+    } else {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Convenio actualizado!',
+        text: 'Serás redirigido al resumen',
+        confirmButtonText: 'Aceptar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/dashboard/convenios');
+        }
+      });
+      return response;
+    }
 
-    swal.showSuccessBackEnd(HTTP_MSG_MODI, response);
-    return response;
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_MODI_ERROR + ` (${URL} - status: ${error.status})`;

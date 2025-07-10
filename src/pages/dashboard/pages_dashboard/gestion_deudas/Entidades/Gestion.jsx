@@ -147,17 +147,19 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       console.log("Todos los valores están definidos.");
       console.log('Body Convenio:', bodyConvenio);
       console.log('ID_EMPRESA:', ID_EMPRESA);
-      const respuesta = await generarConvenio(ID_EMPRESA, bodyConvenio);
-      Swal.fire({
-        icon: 'success',
-        title: '¡Convenio generado!',
-        text: 'Serás redirigido al resumen',
-        confirmButtonText: 'Aceptar',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate('/dashboard/convenios');
-        }
-      });
+      const response = await generarConvenio(ID_EMPRESA, bodyConvenio);
+      if (response === true) {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Convenio generado!',
+          text: 'Serás redirigido al resumen',
+          confirmButtonText: 'Aceptar',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate('/dashboard/convenios');
+          }
+        });
+      }
       setShowLoading(false);
 
     }
@@ -189,17 +191,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       console.log('Body Convenio:', bodyConvenio);
       console.log('ID_EMPRESA:', ID_EMPRESA);
       console.log('CONVENIOID:', convenio_id);
-      const respuesta = await axiosGestionDeudas.putActualizarConvenio(ID_EMPRESA, convenio_id, bodyConvenio);
-      Swal.fire({
-        icon: 'success',
-        title: '¡Convenio actualizado!',
-        text: 'Serás redirigido al resumen',
-        confirmButtonText: 'Aceptar',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate('/dashboard/convenios');
-        }
-      });
+      await axiosGestionDeudas.putActualizarConvenio(ID_EMPRESA, convenio_id, bodyConvenio);
+
       setShowLoading(false);
     }
   };
@@ -342,7 +335,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         const preselectedActas = response['actas']
           .filter((item) => item.convenioActaId !== null && item.convenioActaId !== undefined)
           .map((item) => item.id);
-        
+
         if (preselectedActas.length > 0 && preselectedActas.some(id => !selectedActas.includes(id))) {
           setSelectedActas((prev) => Array.from(new Set([...prev, ...preselectedActas])));
         }
@@ -361,7 +354,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         const preselectedAjustes = response['saldosAFavor']
           .filter((item) => item.convenioAjusteId !== null && item.convenioAjusteId !== undefined)
           .map((item) => item.id);
-        
+
         if (preselectedAjustes.length > 0 && preselectedAjustes.some(id => !selectedDeclaracionesJuradas.includes(id))) {
           setSelectedSaldosAFavor((prev) => Array.from(new Set([...prev, ...preselectedAjustes])));
         }
