@@ -31,6 +31,7 @@ import Tab from '@mui/material/Tab';
 import * as locales from '@mui/material/locale';
 import PropTypes from 'prop-types';
 import { ThreeCircles } from 'react-loader-spinner';
+import { esES } from '@mui/x-data-grid';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -388,9 +389,17 @@ export const Boletas = () => {
                   ),
                 }}
                 localeText={{
+                  ...esES.components.MuiDataGrid.defaultProps.localeText,
                   toolbarColumns: 'Columnas',
                   toolbarFilters: 'Filtros',
                   toolbarExport: 'Exportar',
+                  toolbarDensity: 'Densidad',
+                  toolbarDensityLabel: 'Densidad',
+                  toolbarDensityCompact: 'Compacto',
+                  toolbarDensityStandard: 'Estándar',
+                  toolbarDensityComfortable: 'Cómodo',
+                  footerRowsPerPage: 'Filas por página',
+                  noRowsLabel: 'Sin filas'
                 }}
               />
             </Box>
@@ -488,9 +497,17 @@ export const Boletas = () => {
                   ),
                 }}
                 localeText={{
+                  ...esES.components.MuiDataGrid.defaultProps.localeText,
                   toolbarColumns: 'Columnas',
                   toolbarFilters: 'Filtros',
                   toolbarExport: 'Exportar',
+                  toolbarDensity: 'Densidad',
+                  toolbarDensityLabel: 'Densidad',
+                  toolbarDensityCompact: 'Compacto',
+                  toolbarDensityStandard: 'Estándar',
+                  toolbarDensityComfortable: 'Cómodo',
+                  footerRowsPerPage: 'Filas por página',
+                  noRowsLabel: 'Sin filas'
                 }}
               />
             </Box>
