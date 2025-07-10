@@ -68,6 +68,8 @@ export const crear = async (chequeBody, cuota, idConvenio, empresaId) => {
       await consultar(idConvenio, cuota, empresaId);
       swal.showSuccess(HTTP_MSG_ALTA);
       return data;
+    } else {
+      swal.showErrorBackEnd(HTTP_MSG_ALTA_ERROR, data);
     }
   } catch (error) {
     swal.showErrorBackEnd(
@@ -91,6 +93,17 @@ export const actualizar = async (chequeBody, empresaId, convenioId, cuotaId, che
     }
 
     const data = await axiosCrud.actualizar(URL_API, body);
+    if (data === false) {
+      swal.showErrorBackEnd(
+        HTTP_MSG_MODI_ERROR + ` (${URL_API} - status: ${error.status})`,
+        error,
+      );
+    } else {
+      swal.showSuccess("Cheque actualizado correctamente");
+    }
+
+
+
     return data;
     
   } catch (error) {

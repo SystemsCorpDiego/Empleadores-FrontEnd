@@ -191,8 +191,10 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       console.log('Body Convenio:', bodyConvenio);
       console.log('ID_EMPRESA:', ID_EMPRESA);
       console.log('CONVENIOID:', convenio_id);
-      await axiosGestionDeudas.putActualizarConvenio(ID_EMPRESA, convenio_id, bodyConvenio);
-
+      const result = await axiosGestionDeudas.putActualizarConvenio(ID_EMPRESA, convenio_id, bodyConvenio);
+      if (result) {
+        navigate('/dashboard/convenios');
+      }
       setShowLoading(false);
     }
   };

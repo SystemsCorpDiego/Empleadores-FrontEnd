@@ -311,12 +311,8 @@ const putActualizarConvenio = async (empresa_id, convenioId, body) => {
         title: '¡Convenio actualizado!',
         text: 'Serás redirigido al resumen',
         confirmButtonText: 'Aceptar',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate('/dashboard/convenios');
-        }
-      });
-      return response;
+      })
+      return true;
     }
 
   } catch (error) {
