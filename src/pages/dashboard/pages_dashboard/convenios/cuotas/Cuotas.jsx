@@ -25,8 +25,6 @@ useEffect(() => {
   setNumeroConvenio(convenioFromPath);
 }, []);
 
-useEffect(() => {
-
   const getCuotas = async () => {
     console.log(numeroConvenio, ID_EMPRESA);
     await consultar(numeroConvenio, ID_EMPRESA)
@@ -38,6 +36,10 @@ useEffect(() => {
         console.error('Error al consultar las cuotas:', error);
       });
   };
+
+useEffect(() => {
+
+
   if (!numeroConvenio) return;
   if (ID_EMPRESA === null) return;
   getCuotas();
@@ -57,8 +59,16 @@ useEffect(() => {
   const columns = [
     { field: 'numero', headerName: 'Nro. Cuota', flex: 1 },
     { field: 'importe', headerName: 'Importe Cuota', align: 'right', flex: 1, valueFormatter: (params) => formatter.currency.format(params.value || 0) },
-    { field: 'chequesNro', headerName: 'Nro. Cheques', flex: 1 },
-    { field: 'chequesTotal', headerName: 'Total Cheques', align: 'right', flex: 1,valueFormatter: (params) => formatter.currency.format(params.value || 0) },
+    { 
+      field: 'chequesNro', 
+      headerName: 'Nro. Cheques', 
+      flex: 1,
+      valueFormatter: (params) => 
+        typeof params.value === 'string' 
+          ? params.value.replace(/,/g, '/') 
+          : params.value 
+    },
+    { field: 'chequestotal', headerName: 'Total Cheques', align: 'right', flex: 1,valueFormatter: (params) => formatter.currency.format(params.value || 0) },
     { field: 'vencimiento', headerName: 'Fecha Vencimiento', flex: 1 },
     {
       field: 'acciones',
@@ -88,6 +98,7 @@ useEffect(() => {
             convenio={numeroConvenio}
             cuota={cuota.numero}
             cuotaId={cuota.id}
+            getCuotas ={getCuotas}
             //cheques={chequesPorFila[filaSeleccionada] || []}
             //setCheques={actualizarCheques}
             total={cuota.importe}

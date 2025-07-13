@@ -17,7 +17,7 @@ import Swal from 'sweetalert2';
 import './cheques.css'
 import { esES } from '@mui/x-data-grid';
 
-const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total }) => {
+const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas }) => {
   const ID_EMPRESA = localStorageService.getEmpresaId();
 
   const [cheques, setCheques] = useState([]);
@@ -136,8 +136,9 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total }) => {
       resetChequeForm();
 
       // Refrescar cheques
-      const updated = await axiosCheques.consultar(convenio, cuotaId, ID_EMPRESA);
+      const updated = await axiosCheques.consultar(convenio, cuotaId, ID_EMPRESA);      
       setCheques(updated);
+      getCuotas()
     } catch (error) {
       console.error('Error al guardar el cheque', error);
     }
@@ -242,16 +243,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total }) => {
             pageSize={4}
             getRowId={(row) => row.id}
             rowsPerPageOptions={[5]}
-            localeText={{
-              ...esES.components.MuiDataGrid.defaultProps.localeText,
-              toolbarDensity: 'Densidad',
-              toolbarDensityLabel: 'Densidad',
-              toolbarDensityCompact: 'Compacto',
-              toolbarDensityStandard: 'Estándar',
-              toolbarDensityComfortable: 'Cómodo',
-              footerRowsPerPage: 'Filas por página',
-              noRowsLabel: 'Sin filas'
-            }}
+            //localeText={esES.components.MuiDataGrid.defaultProps.localeText}
             sx={{
               '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {
                 width: '8px',
@@ -280,7 +272,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total }) => {
               value={newCheque.fecha || ''}
               onChange={handleInputChange}
               InputLabelProps={{ shrink: true }}
-              inputProps={{ min: todayStr }}
+              inputProps={{ min: todayStr, lang: 'es' }}
               error={isFechaInvalida}
               helperText={isFechaInvalida ? 'La fecha no puede ser menor a hoy' : ''}
             />

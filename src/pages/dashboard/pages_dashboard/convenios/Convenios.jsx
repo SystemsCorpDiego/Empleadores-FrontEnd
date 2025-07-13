@@ -73,7 +73,7 @@ export const Convenios = () => {
     fechaHasta: '',
   });
 
-  const KVESTADOS ={
+  const KVESTADOS = {
     "PRCH": "Pendiente en recepción de cheque",
     "CHRECI": "Cheque recibido",
     "CHRECH": "Cheque rechazado",
@@ -92,22 +92,22 @@ export const Convenios = () => {
   );
 
   const fetchData = async () => {
-      try {
-        setRol(getRol());
-        console.log('Rol:', rol);
-      } catch (error) {
-        console.error('Error fetching rol:', error);
-      }
-      try {
-        const data = await ConveniosService.getAllConvenios(empresaId);
-        setRows(data);
-      } catch (error) {
-        console.error('Error fetching convenios:', error);
-      }
-    };
+    try {
+      setRol(getRol());
+      console.log('Rol:', rol);
+    } catch (error) {
+      console.error('Error fetching rol:', error);
+    }
+    try {
+      const data = await ConveniosService.getAllConvenios(empresaId);
+      setRows(data);
+    } catch (error) {
+      console.error('Error fetching convenios:', error);
+    }
+  };
 
   useEffect(() => {
-    
+
     fetchData();
     console.log('Este es el rol', rol)
     console.log(rows);
@@ -125,7 +125,7 @@ export const Convenios = () => {
     setRowTyC(row);
     console.log('Row para Terminos y Condiciones:', rowTyC);
     setTerminosYCondiciones(true);
-    
+
 
     console.log(terminosYCondiciones);
   }
@@ -161,83 +161,85 @@ export const Convenios = () => {
 
   };
 
-const handleDownload = (row) => async () => {
-  console.log('Descargando cuotas para el convenio:', row.id);
-  try {
-    const cuotas = await consultarCuotas(row.id, empresaId);
-    if (!Array.isArray(cuotas)) throw new Error('Formato de cuotas inesperado');
+  const handleDownload = (row) => async () => {
+    console.log('Descargando cuotas para el convenio:', row.id);
+    try {
+      const cuotas = await consultarCuotas(row.id, empresaId);
+      if (!Array.isArray(cuotas)) throw new Error('Formato de cuotas inesperado');
 
-    const convenioInfo = {
-      convenioId: row.id,
-      fecha: row.fecha,
-      numero: row.numero,
-      capital: row.capital,
-      interes: row.interes,
-      saldoFavor: row.saldoFavor,
-      medioPago: row.medioPago,
-      estado: row.estado,
-    };
+      const convenioInfo = {
+        convenioId: row.id,
+        fecha: row.fecha,
+        numero: row.numero,
+        capital: row.capital,
+        interes: row.interes,
+        saldoFavor: row.saldoFavor,
+        medioPago: row.medioPago,
+        estado: row.estado,
+      };
 
-    const allRows = cuotas.map((cuota) => ({
-      ...convenioInfo,
-      nroCuota: cuota.nro_cuota,
-      importeCuota: cuota.importeCuota,
-      cheques: cuota.cheques,
-      totalCheques: cuota.totalCheques,
-    }));
+      const allRows = cuotas.map((cuota) => ({
+        ...convenioInfo,
+        nroCuota: cuota.nro_cuota,
+        importeCuota: cuota.importeCuota,
+        cheques: cuota.cheques,
+        totalCheques: cuota.totalCheques,
+      }));
 
-    const headerMap = {
-      convenioId: 'ID Convenio',
-      fecha: 'Fecha',
-      numero: 'Numero',
-      capital: 'Deuda Original',
-      interes: 'Intereses Financieros',
-      saldoFavor: 'Saldo a Favor',
-      medioPago: 'Medio de Pago',
-      estado: 'Estado',
-      nroCuota: 'Numero de Cuota',
-      importeCuota: 'Importe de Cuota',
-      cheques: 'Cheques',
-      totalCheques: 'Total Cheques',
-    };
+      const headerMap = {
+        convenioId: 'ID Convenio',
+        fecha: 'Fecha',
+        numero: 'Numero',
+        capital: 'Deuda Original',
+        interes: 'Intereses Financieros',
+        saldoFavor: 'Saldo a Favor',
+        medioPago: 'Medio de Pago',
+        estado: 'Estado',
+        nroCuota: 'Numero de Cuota',
+        importeCuota: 'Importe de Cuota',
+        cheques: 'Cheques',
+        totalCheques: 'Total Cheques',
+      };
 
-    const headers = Object.keys(headerMap);
-    const headerLabels = headers.map((key) => headerMap[key]);
+      const headers = Object.keys(headerMap);
+      const headerLabels = headers.map((key) => headerMap[key]);
 
-    const csvContent = [
-      headerLabels.join(','), // encabezados legibles
-      ...allRows.map((r) =>
-        headers.map((h) => `"${String(r[h] ?? '').replace(/"/g, '""')}"`).join(',')
-      ),
-    ].join('\r\n');
+      const csvContent = [
+        headerLabels.join(','), // encabezados legibles
+        ...allRows.map((r) =>
+          headers.map((h) => `"${String(r[h] ?? '').replace(/"/g, '""')}"`).join(',')
+        ),
+      ].join('\r\n');
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `convenio_${row.id}_cuotas.csv`;
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  } catch (error) {
-    console.error('Error generando CSV:', error);
-    alert('Ocurrió un error al descargar las cuotas del convenio.');
-  }
-};
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `convenio_${row.id}_cuotas.csv`;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Error generando CSV:', error);
+      alert('Ocurrió un error al descargar las cuotas del convenio.');
+    }
+  };
 
   const columnas = [
     {
       field: 'cuit',
       headerName: 'CUIT',
-      visible: rol == 'OSPIM_EMPLEADO' ? true : false ,
+      visible: rol == 'OSPIM_EMPLEADO' ? true : false,
       flex: 1.2,
       hide: !useContext(UserContext).isAdmin, // Esconde la columna si el usuario no es admin
     },
-    { field: 'razonSocial', headerName: 'Razón Social', flex: 1, visible: rol == 'OSPIM_EMPLEADO'? true : false },
+    { field: 'razonSocial', headerName: 'Razón Social', flex: 1, visible: rol == 'OSPIM_EMPLEADO' ? true : false },
     {
       field: 'fecha', headerName: 'Fecha', flex: 1, valueFormatter: (params) =>
         params.value ? formatter.dateString(params.value) : '',
+
+      
     },
     { field: 'numero', headerName: 'Numero Convenio', flex: 0.1, align: 'right' },
     {
@@ -264,7 +266,7 @@ const handleDownload = (row) => async () => {
     {
       field: 'total',
       headerName: 'Total Convenio',
-      flex: 0.8,
+      flex: 1,
       align: 'right',
       valueGetter: (params) => {
         const capital = Number(params.row.capital) || 0;
@@ -340,7 +342,7 @@ const handleDownload = (row) => async () => {
             label="Editar"
             title="Editar"
             sx={{ color: 'primary.main' }}
-            onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/editar/${row.entidad}/convenio/${row.id}`)}
+            onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/editar/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`)}
             color="inherit"
           />,
           <GridActionsCellItem
@@ -351,21 +353,21 @@ const handleDownload = (row) => async () => {
             onClick={() => navigate(`/dashboard/convenio/${row.id}/cuotas`)}
             color="inherit"
           />,
-          ...( 
+          ...(
 
             rol !== 'OSPIM_EMPLEADO'
-            ? [
-          <GridActionsCellItem
-            icon={<CheckIcon />}
-            label="Aceptar Terminos y condiciones"
-            title="Aceptar Terminos y condiciones"
-            sx={{ color: 'primary.main' }}
-            color="inherit"
-            
-            onClick={() => handleOpen(row)}
-          />,
+              ? [
+                <GridActionsCellItem
+                  icon={<CheckIcon />}
+                  label="Aceptar Terminos y condiciones"
+                  title="Aceptar Terminos y condiciones"
+                  sx={{ color: 'primary.main' }}
+                  color="inherit"
+
+                  onClick={() => handleOpen(row)}
+                />,
               ]
-            : []),
+              : []),
         ];
       },
       sortable: false,
@@ -435,8 +437,8 @@ const handleDownload = (row) => async () => {
       flex: 1,
       editable: false,
       valueOptions: Object.entries(KVESTADOS).map(([key, value]) => ({
-      value: key,
-      label: value,
+        value: key,
+        label: value,
       })),
       valueFormatter: (params) => KVESTADOS[params.value] || params.value,
     },
@@ -477,7 +479,7 @@ const handleDownload = (row) => async () => {
             label="Editar"
             title="Editar"
             sx={{ color: 'primary.main' }}
-            onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/editar/${row.entidad}/convenio/${row.id}`)}
+            onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/editar/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`)}
             color="inherit"
           />,
           <GridActionsCellItem
@@ -571,7 +573,7 @@ const handleDownload = (row) => async () => {
   return (
     <Box>
 
-      {(rowTyC !== undefined && rowTyC !== null) && (<TerminosYCondiciones open={terminosYCondiciones} setOpen={setTerminosYCondiciones} rowTyC={rowTyC} setRowTyC={setRowTyC} fetchData={fetchData}/>)}
+      {(rowTyC !== undefined && rowTyC !== null) && (<TerminosYCondiciones open={terminosYCondiciones} setOpen={setTerminosYCondiciones} rowTyC={rowTyC} setRowTyC={setRowTyC} fetchData={fetchData} />)}
 
       <div className="convenios_container">
         <h1 className="mt-1em">Mis convenios</h1>
@@ -587,8 +589,11 @@ const handleDownload = (row) => async () => {
           >
             <MenuItem value="TODOS">Todos</MenuItem>
             <MenuItem value="PENDIENTE">Pendiente</MenuItem>
-            <MenuItem value="CHEQUERECIBIDO">Cheque Recibido</MenuItem>
-            <MenuItem value="CERRADO">Cerrado</MenuItem>
+            <MenuItem value="CHRECI">Cheque Recibido</MenuItem>
+            <MenuItem value="CHRECH">Cheque Rechazado</MenuItem>
+            <MenuItem value="PRES">Presentado</MenuItem>
+            <MenuItem value="APROB">Aprobado</MenuItem>
+            <MenuItem value="PRCH">Pendiente en recepción de cheque</MenuItem>
           </TextField>
 
           <TextField
@@ -621,10 +626,17 @@ const handleDownload = (row) => async () => {
           <ThemeProvider theme={themeWithLocale}>
             <StripedDataGrid
               rows={rows}
-              columns={ rol == 'OSPIM_EMPLEADO' ? columnas : columnas_empleador}
-              getRowClassName={(params) =>
-                rows.indexOf(params.row) % 2 === 0 ? 'even' : 'odd'
-              }
+              columns={rol == 'OSPIM_EMPLEADO' ? columnas : columnas_empleador}
+              //Revisar como hacer para poner los colores de manera correcta
+              
+              //getRowClassName={(params) =>
+              //  rows?.indexOf(params.row) % 2 === 0 ? 'even' : 'odd'
+             // }
+              initialState={{
+          sorting: {
+            sortModel: [{ field: 'fecha', sort: 'desc' }], // Cambia a 'asc' si prefieres ascendente
+          },
+        }}
               editMode="row"
               rowModesModel={rowModesModel}
               onRowModesModelChange={handleRowModesModelChange}

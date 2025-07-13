@@ -105,7 +105,7 @@ const AppRouter = () => {
           <Route path="parametros-convenios" element={<ParametrosConvenios />} />
           <Route path="gestiondeuda" element={<GestionDeudas />} />
           <Route path="gestiondeuda/:id" element={<GestionDeudas />} />
-          <Route path="gestiondeuda/:id/editar/:entidad/convenio/:convenioid" element={<GestionDeudas />} />
+          <Route path="gestiondeuda/:id/editar/:entidad/convenio/:convenioid/cuit/:cuit" element={<GestionDeudas />} />
           <Route path="convenio/:id/cuotas" element={<Cuotas />} />
 
           <Route path="convenios" element={<Convenios />} />

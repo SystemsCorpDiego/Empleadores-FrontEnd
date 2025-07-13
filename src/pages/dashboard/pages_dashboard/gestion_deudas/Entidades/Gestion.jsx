@@ -20,6 +20,7 @@ import Swal from 'sweetalert2';
 import { generarConvenio } from './GestionApi';
 import { useNavigate } from 'react-router-dom';
 import { use } from 'react';
+import { getEmpresaId, getRol } from '@/components/localStorage/localStorageService';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -82,8 +83,12 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   const [importeDeDeuda, setImporteDeDeuda] = useState(0); //Se usa para mostrar el importe de la deuda en el estado de deuda
   const [fechaDelDia, setFechaDelDia] = useState(null); //Se usa para guardar la fecha del dia actual
   const [convenio_id, setConvenioId] = useState(null); //Se usa para guardar el id del convenio si se esta editando
+  const [cuitInput, setCuitInput] = useState(null); //Se usa para guardar el cuit de la empresa
+  const [rol, setRol] = useState(null); //Se usa para guardar el rol del usuario
+  const [empresa_id, setEmpresaId] = useState(null); //Se usa para guardar el id de la empresa
 
   useEffect(() => {
+    setRol(getRol());
     const isEditar = window.location.hash.includes('/editar');
     console.log('isEditar:', isEditar);
     if (isEditar) {
@@ -91,9 +96,11 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       const parts = window.location.hash.split('/');
       console.log(parts[parts.indexOf('convenio') + 1])
       setConvenioId(parts[parts.indexOf('convenio') + 1]);
+      setCuitInput(parts[parts.indexOf('cuit') + 1]);
+      console.log('cuitInput:', parts[parts.indexOf('cuit') + 1]);
     }
     setFechaDelDia(new Date());
-    fetchData(isEditar)
+    fetchData(isEditar, null)
     if (isEditar) {
       setIsCheckedEstadoDeDeduda(false);
       console.log('Estoy en editar')
@@ -114,6 +121,21 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     }
     ;
   }, []);
+
+
+  const buscarPorCuit = (cuitInput) => {
+    console.log('cuitInput:', cuitInput);
+    const getEmpresaID = async () => {
+      const empresaID = await axiosGestionDeudas.getEmpresaByCuit(cuitInput)
+      
+      fetchData(false, empresaID);
+      setEmpresaId(empresaID)
+      console.log('Empresa ID:', empresaID);
+    }
+    getEmpresaID();
+  }
+
+
   /*
     useEffect(() => {
       calcularDetalle();
@@ -146,8 +168,10 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     } else {
       console.log("Todos los valores están definidos.");
       console.log('Body Convenio:', bodyConvenio);
-      console.log('ID_EMPRESA:', ID_EMPRESA);
-      const response = await generarConvenio(ID_EMPRESA, bodyConvenio);
+      
+      const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA;
+      console.log('ID_EMPRESA:', empresa);
+      const response = await generarConvenio(empresa, bodyConvenio);
       if (response === true) {
         Swal.fire({
           icon: 'success',
@@ -188,10 +212,12 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       setShowLoading(false);
     } else {
       console.log("Todos los valores están definidos.");
-      console.log('Body Convenio:', bodyConvenio);
-      console.log('ID_EMPRESA:', ID_EMPRESA);
+      console.log('Body Convenio:', bodyConvenio);  
+      const empresa = await axiosGestionDeudas.getEmpresaByCuit(cuitInput);
+      //const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA;
+      console.log('ID_EMPRESA:', empresa);
       console.log('CONVENIOID:', convenio_id);
-      const result = await axiosGestionDeudas.putActualizarConvenio(ID_EMPRESA, convenio_id, bodyConvenio);
+      const result = await axiosGestionDeudas.putActualizarConvenio(empresa, convenio_id, bodyConvenio);
       if (result) {
         navigate('/dashboard/convenios');
       }
@@ -227,9 +253,9 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     const ATotal = actas
       .filter((item) => selectedActas.includes(item.id))
       .reduce((acc, item) => (acc += item.estadoDeuda !== 'JUDICIALIZADO' ? item.importeTotal : 0), 0);
-    console.log('Esto es lo que se tendria que imprimir', ATotal);
+    
     setTotalActas(ATotal);
-    console.log(selectedActas)
+    
     setShowLoadingDetalle(false);
   }, [selectedActas]);
 
@@ -238,8 +264,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     const BTotal = declaracionesJuradas
       .filter((item) => selectedDeclaracionesJuradas.includes(item.id))
       .reduce((acc, item) => (acc += item.importeTotal), 0);
-    console.log('Esto es lo que se tendria que imprimir', BTotal);
-    console.log(selectedDeclaracionesJuradas)
+    
+    
     setTotalDeclaracionesJuradas(BTotal);
     setShowLoadingDetalle(false);
   }, [selectedDeclaracionesJuradas, ENTIDAD]);
@@ -248,7 +274,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     setShowLoadingDetalle(true);
     const CTotal = saldosAFavor
       .reduce((acc, item) => (acc += item.importe), 0);
-    console.log('Esto es lo que se tendria que imprimir', CTotal);
+    
     setTotalSaldosAFavor(CTotal);
     setShowLoadingDetalle(false);
   }, [saldosAFavor, ENTIDAD]);
@@ -258,7 +284,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     const totalSaldosAFavorSelecteds = saldosAFavor
       .filter((item) => selectedSaldosAFavor.includes(item.id))
       .reduce((acc, item) => (acc += item.importe), 0);
-    console.log('Esto es lo que se tendria que imprimir', totalSaldosAFavorSelecteds);
+    
     setTotalSaldosAFavorSelected(totalSaldosAFavorSelecteds);
     setShowLoadingDetalle(false);
   }, [selectedSaldosAFavor, ENTIDAD]);
@@ -270,7 +296,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         (acc, item) => (acc += item.totalActualizado),
         0,
       );
-      console.log('Esto es lo que se tendria que imprimir', CTotal);
+    
       setTotalConvenios(CTotal);
     }
     setShowLoadingDetalle(false);
@@ -278,41 +304,25 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
 
   }, [convenios]);
 
-  const fetchData = async (editar) => {
+  const fetchData = async (editar, empresa) => {
 
     try {
-      console.log(ID_EMPRESA);
-      console.log(ENTIDAD);
       let response;
-      console.log('fetchData - editar:', editar);
-      console.log('fetchData - convenio_id:', convenio_id);
       if (!editar) {
+        empresa = empresa || ID_EMPRESA; // si no se pasa empresa, se usa ID_EMPRESA
         response = await axiosGestionDeudas.getDeclaracionesJuradas(
-          ID_EMPRESA,
+          empresa,
           ENTIDAD,
         );
       } else {
         const parts = window.location.hash.split('/');
-        //console.log(parts[parts.indexOf('convenio') + 1])
         const CONVENIOID = parts[parts.indexOf('convenio') + 1];
         response = await axiosGestionDeudas.getDeclaracionesJuradasEditar(
           ID_EMPRESA,
           CONVENIOID
         );
-        console.log('Estoy en editar');
-        console.log('response:', response);
       }
-
-      console.log(response)
-
-
       calcularDetalle();
-
-      console.log('axiosdeclaracionesJuradas.getDeclaracionesJuradas - response:', response);
-
-      console.log(response['declaracionesJuradas'])
-
-      //console.log('fecha de intencion de pago: ', dayjs(response.intencionPago))
       if (response.intencionPago) {
         setFechaIntencion(response.intencionPago ? moment(response.intencionPago) : null);
       }
@@ -326,13 +336,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       setActas(response['actas']);
       setConvenios(response['convenios']);
       setSaldosAFavor(response['saldosAFavor'])
-
-
       const idsActas = response['actas'].map((objeto) => objeto.id);
       setSelectedActas(idsActas);
-
-
-
       if (editar) {
         const preselectedActas = response['actas']
           .filter((item) => item.convenioActaId !== null && item.convenioActaId !== undefined)
@@ -373,17 +378,11 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         //console.log(idSelectedSaldosAFavor)
       }
 
-
-
-      console.log(response['saldosAFavor'])
-      //setSelectedSaldosAFavor(idSelectedSaldosAFavor);
-      console.log(selectedSaldosAFavor)
-
       const totalDeudaCalculada =
         response['declaracionesJuradas'].reduce((acc, dj) => acc + (dj.importeTotal || 0), 0) +
         response['actas'].reduce((acc, acta) => acc + (acta.importeTotal || 0), 0);
       setTotalDeuda(totalDeudaCalculada);
-      //setSaldoAFavor(response['saldoAFavor']);
+    
     } catch (error) {
       console.error('Error al obtener las declaracionesJuradas: ', error);
     }
@@ -416,9 +415,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         .filter((saldo) => selectedSaldosAFavor.includes(saldo.id))
         .reduce((acc, saldo) => acc + (saldo.importe || 0), 0);
 
-      console.log('Suma importeTotal declaraciones juradas seleccionadas:', sumaDeclaracionesJuradas);
-      console.log('Suma importeTotal actas seleccionadas:', sumaActas);
-      console.log('Suma importe saldos a favor seleccionados:', sumaSaldosAFavor);
+    
       setImporteDeDeuda(sumaDeclaracionesJuradas + sumaActas);
 
 
@@ -445,6 +442,24 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
 
   return (
     <div className="container_grilla">
+      {rol == 'OSPIM_EMPLEADO' && (
+        <Box display="flex" alignItems="center" mb={2} gap={2}>
+          <input
+            type="text"
+            placeholder="Ingrese CUIT"
+            value={cuitInput || ''}
+            onChange={e => setCuitInput(e.target.value)}
+            style={{ padding: '8px', fontSize: '16px', borderRadius: '4px', border: '1px solid #ccc' }}
+          />
+          <button
+            onClick={() => buscarPorCuit(cuitInput)} 
+            style={{ padding: '8px 16px', fontSize: '16px', borderRadius: '4px', background: '#1976d2', color: '#fff', border: 'none', cursor: 'pointer' }}
+          >
+            Buscar
+          </button>
+        </Box>
+      )}
+
       <div className="mb-4em">
         <EstadoDeDeuda
           isCheckedEstadoDeDeduda={isCheckedEstadoDeDeduda}

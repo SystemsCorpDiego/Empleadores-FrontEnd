@@ -81,10 +81,19 @@ const ConveniosService = {
         console.log('fechaHasta:', fechaHasta);
         console.log('fechaHasta == null:', fechaHasta == '');
         console.log('estado:', estado);
-        
+        const emp = empresaId == '833' ? '' : empresaId;
+
         try {
+            // Construir los parámetros dinámicamente
+            const params = [];
+            if (fechaDesde !== '') params.push(`desde=${fechaDesde}`);
+            if (fechaHasta !== '') params.push(`hasta=${fechaHasta}`);
+            if (estado !== 'TODOS' ) params.push(`estado=${estado}`);
+            if (emp !== '') params.push(`empresaId=${emp}`);
+
+            const queryString = params.length > 0 ? `?${params.join('&')}` : '';
             const response = await axiosCrud.consultar(
-                `${API_BASE_URL}convenios?${fechaDesde == '' ?   '' : 'desde=' }${fechaDesde}&${fechaHasta == '' ?   '' : 'hasta' }${fechaHasta}&${estado == '' || estado == 'TODOS'?   '' : 'estado=' }${estado}&empresaId=${empresaId}`
+                `${API_BASE_URL}convenios${queryString}`
             );
             return response || [];
         } catch (error) {

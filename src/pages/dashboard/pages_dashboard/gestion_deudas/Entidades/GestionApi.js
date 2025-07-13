@@ -322,9 +322,32 @@ const putActualizarConvenio = async (empresa_id, convenioId, body) => {
   }
 }
 
+const getEmpresaByCuit = async (cuit) => {
+  try {
+    console.log('getEmpresaByCuit - cuit:', cuit);
+    const URL = `/empresa`;
+    const response = await axiosCrud.consultar(URL);
+    console.log('response', response);
+    if (response && response.length > 0) {
+
+      const empresaEncontrada = response.find(e => e.cuit == cuit);
+      console.log('empresaEncontrada', empresaEncontrada);
+      return empresaEncontrada.id? empresaEncontrada.id : null;
+    } else {
+      swal.showErrorBackEnd('No se encontró la empresa con el CUIT proporcionado.');
+      return null;
+    }
+  } catch (error) {
+    const HTTP_MSG =
+      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
+    swal.showErrorBackEnd(HTTP_MSG, error);
+  }
+};
+
 export const axiosGestionDeudas = {
   getDeclaracionesJuradas,
   getDetalleConvenio,
   getDeclaracionesJuradasEditar,
-  putActualizarConvenio
+  putActualizarConvenio,
+  getEmpresaByCuit
 };
