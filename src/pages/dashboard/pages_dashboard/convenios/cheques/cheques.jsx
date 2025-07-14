@@ -24,15 +24,19 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
   const [openChequeDialog, setOpenChequeDialog] = useState(false);
   const [resta, setResta] = useState(total);
   const [editing, setEditing] = useState(false);
+  const [rol, setRol] = useState(localStorageService.getRol());
   const [newCheque, setNewCheque] = useState({
     fecha: '',
     id: 0,
     numero: '',
     importe: '',
+    estado: 'INGRESADO', // Estado por defecto
   });
 
   // Cargar cheques al abrir
   useEffect(() => {
+    console.log('Rol actual:', rol);
+    console.log('OSPIM_EMPLEADO' === rol);
     console.log('Cargando cheques para convenio:', convenio, 'cuota:', cuotaId, 'ID Empresa:', ID_EMPRESA);
     if (!convenio || !cuotaId || !ID_EMPRESA) {
       console.warn('Valores insuficientes para consultar cheques', { convenio, cuotaId, ID_EMPRESA });
@@ -114,6 +118,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
           numero: newCheque.numero,
           fecha: newCheque.fecha,
           importe: parseFloat(newCheque.importe.replace(",", ".")),
+          estado: newCheque.estado || 'CARGADO', // Asegurarse de que estado tenga un valor por defecto
         },
           ID_EMPRESA,
           convenio,
@@ -126,6 +131,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
             numero: newCheque.numero,
             fecha: newCheque.fecha,
             importe: parseFloat(newCheque.importe.replace(",", ".")), // Asegurarse de que importe sea un número con dos decimales
+            estado: 'INGRESADO',
           },
           cuotaId,
           convenio,
@@ -177,6 +183,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
       valueFormatter: (params) => formatter.currency.format(params.value || 0),
     },
     { field: 'numero', headerName: 'Número Cheque', flex: 1, align: 'center' },
+    { field: 'estado', headerName: 'Estado', flex: 1, align: 'center' },
     {
       field: 'acciones',
       headerName: 'Acciones',
@@ -293,6 +300,28 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
               value={newCheque.importe || ''}
               onChange={handleInputChange}
             />
+
+            {rol === 'OSPIM_EMPLEADO' && editing && (
+              <TextField
+                margin="dense"
+                name="estado"
+                label="Estado"
+                select
+                fullWidth
+                value={newCheque.estado || ''}
+                onChange={handleInputChange}
+                disabled={localStorageService.isRolEmpleador()}
+                SelectProps={{
+                  native: true,
+                }}
+              >
+                <option value="PENDIENTE">PENDIENTE</option>
+                <option value="CARGADO">CARGADO</option>
+                <option value="RECIBIDO">RECIBIDO</option>
+                <option value="RECHAZADO">RECHAZADO</option>
+              </TextField>
+            )}
+            
           </DialogContent>
           <DialogActions>
             <Button onClick={resetChequeForm} color="secondary">

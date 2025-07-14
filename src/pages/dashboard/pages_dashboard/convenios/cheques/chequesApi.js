@@ -57,7 +57,8 @@ export const crear = async (chequeBody, cuota, idConvenio, empresaId) => {
     const body = {
       'numero' : chequeBody.numero,
       'fecha' : chequeBody.fecha,
-      'importe': parseFloat(chequeBody.importe).toFixed(2)
+      'importe': parseFloat(chequeBody.importe).toFixed(2),
+      'estado': chequeBody.estado, // Asegúrate de que el estado esté definido en chequeBody
     }
      //'importe' :parseInt(chequeBody.importe, 10)}
     
@@ -89,6 +90,7 @@ export const actualizar = async (chequeBody, empresaId, convenioId, cuotaId, che
       'numero' : chequeBody.numero,
       'fecha' : chequeBody.fecha,
       'importe': chequeBody.importe,//parseFloat(chequeBody.importe),
+      'estado': chequeBody.estado, // Asegúrate de que el estado esté definido en chequeBody
       'id' : chequeId
     }
 
