@@ -312,10 +312,12 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       let response;
       if (!editar) {
         empresa = empresa || ID_EMPRESA; // si no se pasa empresa, se usa ID_EMPRESA
+        if (empresa !== "833" ) {
         response = await axiosGestionDeudas.getDeclaracionesJuradas(
           empresa,
           ENTIDAD,
         );
+      }
       } else {
         const parts = window.location.hash.split('/');
         const CONVENIOID = parts[parts.indexOf('convenio') + 1];
