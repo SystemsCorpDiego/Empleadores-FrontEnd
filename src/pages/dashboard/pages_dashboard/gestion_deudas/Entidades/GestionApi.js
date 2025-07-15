@@ -135,7 +135,7 @@ const ordenaGrillaPeriodo = (response) => {
         };
       }
       acc[clave][curr.aporteDescripcion] = curr.importe;
-      acc[clave].importeTotal = (acc[clave].importeTotal || 0) + curr.importe;
+      acc[clave].importeTotal = (acc[clave].importeTotal || 0) + curr.importeTotal;
       acc[clave].intereses = (acc[clave].intereses || 0) + curr.intereses;
       return acc;
     }, {});
