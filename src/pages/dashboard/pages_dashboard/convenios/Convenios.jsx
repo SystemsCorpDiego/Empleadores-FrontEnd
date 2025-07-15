@@ -10,6 +10,7 @@ import {
   createTheme,
 } from '@mui/material';
 import { StripedDataGrid, dataGridStyle } from '@/common/dataGridStyle';
+import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import EditIcon from '@mui/icons-material/Edit';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
@@ -160,6 +161,9 @@ export const Convenios = () => {
     console.log('Guardando cambios para el convenio:', rows[id]);
 
   };
+  const handleImprimir = async (row) => {
+    await ConveniosService.imprimirConvenio(row.cuit, row.id);
+  };
 
   const handleDownload = (row) => async () => {
     console.log('Descargando cuotas para el convenio:', row.id);
@@ -239,7 +243,7 @@ export const Convenios = () => {
       field: 'fecha', headerName: 'Fecha', flex: 1, valueFormatter: (params) =>
         params.value ? formatter.dateString(params.value) : '',
 
-      
+
     },
     { field: 'numero', headerName: 'Numero Convenio', flex: 0.1, align: 'right' },
     {
@@ -336,6 +340,13 @@ export const Convenios = () => {
             title="Descargar"
             sx={{ color: 'primary.main' }}
             onClick={handleDownload(row)}
+          />,
+          <GridActionsCellItem
+            icon={<LocalPrintshopIcon />}
+            label="Print"
+            title="Imprimir"
+            color="inherit"
+            onClick={() => handleImprimir(row)}
           />,
           <GridActionsCellItem
             icon={<EditIcon />}
@@ -475,6 +486,14 @@ export const Convenios = () => {
             onClick={handleDownload(row)}
           />,
           <GridActionsCellItem
+            icon={<LocalPrintshopIcon />}
+            label="Print"
+            title="Imprimir"
+            color="inherit"
+            sx={{ color: 'primary.main' }}
+            onClick={() => handleImprimir(row)}
+          />,
+          <GridActionsCellItem
             icon={<EditIcon />}
             label="Editar"
             title="Editar"
@@ -576,7 +595,7 @@ export const Convenios = () => {
       {(rowTyC !== undefined && rowTyC !== null) && (<TerminosYCondiciones open={terminosYCondiciones} setOpen={setTerminosYCondiciones} rowTyC={rowTyC} setRowTyC={setRowTyC} fetchData={fetchData} />)}
 
       <div className="convenios_container">
-        <h1 className="mt-1em">Mis convenios</h1>
+        <h1 className="mt-1em">{rol == 'OSPIM_EMPLEADO' ? 'Consulta Convenios' : 'Mis convenios'}</h1>
 
         {/* Filtros */}
         <Box sx={{ display: 'flex', gap: 2, mb: 3 }} className="mt-1em">
@@ -628,15 +647,15 @@ export const Convenios = () => {
               rows={rows}
               columns={rol == 'OSPIM_EMPLEADO' ? columnas : columnas_empleador}
               //Revisar como hacer para poner los colores de manera correcta
-              
+
               //getRowClassName={(params) =>
               //  rows?.indexOf(params.row) % 2 === 0 ? 'even' : 'odd'
-             // }
+              // }
               initialState={{
-          sorting: {
-            sortModel: [{ field: 'fecha', sort: 'desc' }], // Cambia a 'asc' si prefieres ascendente
-          },
-        }}
+                sorting: {
+                  sortModel: [{ field: 'fecha', sort: 'desc' }], // Cambia a 'asc' si prefieres ascendente
+                },
+              }}
               editMode="row"
               rowModesModel={rowModesModel}
               onRowModesModelChange={handleRowModesModelChange}
