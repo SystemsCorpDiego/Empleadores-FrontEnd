@@ -86,6 +86,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   const [cuitInput, setCuitInput] = useState(null); //Se usa para guardar el cuit de la empresa
   const [rol, setRol] = useState(null); //Se usa para guardar el rol del usuario
   const [empresa_id, setEmpresaId] = useState(null); //Se usa para guardar el id de la empresa
+  const [shouldCalculate, setShouldCalculate] = useState(!window.location.hash.includes('/editar'));
+  const [intereses, setIntereses] = useState(0); //Se usa para guardar los intereses de la deuda
 
   useEffect(() => {
     setRol(getRol());
@@ -127,7 +129,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     console.log('cuitInput:', cuitInput);
     const getEmpresaID = async () => {
       const empresaID = await axiosGestionDeudas.getEmpresaByCuit(cuitInput)
-      
+
       fetchData(false, empresaID);
       setEmpresaId(empresaID)
       console.log('Empresa ID:', empresaID);
@@ -168,7 +170,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     } else {
       console.log("Todos los valores están definidos.");
       console.log('Body Convenio:', bodyConvenio);
-      
+
       const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA;
       console.log('ID_EMPRESA:', empresa);
       const response = await generarConvenio(empresa, bodyConvenio);
@@ -212,7 +214,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       setShowLoading(false);
     } else {
       console.log("Todos los valores están definidos.");
-      console.log('Body Convenio:', bodyConvenio);  
+      console.log('Body Convenio:', bodyConvenio);
       const empresa = await axiosGestionDeudas.getEmpresaByCuit(cuitInput);
       //const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA;
       console.log('ID_EMPRESA:', empresa);
@@ -253,9 +255,9 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     const ATotal = actas
       .filter((item) => selectedActas.includes(item.id))
       .reduce((acc, item) => (acc += item.estadoDeuda !== 'JUDICIALIZADO' ? item.importeTotal : 0), 0);
-    
+
     setTotalActas(ATotal);
-    
+
     setShowLoadingDetalle(false);
   }, [selectedActas]);
 
@@ -264,8 +266,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     const BTotal = declaracionesJuradas
       .filter((item) => selectedDeclaracionesJuradas.includes(item.id))
       .reduce((acc, item) => (acc += item.importeTotal), 0);
-    
-    
+
+
     setTotalDeclaracionesJuradas(BTotal);
     setShowLoadingDetalle(false);
   }, [selectedDeclaracionesJuradas, ENTIDAD]);
@@ -274,7 +276,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     setShowLoadingDetalle(true);
     const CTotal = saldosAFavor
       .reduce((acc, item) => (acc += item.importe), 0);
-    
+
     setTotalSaldosAFavor(CTotal);
     setShowLoadingDetalle(false);
   }, [saldosAFavor, ENTIDAD]);
@@ -284,7 +286,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     const totalSaldosAFavorSelecteds = saldosAFavor
       .filter((item) => selectedSaldosAFavor.includes(item.id))
       .reduce((acc, item) => (acc += item.importe), 0);
-    
+
     setTotalSaldosAFavorSelected(totalSaldosAFavorSelecteds);
     setShowLoadingDetalle(false);
   }, [selectedSaldosAFavor, ENTIDAD]);
@@ -296,7 +298,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         (acc, item) => (acc += item.totalActualizado),
         0,
       );
-    
+
       setTotalConvenios(CTotal);
     }
     setShowLoadingDetalle(false);
@@ -321,10 +323,20 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           ID_EMPRESA,
           CONVENIOID
         );
+        console.log('Response Editar:', response);
       }
       calcularDetalle();
       if (response.intencionPago) {
         setFechaIntencion(response.intencionPago ? moment(response.intencionPago) : null);
+      }
+      if (response.interes){
+        setIntereses(response.interes);
+      }
+      if (response.deuda){
+        setImporteDeDeuda(response.deuda);
+      }
+      if (response.saldoAFavor){
+        setSaldosAFavor(response.saldoAFavor);
       }
       if (response.cuotas) {
         setCuotas(response.cuotas);
@@ -382,7 +394,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         response['declaracionesJuradas'].reduce((acc, dj) => acc + (dj.importeTotal || 0), 0) +
         response['actas'].reduce((acc, acta) => acc + (acta.importeTotal || 0), 0);
       setTotalDeuda(totalDeudaCalculada);
-    
+
     } catch (error) {
       console.error('Error al obtener las declaracionesJuradas: ', error);
     }
@@ -396,13 +408,34 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   }, [ENTIDAD, declaracionesJuradas, actas]);
 
   useEffect(() => {
+    if (!shouldCalculate) return; // Solo si ya permitimos calcular
+
     calcularDetalle();
   }, [selectedActas, selectedDeclaracionesJuradas, selectedSaldosAFavor, cuotas, fechaIntencion]);
 
+  const handleChangeActas = (value) => {
+    setSelectedActas(value);
+    if (!shouldCalculate) setShouldCalculate(true);
+  };
+  const handleChangeDDJJ = (value) => {
+    setSelectedDeclaracionesJuradas(value);
+    if (!shouldCalculate) setShouldCalculate(true);
+  };
+  const handleChangeSaldo = (value) => {
+    setSelectedSaldosAFavor(value);
+    if (!shouldCalculate) setShouldCalculate(true);
+  };
+  const handleChangeCuotas = (value) => {
+    setCuotas(value);
+    if (!shouldCalculate) setShouldCalculate(true);
+  };
+  const handleChangeFecha = (value) => {
+    setFechaIntencion(value);
+    if (!shouldCalculate) setShouldCalculate(true);
+  };
+
   const calcularDetalle = async () => {
     try {
-
-
       const sumaDeclaracionesJuradas = declaracionesJuradas
         .filter((dj) => selectedDeclaracionesJuradas.includes(dj.id))
         .reduce((acc, dj) => acc + (dj.importeTotal || 0), 0);
@@ -415,7 +448,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         .filter((saldo) => selectedSaldosAFavor.includes(saldo.id))
         .reduce((acc, saldo) => acc + (saldo.importe || 0), 0);
 
-    
+
       setImporteDeDeuda(sumaDeclaracionesJuradas + sumaActas);
 
 
@@ -452,7 +485,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
             style={{ padding: '8px', fontSize: '16px', borderRadius: '4px', border: '1px solid #ccc' }}
           />
           <button
-            onClick={() => buscarPorCuit(cuitInput)} 
+            onClick={() => buscarPorCuit(cuitInput)}
             style={{ padding: '8px 16px', fontSize: '16px', borderRadius: '4px', background: '#1976d2', color: '#fff', border: 'none', cursor: 'pointer' }}
           >
             Buscar
@@ -492,7 +525,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
             <GrillaActas
               actas={actas}
               selectedActas={selectedActas}
-              setSelectedActas={setSelectedActas}
+              setSelectedActas={handleChangeActas}
             />
           </AccordionDetails>
         </Accordion>
@@ -521,7 +554,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
             <GrillaPeriodo
               declaracionesJuradas={declaracionesJuradas}
               selectedDeclaracionesJuradas={selectedDeclaracionesJuradas}
-              setSelectedDeclaracionesJuradas={setSelectedDeclaracionesJuradas}
+              setSelectedDeclaracionesJuradas={handleChangeDDJJ}
             />
           </AccordionDetails>
         </Accordion>
@@ -550,16 +583,17 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
             <GrillaSaldoAFavor
               saldoAFavor={saldosAFavor}
               selectedSaldosAFavor={selectedSaldosAFavor}
-              setSelectedSaldosAFavor={setSelectedSaldosAFavor}
+              setSelectedSaldosAFavor={handleChangeSaldo}
             />
           </AccordionDetails>
         </Accordion>
 
         <OpcionesDePago
           cuotas={cuotas}
-          setCuotas={setCuotas}
+          intereses={intereses}
+          setCuotas={handleChangeCuotas}
           fechaIntencion={fechaIntencion}
-          setFechaIntencion={setFechaIntencion}
+          setFechaIntencion={handleChangeFecha}
           saldoAFavor={formatter.currencyString(totalSaldosAFavorSelected)}
           noUsar={noUsar}
           setNoUsar={setNoUsar}

@@ -33,6 +33,7 @@ export const OpcionesDePago = ({
   setMedioPago,
   detalleConvenio,
   importeDeDeuda,
+  intereses,
   saldoAFavorUtilizado,
   handleGenerarConvenio,
   handleActualizarConvenio,
@@ -119,12 +120,12 @@ export const OpcionesDePago = ({
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2"><strong>Intereses de financiación:</strong></Typography>
-                <Typography variant="body1">{formatter.currencyString(detalleConvenio.importeInteresTotal)}</Typography>
+                <Typography variant="body1">{detalleConvenio.importeInteresTotal ?formatter.currencyString(detalleConvenio.importeInteresTotal) : intereses}</Typography>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2"><strong>Total a pagar:</strong></Typography>
                 <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                  {formatter.currencyString(importeDeDeuda + detalleConvenio.importeInteresTotal)}
+                  {formatter.currencyString(importeDeDeuda + (detalleConvenio.importeInteresTotal ? detalleConvenio.importeInteresTotal : intereses))}
                 </Typography>
               </Grid>
             </Grid>

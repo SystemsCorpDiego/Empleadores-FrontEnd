@@ -346,6 +346,7 @@ export const Convenios = () => {
             label="Print"
             title="Imprimir"
             color="inherit"
+            sx={{ color: 'primary.main' }}
             onClick={() => handleImprimir(row)}
           />,
           <GridActionsCellItem
