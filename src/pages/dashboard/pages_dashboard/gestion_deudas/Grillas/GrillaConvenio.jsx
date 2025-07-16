@@ -11,9 +11,10 @@ import {
   GridToolbarExport,
 } from '@mui/x-data-grid';
 
-export const GrillaConvenio = ({ convenios, }) => {
+export const GrillaConvenio = ({ convenios }) => {
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
+
   return (
     <Box
       style={{ height: 400 }}
@@ -53,7 +54,7 @@ export const GrillaConvenio = ({ convenios, }) => {
             flex: 1,
             align: 'right',
             valueFormatter: (params) =>
-              params.value ? formatter.currencyString(params.value) : ''
+              params.value ? formatter.currencyString(params.value) : '',
           },
 
           {
@@ -62,7 +63,7 @@ export const GrillaConvenio = ({ convenios, }) => {
             flex: 1,
             align: 'right',
             valueFormatter: (params) =>
-              params.value ? formatter.currencyString(params.value) : ''
+              params.value ? formatter.currencyString(params.value) : '',
           },
         ]}
         paginationModel={paginationModel}

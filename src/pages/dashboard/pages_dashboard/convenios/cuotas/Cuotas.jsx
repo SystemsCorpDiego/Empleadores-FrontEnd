@@ -8,22 +8,21 @@ import Cheques from '../cheques/cheques';
 import formatter from '@/common/formatter';
 import localStorageService from '@/components/localStorage/localStorageService';
 
-
 export const Cuotas = () => {
   const navigate = useNavigate();
   const [cuotas, setCuotas] = useState([]);
-  const [cuota, setCuota] = useState(null)
-  const [numeroConvenio, setNumeroConvenio] = useState(null); 
-  
+  const [cuota, setCuota] = useState(null);
+  const [numeroConvenio, setNumeroConvenio] = useState(null);
+
   const [open, setOpen] = useState(false);
   const ID_EMPRESA = localStorageService.getEmpresaId();
 
-useEffect(() => {
-  const pathParts = window.location.href.split('/');
-  const convenioFromPath = pathParts[pathParts.length - 2];
-  
-  setNumeroConvenio(convenioFromPath);
-}, []);
+  useEffect(() => {
+    const pathParts = window.location.href.split('/');
+    const convenioFromPath = pathParts[pathParts.length - 2];
+
+    setNumeroConvenio(convenioFromPath);
+  }, []);
 
   const getCuotas = async () => {
     console.log(numeroConvenio, ID_EMPRESA);
@@ -37,15 +36,11 @@ useEffect(() => {
       });
   };
 
-useEffect(() => {
-
-
-  if (!numeroConvenio) return;
-  if (ID_EMPRESA === null) return;
-  getCuotas();
-}, [numeroConvenio]);
-
-  
+  useEffect(() => {
+    if (!numeroConvenio) return;
+    if (ID_EMPRESA === null) return;
+    getCuotas();
+  }, [numeroConvenio]);
 
   const handleOpen = (row) => {
     console.log(row);
@@ -58,17 +53,29 @@ useEffect(() => {
 
   const columns = [
     { field: 'numero', headerName: 'Nro. Cuota', flex: 1 },
-    { field: 'importe', headerName: 'Importe Cuota', align: 'right', flex: 1, valueFormatter: (params) => formatter.currency.format(params.value || 0) },
-    { 
-      field: 'chequesNro', 
-      headerName: 'Nro. Cheques', 
+    {
+      field: 'importe',
+      headerName: 'Importe Cuota',
+      align: 'right',
       flex: 1,
-      valueFormatter: (params) => 
-        typeof params.value === 'string' 
-          ? params.value.replace(/,/g, '/') 
-          : params.value 
+      valueFormatter: (params) => formatter.currency.format(params.value || 0),
     },
-    { field: 'chequestotal', headerName: 'Total Cheques', align: 'right', flex: 1,valueFormatter: (params) => formatter.currency.format(params.value || 0) },
+    {
+      field: 'chequesNro',
+      headerName: 'Nro. Cheques',
+      flex: 1,
+      valueFormatter: (params) =>
+        typeof params.value === 'string'
+          ? params.value.replace(/,/g, '/')
+          : params.value,
+    },
+    {
+      field: 'chequesTotal',
+      headerName: 'Total Cheques',
+      align: 'right',
+      flex: 1,
+      valueFormatter: (params) => formatter.currency.format(params.value || 0),
+    },
     { field: 'vencimiento', headerName: 'Fecha Vencimiento', flex: 1 },
     {
       field: 'acciones',
@@ -98,7 +105,7 @@ useEffect(() => {
             convenio={numeroConvenio}
             cuota={cuota.numero}
             cuotaId={cuota.id}
-            getCuotas ={getCuotas}
+            getCuotas={getCuotas}
             //cheques={chequesPorFila[filaSeleccionada] || []}
             //setCheques={actualizarCheques}
             total={cuota.importe}
