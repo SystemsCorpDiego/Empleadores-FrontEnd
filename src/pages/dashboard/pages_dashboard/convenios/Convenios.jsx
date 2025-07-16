@@ -184,10 +184,11 @@ export const Convenios = () => {
 
       const allRows = cuotas.map((cuota) => ({
         ...convenioInfo,
-        nroCuota: cuota.nro_cuota,
-        importeCuota: cuota.importeCuota,
-        cheques: cuota.cheques,
-        totalCheques: cuota.totalCheques,
+        nroCuota: cuota.numero,
+        importeCuota: cuota.importe,
+        cheques: cuota.chequesNro,
+        totalCheques: cuota.chequesTotal,
+        vencimiento: cuota.vencimiento
       }));
 
       const headerMap = {
