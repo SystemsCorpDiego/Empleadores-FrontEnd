@@ -20,6 +20,7 @@ export const GrillaPeriodo = ({ declaracionesJuradas, selectedDeclaracionesJurad
   const [aporteSolidario, setAporteSolidario] = useState(false);
   const [cuotaSocial, setCuotaSocial] = useState(false);
   const [art46, setArt46] = useState(false);
+  const [cuotaUsufructo, setCuotaUsufructo] = useState(false);
 
   useEffect(() => {
     declaracionesJuradas.forEach((declaracion) => {
@@ -33,8 +34,11 @@ export const GrillaPeriodo = ({ declaracionesJuradas, selectedDeclaracionesJurad
       if (declaracion['Art. 46']) {
         setArt46(true);
       }
+      if (declaracion['Cuota Usufructo']){
+        setCuotaUsufructo(true);
+      }
     });
-    console.log(aporteSolidario, cuotaSocial, art46)
+    console.log(aporteSolidario, cuotaSocial, art46, cuotaUsufructo);
 
 
   }, [declaracionesJuradas]);
@@ -112,6 +116,14 @@ export const GrillaPeriodo = ({ declaracionesJuradas, selectedDeclaracionesJurad
             headerAlign: 'right',
             align: 'right',
 
+            valueFormatter: (params) => {
+              return formatter.currencyString(params?.value) || 0.00;
+            }
+          },
+          cuotaUsufructo && {
+            field: 'Cuota Usufructo', headerName: 'Cuota Usufructo', flex: 1.4,
+            headerAlign: 'right',
+            align: 'right',
             valueFormatter: (params) => {
               return formatter.currencyString(params?.value) || 0.00;
             }
