@@ -1,9 +1,8 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { UserContext } from '@/context/userContext';
 import { Box, Checkbox } from '@mui/material';
 import formatter from '@/common/formatter';
 import { esES } from '@mui/x-data-grid';
-
 import {
   DataGrid,
   GridToolbarContainer,
@@ -11,49 +10,111 @@ import {
   GridToolbarFilterButton,
   GridToolbarExport,
 } from '@mui/x-data-grid';
-import './Grilla.css'
+import './Grilla.css';
 
-
-export const GrillaPeriodo = ({ declaracionesJuradas, selectedDeclaracionesJuradas, setSelectedDeclaracionesJuradas }) => {
+export const GrillaPeriodo = ({
+  declaracionesJuradas,
+  selectedDeclaracionesJuradas,
+  setSelectedDeclaracionesJuradas,
+}) => {
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
-  const [aporteSolidario, setAporteSolidario] = useState(false);
-  const [cuotaSocial, setCuotaSocial] = useState(false);
-  const [art46, setArt46] = useState(false);
-  const [cuotaUsufructo, setCuotaUsufructo] = useState(false);
-
-  useEffect(() => {
-    declaracionesJuradas.forEach((declaracion) => {
-      if (declaracion['Aporte Solidario UOMA']) {
-        setAporteSolidario(true);
-      }
-      if (declaracion['Cuota Social UOMA']) {
-        console.log('Estoy entrando no se por que')
-        setCuotaSocial(true);
-      }
-      if (declaracion['Art. 46']) {
-        setArt46(true);
-      }
-      if (declaracion['Cuota Usufructo']){
-        setCuotaUsufructo(true);
-      }
-    });
-    console.log(aporteSolidario, cuotaSocial, art46, cuotaUsufructo);
-
-
-  }, [declaracionesJuradas]);
 
   const handleSelectionChange = (id) => {
-    setSelectedDeclaracionesJuradas((prevSelected) => {
-      console.log(prevSelected)
-      if (prevSelected.includes(id)) {
-        return prevSelected.filter((selectedId) => selectedId !== id);
-      } else {
-        return [...prevSelected, id];
+    setSelectedDeclaracionesJuradas((prevSelected) =>
+      prevSelected.includes(id)
+        ? prevSelected.filter((selectedId) => selectedId !== id)
+        : [...prevSelected, id]
+    );
+  };
+
+  const COLUMNAS_FIJAS = [
+    {
+      field: 'selection',
+      headerName: '',
+      renderCell: (params) => (
+        <Checkbox
+          checked={selectedDeclaracionesJuradas.includes(params.id)}
+          onChange={() => handleSelectionChange(params.id)}
+        />
+      ),
+      headerCheckboxSelection: true,
+      checkboxSelection: true,
+      flex: 0.25,
+    },
+    {
+      field: 'periodo',
+      headerName: 'Periodo',
+      flex: 0.8,
+      valueFormatter: (params) => formatter.periodoString(params.value),
+    },
+    {
+      field: 'rectificativa',
+      headerName: 'Rectificativa',
+      flex: 0.5,
+    },
+  ];
+
+  const COLUMNAS_NUMERICAS_FINALES = [
+    {
+      field: 'intereses',
+      headerName: 'Intereses',
+      flex: 1,
+      headerAlign: 'right',
+      align: 'right',
+      valueFormatter: (params) =>
+        formatter.currencyString(params?.value) || 0.0,
+    },
+    {
+      field: 'importeTotal',
+      headerName: 'Importe Total',
+      headerAlign: 'right',
+      flex: 1,
+      align: 'right',
+      valueFormatter: (params) => formatter.currencyString(params?.value),
+    },
+  ];
+const generarColumnasDinamicas = (data) => {
+  const columnasExcluidas = new Set([
+    'id',
+    'periodo',
+    'rectificativa',
+    'intereses',
+    'importeTotal',
+    'convenioDdjjId'
+  ]);
+
+  const columnasDetectadas = new Set();
+
+  data.forEach((item) => {
+    Object.entries(item).forEach(([key, value]) => {
+      if (
+        typeof value === 'number' &&
+        !columnasExcluidas.has(key)
+      ) {
+        columnasDetectadas.add(key);
       }
     });
-  };
-  return (<>
+  });
+
+  const columnasDinamicas = [...columnasDetectadas].map((key) => ({
+    field: key,
+    headerName: key,
+    flex: 1.4,
+    headerAlign: 'right',
+    align: 'right',
+    valueFormatter: (params) =>
+      formatter.currencyString(params?.value) || 0.0,
+  }));
+
+  return [
+    ...COLUMNAS_FIJAS,
+    ...columnasDinamicas,
+    ...COLUMNAS_NUMERICAS_FINALES,
+  ];
+};
+
+  return (
     <Box
       style={{ height: 400, width: '100%' }}
       sx={{
@@ -65,91 +126,8 @@ export const GrillaPeriodo = ({ declaracionesJuradas, selectedDeclaracionesJurad
       }}
     >
       <DataGrid
-        rows={declaracionesJuradas ? declaracionesJuradas : []}
-        columns={[
-          {
-            field: 'selection',
-            headerName: '',
-            renderCell: (params) => {
-              console.log('params', params);
-              console.log('selectedDeclaracionesJuradas', selectedDeclaracionesJuradas);
-              return (
-                <Checkbox
-                  checked={selectedDeclaracionesJuradas.includes(params.id)}
-                  onChange={() => handleSelectionChange(params.id)}
-                />
-              )
-            },
-            headerCheckboxSelection: true,
-            checkboxSelection: true,
-            flex: 0.25
-          },
-          {
-            field: 'periodo',
-            headerName: 'Periodo',
-            flex: 0.8,
-            valueFormatter: (params) =>
-              formatter.periodoString(params.value),
-          },
-
-          { field: 'rectificativa', headerName: 'Rectificativa', flex: 1 },
-          aporteSolidario && {
-            field: 'Aporte Solidario UOMA', headerName: 'Aporse Solidario UOMA', flex: 1,
-            //visible: aporteSolidario,
-            headerAlign: 'right',
-            align: 'right',
-            valueFormatter: (params) => {
-              return formatter.currencyString(params?.value) || 0.00;
-            }
-          },
-          art46 && {
-            field: 'Art. 46', headerName: 'Art. 46', flex: 0.7,
-            //visible: art46,
-            headerAlign: 'right',
-            align: 'right',
-            valueFormatter: (params) => {
-              return formatter.currencyString(params?.value) || 0.00;
-            }
-          },
-          cuotaSocial && {
-            field: 'Cuota Social UOMA', headerName: 'Cuota Social UOMA', flex: 1.4,
-            headerAlign: 'right',
-            align: 'right',
-
-            valueFormatter: (params) => {
-              return formatter.currencyString(params?.value) || 0.00;
-            }
-          },
-          cuotaUsufructo && {
-            field: 'Cuota Usufructo', headerName: 'Cuota Usufructo', flex: 1.4,
-            headerAlign: 'right',
-            align: 'right',
-            valueFormatter: (params) => {
-              return formatter.currencyString(params?.value) || 0.00;
-            }
-          },
-          {
-            field: 'intereses',
-            headerName: 'Intereses',
-            flex: 0.7,
-            headerAlign: 'right',
-            align: 'right',
-            valueFormatter: (params) => {
-              return formatter.currencyString(params?.value) || 0.00;
-            },
-          },
-          {
-            field: 'importeTotal',
-            headerName: 'Importe Total',
-            headerAlign: 'right',
-            flex: 1,
-            align: 'right',
-            valueFormatter: (params) => {
-              return formatter.currencyString(params?.value);
-            },
-          },
-
-        ].filter(Boolean)}
+        rows={declaracionesJuradas || []}
+        columns={generarColumnasDinamicas(declaracionesJuradas || [])}
         getRowClassName={(params) =>
           declaracionesJuradas.indexOf(params.row) % 2 === 0 ? 'even' : ''
         }
@@ -180,5 +158,5 @@ export const GrillaPeriodo = ({ declaracionesJuradas, selectedDeclaracionesJurad
         }}
       />
     </Box>
-  </>)
-}
+  );
+};
