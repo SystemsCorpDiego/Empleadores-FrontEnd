@@ -24,7 +24,7 @@ export const GrillaPeriodo = ({
     setSelectedDeclaracionesJuradas((prevSelected) =>
       prevSelected.includes(id)
         ? prevSelected.filter((selectedId) => selectedId !== id)
-        : [...prevSelected, id]
+        : [...prevSelected, id],
     );
   };
 
@@ -52,6 +52,16 @@ export const GrillaPeriodo = ({
       field: 'rectificativa',
       headerName: 'Rectificativa',
       flex: 0.5,
+      valueGetter: (params) => {
+        // Si secuencia es 0 es "Original" sino es "Rectificativa"+secuencia
+        if (params.value === null) {
+          return 'Pendiente';
+        } else if (params.value === 0) {
+          return 'Original';
+        } else {
+          return 'Rectif. ' + params.value;
+        }
+      },
     },
   ];
 
@@ -74,45 +84,42 @@ export const GrillaPeriodo = ({
       valueFormatter: (params) => formatter.currencyString(params?.value),
     },
   ];
-const generarColumnasDinamicas = (data) => {
-  const columnasExcluidas = new Set([
-    'id',
-    'periodo',
-    'rectificativa',
-    'intereses',
-    'importeTotal',
-    'convenioDdjjId'
-  ]);
+  const generarColumnasDinamicas = (data) => {
+    const columnasExcluidas = new Set([
+      'id',
+      'periodo',
+      'rectificativa',
+      'intereses',
+      'importeTotal',
+      'convenioDdjjId',
+    ]);
 
-  const columnasDetectadas = new Set();
+    const columnasDetectadas = new Set();
 
-  data.forEach((item) => {
-    Object.entries(item).forEach(([key, value]) => {
-      if (
-        typeof value === 'number' &&
-        !columnasExcluidas.has(key)
-      ) {
-        columnasDetectadas.add(key);
-      }
+    data.forEach((item) => {
+      Object.entries(item).forEach(([key, value]) => {
+        if (typeof value === 'number' && !columnasExcluidas.has(key)) {
+          columnasDetectadas.add(key);
+        }
+      });
     });
-  });
 
-  const columnasDinamicas = [...columnasDetectadas].map((key) => ({
-    field: key,
-    headerName: key,
-    flex: 1.4,
-    headerAlign: 'right',
-    align: 'right',
-    valueFormatter: (params) =>
-      formatter.currencyString(params?.value) || 0.0,
-  }));
+    const columnasDinamicas = [...columnasDetectadas].map((key) => ({
+      field: key,
+      headerName: key,
+      flex: 1.4,
+      headerAlign: 'right',
+      align: 'right',
+      valueFormatter: (params) =>
+        formatter.currencyString(params?.value) || 0.0,
+    }));
 
-  return [
-    ...COLUMNAS_FIJAS,
-    ...columnasDinamicas,
-    ...COLUMNAS_NUMERICAS_FINALES,
-  ];
-};
+    return [
+      ...COLUMNAS_FIJAS,
+      ...columnasDinamicas,
+      ...COLUMNAS_NUMERICAS_FINALES,
+    ];
+  };
 
   return (
     <Box
