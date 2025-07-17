@@ -131,7 +131,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
             numero: newCheque.numero,
             fecha: newCheque.fecha,
             importe: parseFloat(newCheque.importe.replace(",", ".")), // Asegurarse de que importe sea un número con dos decimales
-            estado: 'INGRESADO',
+            estado: 'CARGADO',
           },
           cuotaId,
           convenio,
@@ -315,7 +315,6 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
                   native: true,
                 }}
               >
-                <option value="PENDIENTE">PENDIENTE</option>
                 <option value="CARGADO">CARGADO</option>
                 <option value="RECIBIDO">RECIBIDO</option>
                 <option value="RECHAZADO">RECHAZADO</option>
