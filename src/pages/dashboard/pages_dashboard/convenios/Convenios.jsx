@@ -350,14 +350,18 @@ export const Convenios = () => {
             sx={{ color: 'primary.main' }}
             onClick={() => handleImprimir(row)}
           />,
+          ...(row.estado !== 'PRES' && row.estado !== 'Presentado' 
+            ? [
           <GridActionsCellItem
-            icon={<EditIcon />}
+            icon={<EditIcon />} 
             label="Editar"
             title="Editar"
             sx={{ color: 'primary.main' }}
             onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/editar/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`)}
             color="inherit"
           />,
+              ]
+            : []),
           <GridActionsCellItem
             icon={<AccountBalanceWalletIcon />}
             label="Cheques"
