@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { use } from 'react';
 import { getEmpresaId, getRol } from '@/components/localStorage/localStorageService';
 
+
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -66,15 +67,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   const [selectedSaldosAFavor, setSelectedSaldosAFavor] = useState([])
   const [totalSaldosAFavor, setTotalSaldosAFavor] = useState(0)
   const [totalSaldosAFavorSelected, setTotalSaldosAFavorSelected] = useState(0); //Se usa para guardar el total de saldos a favor seleccionados
-  const [detalleConvenio, setDetalleConvenio] = useState({
-    importeDeDeuda: 0,
-    interesesDeFinanciacion: 0,
-    saldoAFavor: 0,
-    saldoAFavorUtilizado: 0,
-    totalAPagar: 0,
-    cantidadCuotas: 0,
-    detalleCuota: [],
-  }); //Propiedades del detalle convenio
+  const [detalleConvenio, setDetalleConvenio] = useState({}); //Propiedades del detalle convenio
   const [showLoading, setShowLoading] = useState(false); // Estado para mostrar el loading
   const [showLoadingDetalle, setShowLoadingDetalle] = useState(false); // Estado para mostrar el loading del detalle
   const [noUsar, setNoUsar] = useState(true); // Estado que identifica si se utiliza el saldo a favor o no
@@ -88,6 +81,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   const [empresa_id, setEmpresaId] = useState(null); //Se usa para guardar el id de la empresa
   const [shouldCalculate, setShouldCalculate] = useState(!window.location.hash.includes('/editar'));
   const [intereses, setIntereses] = useState(0); //Se usa para guardar los intereses de la deuda
+
 
   useEffect(() => {
     setRol(getRol());
@@ -312,12 +306,12 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       let response;
       if (!editar) {
         empresa = empresa || ID_EMPRESA; // si no se pasa empresa, se usa ID_EMPRESA
-        if (empresa !== "833" ) {
-        response = await axiosGestionDeudas.getDeclaracionesJuradas(
-          empresa,
-          ENTIDAD,
-        );
-      }
+        if (empresa !== "833") {
+          response = await axiosGestionDeudas.getDeclaracionesJuradas(
+            empresa,
+            ENTIDAD,
+          );
+        }
       } else {
         const parts = window.location.hash.split('/');
         const CONVENIOID = parts[parts.indexOf('convenio') + 1];
@@ -326,18 +320,23 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           CONVENIOID
         );
         console.log('Response Editar:', response);
+        if (response.lstCuotas) {
+          console.log('Response lstCuotas:', response.lstCuotas);
+          setDetalleConvenio(response.lstCuotas);
+          //detalleCargado.current = true;
+        }
       }
-      calcularDetalle();
+      //calcularDetalle();
       if (response.intencionPago) {
         setFechaIntencion(response.intencionPago ? moment(response.intencionPago) : null);
       }
-      if (response.interes){
+      if (response.interes) {
         setIntereses(response.interes);
       }
-      if (response.deuda){
+      if (response.deuda) {
         setImporteDeDeuda(response.deuda);
       }
-      if (response.saldoAFavor){
+      if (response.saldoAFavor) {
         setSaldosAFavor(response.saldoAFavor);
       }
       if (response.cuotas) {
@@ -345,6 +344,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       } else {
         setCuotas(1);
       }
+
+
 
       setDeclaracionesJuradas(response['declaracionesJuradas']);
       setActas(response['actas']);
@@ -465,7 +466,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         ID_EMPRESA,
         body,
       );
-
+      console.log('Detalle Convenio:', response);
 
 
       setDetalleConvenio(response);
@@ -589,7 +590,6 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
             />
           </AccordionDetails>
         </Accordion>
-
         <OpcionesDePago
           cuotas={cuotas}
           intereses={intereses}
@@ -607,7 +607,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           handleActualizarConvenio={handleActualizarConvenio}
           isEditar={window.location.hash.includes('/editar')}
           showLoading={showLoading}
-        ></OpcionesDePago>
+        ></OpcionesDePago> 
       </div>
     </div>
   );

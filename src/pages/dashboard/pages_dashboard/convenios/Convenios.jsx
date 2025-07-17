@@ -575,25 +575,7 @@ export const Convenios = () => {
     */
     setRows(filteredRows);
   }
-  const handleExportar = (filtros) => {
-    const { estado, fechaDesde, fechaHasta } = filtros;
-    let filteredRows = rows;
-
-    if (estado && estado !== 'TODOS') {
-      filteredRows = filteredRows.filter((row) => row.estado === estado);
-    }
-
-    if (fechaDesde) {
-      filteredRows = filteredRows.filter((row) => new Date(row.fecha) >= new Date(fechaDesde));
-    }
-
-    if (fechaHasta) {
-      filteredRows = filteredRows.filter((row) => new Date(row.fecha) <= new Date(fechaHasta));
-    }
-
-    // Aquí puedes implementar la lógica para exportar los datos filtrados
-    console.log('Exportando datos:', filteredRows);
-  };
+  
 
   return (
     <Box>
@@ -642,9 +624,7 @@ export const Convenios = () => {
           <Button variant="contained" color="primary" onClick={() => handleBuscar(filtros)}>
             Buscar
           </Button>
-          <Button variant="contained" color="primary" onClick={() => handleExportar(filtros)}>
-            Exportar
-          </Button>
+          
         </Box>
         {/* DataGrid */}
         <Box sx={{ height: 450, width: '100%' }}>

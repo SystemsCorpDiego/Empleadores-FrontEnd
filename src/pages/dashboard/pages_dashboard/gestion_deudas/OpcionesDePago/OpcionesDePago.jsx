@@ -40,7 +40,7 @@ export const OpcionesDePago = ({
   isEditar,
   showLoading
 }) => {
-
+  console.log('detalleConvenio:', detalleConvenio);
   return (
     <Box p={3} sx={{ margin: '60px auto', padding: 0 }}>
       <Typography variant="h6" gutterBottom>OPCIONES DE PAGO</Typography>
@@ -120,12 +120,12 @@ export const OpcionesDePago = ({
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2"><strong>Intereses de financiación:</strong></Typography>
-                <Typography variant="body1">{detalleConvenio.importeInteresTotal ?formatter.currencyString(detalleConvenio.importeInteresTotal) : intereses}</Typography>
+                <Typography variant="body1">{detalleConvenio.length >0 ?formatter.currencyString( detalleConvenio.reduce((acumulador, e) => acumulador + e.interes,0 )) : intereses}</Typography>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2"><strong>Total a pagar:</strong></Typography>
                 <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                  {formatter.currencyString(importeDeDeuda + (detalleConvenio.importeInteresTotal ? detalleConvenio.importeInteresTotal : intereses))}
+                  {formatter.currencyString(importeDeDeuda + (detalleConvenio.length >0 ? detalleConvenio.reduce((acumulador, e) => acumulador + e.interes,0 ) : intereses))}
                 </Typography>
               </Grid>
             </Grid>
@@ -140,13 +140,13 @@ export const OpcionesDePago = ({
                 </tr>
               </thead>
               <tbody>
-                {Array.from({ length: cuotas }, (_, i) => (
+                {Array.isArray(detalleConvenio) && detalleConvenio.map((cuota, i) => (
                   <tr key={i + 1}>
-                    <td className='pr2'>{i + 1}</td>
-                    <td className='pr2'>{formatter.currencyString((importeDeDeuda + detalleConvenio.importeInteresTotal + saldoAFavorUtilizado) / cuotas)}</td>
+                    <td className='pr2'>{cuota.numero}</td>
+                    <td className='pr2'>{formatter.currencyString((cuota.importe || 0) + (cuota.interes || 0))}</td>
                     <td className='pr2'>
-                      {fechaIntencion && moment(fechaIntencion).isValid()
-                        ? moment(fechaIntencion).clone().add(i, 'month').format("DD/MM/YYYY")
+                      {cuota.vencimiento
+                        ? moment(cuota.vencimiento).format("DD/MM/YYYY")
                         : '–'}
                     </td>
                   </tr>
