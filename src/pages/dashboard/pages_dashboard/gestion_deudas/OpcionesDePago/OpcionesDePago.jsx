@@ -125,7 +125,7 @@ export const OpcionesDePago = ({
               <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2"><strong>Total a pagar:</strong></Typography>
                 <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                  {formatter.currencyString(importeDeDeuda + (detalleConvenio.length >0 ? detalleConvenio.reduce((acumulador, e) => acumulador + e.interes,0 ) : intereses))}
+                  {formatter.currencyString(importeDeDeuda - saldoAFavorUtilizado + (detalleConvenio.length >0 ? detalleConvenio.reduce((acumulador, e) => acumulador + e.interes,0 ) : intereses))}
                 </Typography>
               </Grid>
             </Grid>
