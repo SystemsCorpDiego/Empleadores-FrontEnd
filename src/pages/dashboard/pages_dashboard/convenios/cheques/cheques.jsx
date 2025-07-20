@@ -264,6 +264,19 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
                 color: 'white',
               },
             }}
+            localeText={{
+                      ...esES.components.MuiDataGrid.defaultProps.localeText,
+                      toolbarDensity: 'Densidad',
+                      toolbarDensityLabel: 'Densidad',
+                      toolbarDensityCompact: 'Compacto',
+                      toolbarDensityStandard: 'Estándar',
+                      toolbarDensityComfortable: 'Cómodo',
+                      footerRowsPerPage: 'Filas por página',
+                      noRowsLabel: 'Sin filas',
+                      toolbarColumns: 'Columnas',
+                      toolbarFilters: 'Filtros',
+                      toolbarExport: 'Exportar',
+                    }}
           />
         </div>
 
@@ -317,6 +330,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
               >
                 <option value="CARGADO">CARGADO</option>
                 <option value="RECIBIDO">RECIBIDO</option>
+                <option value="PAGADO">PAGADO</option>
                 <option value="RECHAZADO">RECHAZADO</option>
               </TextField>
             )}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { esES } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
 import { consultar } from './CuotasApi';
@@ -130,9 +130,23 @@ export const Cuotas = () => {
               color: 'white',
             },
           }}
+          localeText={{
+                    ...esES.components.MuiDataGrid.defaultProps.localeText,
+                    toolbarDensity: 'Densidad',
+                    toolbarDensityLabel: 'Densidad',
+                    toolbarDensityCompact: 'Compacto',
+                    toolbarDensityStandard: 'Estándar',
+                    toolbarDensityComfortable: 'Cómodo',
+                    footerRowsPerPage: 'Filas por página',
+                    noRowsLabel: 'Sin filas',
+                    toolbarColumns: 'Columnas',
+                    toolbarFilters: 'Filtros',
+                    toolbarExport: 'Exportar',
+                  }}
           pageSize={5}
           rowsPerPageOptions={[5]}
           disableSelectionOnClick
+          
         />
       </Box>
       <Button

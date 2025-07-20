@@ -123,7 +123,16 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     console.log('cuitInput:', cuitInput);
     const getEmpresaID = async () => {
       const empresaID = await axiosGestionDeudas.getEmpresaByCuit(cuitInput)
+      if (empresaID === null) {
 
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se encontró la empresa con el CUIT proporcionado.',
+          confirmButtonText: 'Aceptar',
+        });
+        return;
+      }
       fetchData(false, empresaID);
       setEmpresaId(empresaID)
       console.log('Empresa ID:', empresaID);

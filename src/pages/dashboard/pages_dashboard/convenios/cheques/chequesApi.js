@@ -70,6 +70,7 @@ export const crear = async (chequeBody, cuota, idConvenio, empresaId) => {
       swal.showSuccess(HTTP_MSG_ALTA);
       return data;
     } else {
+      console.log('Error al crear el cheque:', data);
       swal.showErrorBackEnd(HTTP_MSG_ALTA_ERROR, data);
     }
   } catch (error) {

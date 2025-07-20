@@ -79,7 +79,9 @@ export const Convenios = () => {
     "CHRECI": "Cheque recibido",
     "CHRECH": "Cheque rechazado",
     "PRES": "Presentado",
-    "APROB": "Aprobado"
+    "APROB": "Aprobado",
+    "RECH": "Rechazado",
+    "OBSR": "Observado"
   };
 
   //const handleClose = () => setOpen(false);

@@ -255,7 +255,7 @@ export const generarConvenio = async (idEmpresa, bodyConvenio) => {
   try {
     const URL = `/empresa/${idEmpresa}/convenios`;
     const response = await axiosCrud.crear(URL, bodyConvenio);
-    if (response && Object.keys(response).length > 0) {
+    if (response && Object.keys(response).length > 0 && response.id) {
       return true;
     }
     else {
@@ -332,6 +332,10 @@ const getEmpresaByCuit = async (cuit) => {
 
       const empresaEncontrada = response.find(e => e.cuit == cuit);
       console.log('empresaEncontrada', empresaEncontrada);
+      if (!empresaEncontrada) {
+        swal.showErrorBackEnd('No se encontró la empresa con el CUIT proporcionado.');
+        return null;
+      }
       return empresaEncontrada.id? empresaEncontrada.id : null;
     } else {
       swal.showErrorBackEnd('No se encontró la empresa con el CUIT proporcionado.');
