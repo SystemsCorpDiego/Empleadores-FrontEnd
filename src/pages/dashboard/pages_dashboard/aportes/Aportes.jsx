@@ -63,7 +63,7 @@ export const Aportes = () => {
   const getEntidades = async () => {
     const response = await consultaEntidades();
     const entidades = [...new Set(response.map(item => item.entidad))]
-
+    
     setEntidades(entidades)
     setAportes(response)
   }
@@ -248,25 +248,35 @@ export const Aportes = () => {
       headerClassName: 'header--cell',
       valueGetter: (params) => params.row.entidad ?? '',
     },
-    {
-      field: 'aporte',
-      headerName: 'Aporte',
-      type: 'singleSelect',
-      valueOptions: (params) => {
-        if (aportes) {
-          const filtered = aportes.filter(item => item?.entidad === params.row?.entidad).map(item => item.codigo);
-          filtered.push('');
-          return [...new Set(filtered)];
-        }
-        return [''];
-      },
-      valueGetter: (params) => params.row.aporte ?? '',
-      editable: true,
-      flex: 1,
-      headerAlign: 'left',
-      align: 'left',
-      headerClassName: 'header--cell',
-    },
+{
+  field: 'aporte',
+  headerName: 'Aporte',
+  type: 'singleSelect',
+  valueOptions: (params) => {
+    if (aportes) {
+      const filtered = aportes.filter(item => item?.entidad === params.row?.entidad);
+      const options = filtered.map(item => ({
+        value: item.codigo,
+        label: item.descripcion,
+      }));
+      options.push({ value: '', label: '' });
+      return options;
+    }
+    return [{ value: '', label: '' }];
+  },
+  valueGetter: (params) => params.row.aporte ?? '',
+  renderCell: (params) => {
+    const found = aportes.find(
+      a => a.codigo === params.value && a.entidad === params.row.entidad
+    );
+    return found ? found.descripcion : '';
+  },
+  editable: true,
+  flex: 1,
+  headerAlign: 'left',
+  align: 'left',
+  headerClassName: 'header--cell',
+},
     {
       field: 'socio',
       headerName: 'Socio',
