@@ -301,18 +301,21 @@ const putActualizarConvenio = async (empresa_id, convenioId, body) => {
     const response = await axiosCrud.actualizar(URL, body, convenioId);
     //const reponse = await oAxios.put(URL, body);
     console.log('response', response);
+    console.log(response)
 
-    if (response === false) {
-      swal.showErrorBackEnd(HTTP_MSG_MODI_ERROR, response);
-      return response;
-    } else {
-      Swal.fire({
+
+    if (response === true) {
+       Swal.fire({
         icon: 'success',
         title: '¡Convenio actualizado!',
         text: 'Serás redirigido al resumen',
         confirmButtonText: 'Aceptar',
       })
       return true;
+
+    } else {
+           swal.showErrorBackEnd(HTTP_MSG_MODI_ERROR, response);
+      return response;
     }
 
   } catch (error) {
@@ -321,6 +324,8 @@ const putActualizarConvenio = async (empresa_id, convenioId, body) => {
     swal.showErrorBackEnd(HTTP_MSG, error);
   }
 }
+
+
 
 const getEmpresaByCuit = async (cuit) => {
   try {

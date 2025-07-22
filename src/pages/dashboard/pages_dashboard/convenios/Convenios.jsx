@@ -35,6 +35,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import TerminosYCondiciones from './TerminosYCondiciones/TerminosYCondiciones';
 import localStorageService from '@/components/localStorage/localStorageService';
 import { consultar as consultarCuotas } from './cuotas/CuotasApi';
+
+import {axiosGestionDeudas} from './../gestion_deudas/Entidades/GestionApi';
 //import { consultarCuotas } from './cuotas/CuotasApi';
 //import { getConveniosByDateAndState } from './ConveniosApi';
 // Columnas del DataGrid
@@ -170,8 +172,29 @@ export const Convenios = () => {
   const handleDownload = (row) => async () => {
     console.log('Descargando cuotas para el convenio:', row.id);
     try {
-      const cuotas = await consultarCuotas(row.id, empresaId);
+
+
+      const empresaID = await axiosGestionDeudas.getEmpresaByCuit(row.cuit)
+      const cuotas = await consultarCuotas(row.id, empresaID)
       if (!Array.isArray(cuotas)) throw new Error('Formato de cuotas inesperado');
+
+      const response = await axiosGestionDeudas.getDeclaracionesJuradasEditar(empresaID,row.id);
+      const actas = response.actas;
+      console.log('Actas:', actas);
+      const nroActasStr = Array.isArray(actas) && actas.length > 0
+        ? actas.map(a => a.nroActa).join('/ ')
+        : '';
+
+        console.log('Números de actas:', nroActasStr);
+      const declaracionesJuradas = response.declaracionesJuradas;
+
+      console.log('Declaraciones Juradas:', declaracionesJuradas);
+      const periodosStr = Array.isArray(declaracionesJuradas) && declaracionesJuradas.length > 0
+        ? declaracionesJuradas.map(a => a.periodo).join('/ ')
+        : '';
+      console.log('Períodos de declaraciones juradas:', periodosStr);
+
+      console.log('Datos de la empresa:', response);
 
       const convenioInfo = {
         convenioId: row.id,
@@ -182,6 +205,8 @@ export const Convenios = () => {
         saldoFavor: row.saldoFavor,
         medioPago: row.medioPago,
         estado: row.estado,
+        periodos: periodosStr,
+        actas: nroActasStr
       };
 
       const allRows = cuotas.map((cuota) => ({
@@ -206,6 +231,8 @@ export const Convenios = () => {
         importeCuota: 'Importe de Cuota',
         cheques: 'Cheques',
         totalCheques: 'Total Cheques',
+        periodos: 'Periodos',
+        actas: 'Actas',
       };
 
       const headers = Object.keys(headerMap);
