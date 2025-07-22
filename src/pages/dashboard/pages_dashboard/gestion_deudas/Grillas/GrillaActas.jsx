@@ -16,16 +16,16 @@ export const GrillaActas = ({ actas, selectedActas, setSelectedActas }) => {
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
 
-    useEffect(() => {
-      const preselected = actas
-        .filter((item) => item.convenioActaId !== null && item.convenioActaId !== undefined)
-        .map((item) => item.id);
-  
-      if (preselected.length > 0 && preselected.some(id => !selectedActas.includes(id))) {
-        setSelectedActas((prev) => Array.from(new Set([...prev, ...preselected])));
-      }
-  
-    }, []);
+  useEffect(() => {
+    const preselected = actas
+      .filter((item) => item.convenioActaId !== null && item.convenioActaId !== undefined)
+      .map((item) => item.id);
+
+    if (preselected.length > 0 && preselected.some(id => !selectedActas.includes(id))) {
+      setSelectedActas((prev) => Array.from(new Set([...prev, ...preselected])));
+    }
+
+  }, []);
 
   const handleSelectionChange = (id) => {
     setSelectedActas((prevSelected) => {
@@ -118,6 +118,11 @@ export const GrillaActas = ({ actas, selectedActas, setSelectedActas }) => {
         getRowClassName={(params) =>
           actas.indexOf(params.row) % 2 === 0 ? 'even' : ''
         }
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'fechaActa', sort: 'desc' }], // Cambia a 'asc' si prefieres ascendente
+          },
+        }}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
         pageSizeOptions={pageSizeOptions}
@@ -131,14 +136,14 @@ export const GrillaActas = ({ actas, selectedActas, setSelectedActas }) => {
           ),
         }}
         localeText={{
-                        ...esES.components.MuiDataGrid.defaultProps.localeText,
-                        toolbarDensity: 'Densidad',
-                        toolbarDensityLabel: 'Densidad',
-                        toolbarDensityCompact: 'Compacto',
-                        toolbarDensityStandard: 'Estándar',
-                        toolbarDensityComfortable: 'Cómodo',
-                        footerRowsPerPage: 'Filas por página',
-                        noRowsLabel: 'Sin filas',
+          ...esES.components.MuiDataGrid.defaultProps.localeText,
+          toolbarDensity: 'Densidad',
+          toolbarDensityLabel: 'Densidad',
+          toolbarDensityCompact: 'Compacto',
+          toolbarDensityStandard: 'Estándar',
+          toolbarDensityComfortable: 'Cómodo',
+          footerRowsPerPage: 'Filas por página',
+          noRowsLabel: 'Sin filas',
           toolbarColumns: 'Columnas',
           toolbarFilters: 'Filtros',
           toolbarExport: 'Exportar',

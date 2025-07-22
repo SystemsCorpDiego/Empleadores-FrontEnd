@@ -138,6 +138,11 @@ export const GrillaPeriodo = ({
         getRowClassName={(params) =>
           declaracionesJuradas.indexOf(params.row) % 2 === 0 ? 'even' : ''
         }
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'periodo', sort: 'desc' }], // Cambia a 'asc' si prefieres ascendente
+          },
+        }}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
         pageSizeOptions={pageSizeOptions}

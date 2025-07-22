@@ -91,6 +91,11 @@ export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [],
               params.value ? formatter.currencyString(params.value) : '',
           }
         ]}
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'vigencia', sort: 'desc' }], // Cambia a 'asc' si prefieres ascendente
+          },
+        }}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
         pageSizeOptions={pageSizeOptions}
