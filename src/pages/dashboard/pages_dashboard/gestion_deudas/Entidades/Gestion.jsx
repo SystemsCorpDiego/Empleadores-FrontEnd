@@ -21,7 +21,8 @@ import { generarConvenio } from './GestionApi';
 import { useNavigate } from 'react-router-dom';
 import { use } from 'react';
 import { getEmpresaId, getRol } from '@/components/localStorage/localStorageService';
-
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -77,10 +78,12 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   const [fechaDelDia, setFechaDelDia] = useState(null); //Se usa para guardar la fecha del dia actual
   const [convenio_id, setConvenioId] = useState(null); //Se usa para guardar el id del convenio si se esta editando
   const [cuitInput, setCuitInput] = useState(null); //Se usa para guardar el cuit de la empresa
+  const [nombreEmpresa, setNombreEmpresa] = useState(null); //Se usa para guardar el nombre de la empresa
   const [rol, setRol] = useState(null); //Se usa para guardar el rol del usuario
   const [empresa_id, setEmpresaId] = useState(null); //Se usa para guardar el id de la empresa
   const [shouldCalculate, setShouldCalculate] = useState(!window.location.hash.includes('/editar'));
   const [intereses, setIntereses] = useState(0); //Se usa para guardar los intereses de la deuda
+  const [empresas, setEmpresas] = useState([]); //Se usa para guardar las empresas que vienen del backend
 
 
   useEffect(() => {
@@ -118,11 +121,25 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     ;
   }, []);
 
+  useEffect(() => {
+    const fetchEmpresas = async () => {
+
+      try {
+        const response = await axiosGestionDeudas.getEmpresas()
+        setEmpresas(response);
+        console.log("Empresas", response)
+      } catch (error) {
+        console.error('Error al obtener las empresas:', error);
+      }
+    }
+    fetchEmpresas();
+  }, []);
+
 
   const buscarPorCuit = (cuitInput) => {
     console.log('cuitInput:', cuitInput);
-    const getEmpresaID = async () => {
-      const empresaID = await axiosGestionDeudas.getEmpresaByCuit(cuitInput)
+    const getEmpresaByID = async () => {
+      const empresaID = await axiosGestionDeudas.getEmpresaByCuit(cuitInput, empresas)
       if (empresaID === null) {
 
         Swal.fire({
@@ -135,8 +152,34 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       }
       fetchData(false, empresaID);
       setEmpresaId(empresaID)
+      const empr = empresas.find((e => e.cuit === cuitInput));
+      setNombreEmpresa(empr.razonSocial)
       console.log('Empresa ID:', empresaID);
     }
+    getEmpresaByID();
+  }
+
+  const buscarPorNombre = (nombreEmpresa) => {
+    console.log('nombreEmpresa:', nombreEmpresa);
+    const getEmpresaID = async () => {
+      const empresaID = await axiosGestionDeudas.getEmpresaByNombre(nombreEmpresa, empresas)
+      if (empresaID === null) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se encontró la empresa con el nombre proporcionado.',
+          confirmButtonText: 'Aceptar',
+        });
+        return;
+      }
+      fetchData(false, empresaID);
+
+      const empr = empresas.find((e => e.razonSocial === nombreEmpresa));
+      setCuitInput(empr.cuit)
+      setEmpresaId(empresaID)
+      console.log('Empresa ID:', empresaID);
+    }
+    setCuitInput
     getEmpresaID();
   }
 
@@ -488,21 +531,62 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   return (
     <div className="container_grilla">
       {rol == 'OSPIM_EMPLEADO' && (
-        <Box display="flex" alignItems="center" mb={2} gap={2}>
-          <input
-            type="text"
-            placeholder="Ingrese CUIT"
-            value={cuitInput || ''}
-            onChange={e => setCuitInput(e.target.value)}
-            style={{ padding: '8px', fontSize: '16px', borderRadius: '4px', border: '1px solid #ccc' }}
-          />
-          <button
-            onClick={() => buscarPorCuit(cuitInput)}
-            style={{ padding: '8px 16px', fontSize: '16px', borderRadius: '4px', background: '#1976d2', color: '#fff', border: 'none', cursor: 'pointer' }}
-          >
-            Buscar
-          </button>
-        </Box>
+<>
+  <Box display="flex" alignItems="center" mb={2} gap={2}>
+    <TextField
+      label="Ingrese CUIT"
+      variant="outlined"
+      value={cuitInput || ''}
+      onChange={(e) => setCuitInput(e.target.value)}
+      style={{ width: 320 }}
+    />
+    <button
+      onClick={() => buscarPorCuit(cuitInput)}
+      style={{
+        padding: '8px 16px',
+        fontSize: '16px',
+        borderRadius: '4px',
+        background: '#1976d2',
+        color: '#fff',
+        border: 'none',
+        cursor: 'pointer',
+      }}
+    >
+      Buscar
+    </button>
+  </Box>
+
+  <Box display="flex" alignItems="center" mb={2} gap={2}>
+    <Autocomplete
+      options={Array.isArray(empresas) ? empresas.map(e => e.razonSocial) : []}
+      value={nombreEmpresa || ''}
+      onInputChange={(event, newInputValue) => setNombreEmpresa(newInputValue)}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Ingrese nombre de la empresa"
+          variant="outlined"
+        />
+      )}
+      freeSolo
+      style={{ width: 320 }}
+    />
+    <button
+      onClick={() => buscarPorNombre(nombreEmpresa)}
+      style={{
+        padding: '8px 16px',
+        fontSize: '16px',
+        borderRadius: '4px',
+        background: '#1976d2',
+        color: '#fff',
+        border: 'none',
+        cursor: 'pointer',
+      }}
+    >
+      Buscar
+    </button>
+  </Box>
+</>
       )}
 
       <div className="mb-4em">
@@ -616,7 +700,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           handleActualizarConvenio={handleActualizarConvenio}
           isEditar={window.location.hash.includes('/editar')}
           showLoading={showLoading}
-        ></OpcionesDePago> 
+        ></OpcionesDePago>
       </div>
     </div>
   );

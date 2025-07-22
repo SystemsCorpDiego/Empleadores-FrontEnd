@@ -327,11 +327,11 @@ const putActualizarConvenio = async (empresa_id, convenioId, body) => {
 
 
 
-const getEmpresaByCuit = async (cuit) => {
+const getEmpresaByCuit = async (cuit,empresas) => {
   try {
-    console.log('getEmpresaByCuit - cuit:', cuit);
-    const URL = `/empresa`;
-    const response = await axiosCrud.consultar(URL);
+    //console.log('getEmpresaByCuit - cuit:', cuit);
+    //const URL = `/empresa`;
+    const response = empresas
     console.log('response', response);
     if (response && response.length > 0) {
 
@@ -353,10 +353,56 @@ const getEmpresaByCuit = async (cuit) => {
   }
 };
 
+const getEmpresaByNombre = async (nombreEmpresa, empresas) => {
+  try {
+    //console.log('getEmpresaByCuit - cuit:', cuit);
+    
+    const response =empresas
+    console.log('response', response);
+    if (response && response.length > 0) {
+
+      const empresaEncontrada = response.find(e => e.razonSocial == nombreEmpresa);
+      console.log('empresaEncontrada', empresaEncontrada);
+      if (!empresaEncontrada) {
+        swal.showErrorBackEnd('No se encontró la empresa con el CUIT proporcionado.');
+        return null;
+      }
+      return empresaEncontrada.id? empresaEncontrada.id : null;
+    } else {
+      swal.showErrorBackEnd('No se encontró la empresa con el CUIT proporcionado.');
+      return null;
+    }
+  } catch (error) {
+    const HTTP_MSG =
+      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
+    swal.showErrorBackEnd(HTTP_MSG, error);
+  }
+};
+
+const getEmpresas = async () => {
+  try {
+    const URL = `/empresa`;
+    const response = await axiosCrud.consultar(URL);
+    console.log('response', response);
+    if (response && response.length > 0) {
+      return response;
+    } else {
+      swal.showErrorBackEnd('No se encontraron empresas.');
+      return [];
+    }
+  } catch (error) {
+    const HTTP_MSG =
+      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
+    swal.showErrorBackEnd(HTTP_MSG, error);
+  }
+};
+
 export const axiosGestionDeudas = {
   getDeclaracionesJuradas,
   getDetalleConvenio,
   getDeclaracionesJuradasEditar,
   putActualizarConvenio,
-  getEmpresaByCuit
+  getEmpresaByCuit,
+  getEmpresaByNombre,
+  getEmpresas
 };
