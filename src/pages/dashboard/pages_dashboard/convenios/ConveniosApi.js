@@ -53,14 +53,14 @@ const conveniosData = [
     },
 ];
 
-    const getEmpresaId = async (cuit) => {
-        console.log('getEmpresaId - cuit:', cuit);
-        const URL = `/empresa/?cuit=${cuit}`
-        console.log(URL)
-        const response = await axiosCrud.consultar(URL);
-        console.log(response)
-        return response[0].id;
-    }
+const getEmpresaId = async (cuit) => {
+    console.log('getEmpresaId - cuit:', cuit);
+    const URL = `/empresa/?cuit=${cuit}`
+    console.log(URL)
+    const response = await axiosCrud.consultar(URL);
+    console.log(response)
+    return response[0].id;
+}
 const ConveniosService = {
 
 
@@ -90,7 +90,7 @@ const ConveniosService = {
         const empresaId = await getEmpresaId(cuit)
         const URL = `/empresa/${empresaId}/convenios/${convenioId}/imprimir`;
         console.log('Imprimiendo convenio desde ConveniosApi:', URL);
-        
+
         try {
             const response = await oAxios.get(URL, {
                 responseType: 'blob',
@@ -163,11 +163,28 @@ const ConveniosService = {
             //return objeto
             const response = await oAxios.post(URL, {});
             console.log('Convenio actualizado:', response);
-            //const response = await axiosCrud.crear(`${API_BASE_URL}/${id}`, objeto);
-            return response;
+            if (
+                response.status !== 204 &&
+                response.status !== 200 &&
+                response.status !== 201
+            ) {
+                //JsonServer devuelve 200
+                console.log(
+                    `axiosCrud.actualizar() - ERROR 2 - UrlApi: ${URL} - response.status !== 204 - response: ${JSON.stringify(
+                        response,
+                    )} `,
+                );
+                swal.showErrorBackEnd(`Error al actualizar el convenio`, response.data.descripcion);
+                return false;
+            }
+            
+            return true;
         } catch (error) {
-            console.error(`Error updating convenio with ID ${id}:`, error);
-            throw error;
+            console.log(
+                `axiosCrud.actualizar()`,
+                error,
+            );
+            return false
         }
     },
 
@@ -176,10 +193,31 @@ const ConveniosService = {
 
         try {
             const response = await oAxios.post(`/convenios/${updatedRow.id}/estado-set/PRES`, {});
-            return response.data;
+          //const response = await oAxios.post(URL, {});
+            console.log('Convenio actualizado:', response);
+            if (
+                response.status !== 204 &&
+                response.status !== 200 &&
+                response.status !== 201
+            ) {
+                //JsonServer devuelve 200
+                console.log(
+                    `axiosCrud.actualizar() - ERROR 2 - UrlApi: ${URL} - response.status !== 204 - response: ${JSON.stringify(
+                        response,
+                    )} `,
+                );
+                swal.showErrorBackEnd( response.data.descripcion,`Error al actualizar el convenio`);
+                return false;
+            }
+            
+            return true;
         } catch (error) {
-            console.error(`Error accepting terms and conditions for convenio with ID ${id}:`, error);
-            throw error;
+            console.log(
+                `axiosCrud.actualizar()`,
+                error,
+            );
+            swal.showErrorBackEnd(error.response.data.descripcion, );
+            return false
         }
     },
 

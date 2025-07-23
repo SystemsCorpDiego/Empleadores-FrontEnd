@@ -198,10 +198,7 @@ export const getDeclaracionesJuradas = async (empresa_id, entidad) => {
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
-    swal.showErrorBackEnd(HTTP_MSG, error);
-    //sacar cuando este el back
-
-    //sacar cuando este el back
+    throw error;
   }
 };
 
@@ -246,7 +243,7 @@ export const getDetalleConvenio = async (empresa_id, body) => {
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
-    swal.showErrorBackEnd(HTTP_MSG, error);
+    throw error;
   }
 };
 
@@ -255,18 +252,16 @@ export const generarConvenio = async (idEmpresa, bodyConvenio) => {
   try {
     const URL = `/empresa/${idEmpresa}/convenios`;
     const response = await axiosCrud.crear(URL, bodyConvenio);
-    if (response && Object.keys(response).length > 0 && response.id) {
+    if (response && response.id) {
+      console.log('Convenio generado:', response);
       return true;
     }
     else {
-      swal.showErrorBackEnd(VITE_HTTP_MSG_ALTA_ERROR, response);
+      throw new Error(VITE_HTTP_MSG_ALTA_ERROR);
     }
 
-    return response;
   } catch (error) {
-    const HTTP_MSG =
-      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
-    swal.showErrorBackEnd(HTTP_MSG, error);
+    throw error;
   }
 };
 
@@ -285,10 +280,7 @@ const getDeclaracionesJuradasEditar = async (empresa_id, convenioId) => {
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
-    swal.showErrorBackEnd(HTTP_MSG, error);
-    //sacar cuando este el back
-
-    //sacar cuando este el back
+    throw error;
   }
 }
 
@@ -299,29 +291,14 @@ const putActualizarConvenio = async (empresa_id, convenioId, body) => {
       delete body.entidad;
     }
     const response = await axiosCrud.actualizar(URL, body, convenioId);
-    //const reponse = await oAxios.put(URL, body);
     console.log('response', response);
-    console.log(response)
-
-
     if (response === true) {
-       Swal.fire({
-        icon: 'success',
-        title: '¡Convenio actualizado!',
-        text: 'Serás redirigido al resumen',
-        confirmButtonText: 'Aceptar',
-      })
       return true;
-
     } else {
-           swal.showErrorBackEnd(HTTP_MSG_MODI_ERROR, response);
-      return response;
+      throw new Error(HTTP_MSG_MODI_ERROR);
     }
-
   } catch (error) {
-    const HTTP_MSG =
-      HTTP_MSG_MODI_ERROR + ` (${URL} - status: ${error.status})`;
-    swal.showErrorBackEnd(HTTP_MSG, error);
+    throw error;
   }
 }
 
@@ -331,25 +308,29 @@ const getEmpresaByCuit = async (cuit,empresas) => {
   try {
     //console.log('getEmpresaByCuit - cuit:', cuit);
     //const URL = `/empresa`;
-    const response = empresas
+
+    let response = empresas
+    if (response === null || response === undefined) {
+      try {
+        response = await axiosGestionDeudas.getEmpresas()
+      } catch (error) {
+        throw new Error('Error al obtener las empresas: ' + error.message);
+      }
+    }
     console.log('response', response);
     if (response && response.length > 0) {
 
       const empresaEncontrada = response.find(e => e.cuit == cuit);
       console.log('empresaEncontrada', empresaEncontrada);
       if (!empresaEncontrada) {
-        swal.showErrorBackEnd('No se encontró la empresa con el CUIT proporcionado.');
-        return null;
+        throw new Error('No se encontró la empresa con el CUIT proporcionado.');
       }
       return empresaEncontrada.id? empresaEncontrada.id : null;
     } else {
-      swal.showErrorBackEnd('No se encontró la empresa con el CUIT proporcionado.');
-      return null;
+      throw new Error('No se encontró la empresa con el CUIT proporcionado.');
     }
   } catch (error) {
-    const HTTP_MSG =
-      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
-    swal.showErrorBackEnd(HTTP_MSG, error);
+    throw error;
   }
 };
 
@@ -364,18 +345,14 @@ const getEmpresaByNombre = async (nombreEmpresa, empresas) => {
       const empresaEncontrada = response.find(e => e.razonSocial == nombreEmpresa);
       console.log('empresaEncontrada', empresaEncontrada);
       if (!empresaEncontrada) {
-        swal.showErrorBackEnd('No se encontró la empresa con el CUIT proporcionado.');
-        return null;
+        throw new Error('No se encontró la empresa con el CUIT proporcionado.');
       }
       return empresaEncontrada.id? empresaEncontrada.id : null;
     } else {
-      swal.showErrorBackEnd('No se encontró la empresa con el CUIT proporcionado.');
-      return null;
+      throw new Error('No se encontró la empresa con el CUIT proporcionado.');
     }
   } catch (error) {
-    const HTTP_MSG =
-      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
-    swal.showErrorBackEnd(HTTP_MSG, error);
+    throw error;
   }
 };
 
@@ -387,13 +364,10 @@ const getEmpresas = async () => {
     if (response && response.length > 0) {
       return response;
     } else {
-      swal.showErrorBackEnd('No se encontraron empresas.');
-      return [];
+      throw new Error('No se encontraron empresas.');
     }
   } catch (error) {
-    const HTTP_MSG =
-      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
-    swal.showErrorBackEnd(HTTP_MSG, error);
+    throw error;
   }
 };
 
@@ -404,5 +378,6 @@ export const axiosGestionDeudas = {
   putActualizarConvenio,
   getEmpresaByCuit,
   getEmpresaByNombre,
-  getEmpresas
+  getEmpresas,
+  generarConvenio
 };

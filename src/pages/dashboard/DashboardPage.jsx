@@ -311,7 +311,7 @@ const DashboardPage = () => {
                     {open && <span className="icon-link">Aportes</span>}
                   </NavLink>
                 )}
-                {//rolFuncionalidades.DEUDA && 
+                {rol === 'OSPIM_EMPLEADO' &&
                   (
                     <NavLink to="./gestiondeuda" className="icon-container">
                       <CalculateIcon className="icon-link" />{' '}
@@ -322,7 +322,7 @@ const DashboardPage = () => {
                       </span>}
                     </NavLink>
                   )}
-                {(<NavLink to="./convenios" className="icon-container">
+                {rol === 'OSPIM_EMPLEADO' && (<NavLink to="./convenios" className="icon-container">
                   <HandshakeIcon className="icon-link" />{' '}
                   {open && <span className="icon-link">
                     {rolFuncionalidades.USUARIO_INTERNO

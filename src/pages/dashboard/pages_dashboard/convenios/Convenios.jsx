@@ -83,7 +83,8 @@ export const Convenios = () => {
     "PRES": "Presentado",
     "APROB": "Aprobado",
     "RECH": "Rechazado",
-    "OBSR": "Observado"
+    "OBSR": "Observado",
+    "CAIDO": "Caido"
   };
 
   //const handleClose = () => setOpen(false);
@@ -249,7 +250,7 @@ export const Convenios = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `convenio_${row.id}_cuotas.csv`;
+      a.download = `${row.cuit}_convenio_${row.id}_cuotas.csv`;
       a.style.display = 'none';
       document.body.appendChild(a);
       a.click();

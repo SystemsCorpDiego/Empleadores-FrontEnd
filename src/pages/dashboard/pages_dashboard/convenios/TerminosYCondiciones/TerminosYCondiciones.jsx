@@ -10,6 +10,7 @@ const TerminosYCondiciones = ({open, setOpen, rowTyC, setRowTyC, fetchData}) => 
         
         console.log(rowTyC)
         const response = await ConveniosService.aceptarTerminosYCondiciones(rowTyC)
+        
         console.log('Términos y condiciones aceptados:', response);
         handleClose();
         setRowTyC(null); // Limpiar el estado de la fila después de aceptar

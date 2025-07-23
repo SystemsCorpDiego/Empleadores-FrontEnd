@@ -3,26 +3,23 @@ import { Box, Typography } from '@mui/material';
 import { UserContext } from '@/context/userContext';
 import PropTypes from 'prop-types';
 import { GrillaActas } from '../Grillas/GrillaActas';
-import { GrillaConvenio } from '../Grillas/GrillaConvenio';
 import { GrillaPeriodo } from '../Grillas/GrillaPeriodos';
 import { EstadoDeDeuda } from '../EstadoDeDeuda/EstadoDeDeuda';
 import { OpcionesDePago } from '../OpcionesDePago/OpcionesDePago';
 import { axiosGestionDeudas } from './GestionApi';
-import moment from 'moment';
 import Accordion from '@mui/material/Accordion';
-import AccordionActions from '@mui/material/AccordionActions';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import formatter from '@/common/formatter';
 import { GrillaSaldoAFavor } from '../Grillas/GrillaSaldoAFavor';
 import Swal from 'sweetalert2';
-import { generarConvenio } from './GestionApi';
 import { useNavigate } from 'react-router-dom';
-import { use } from 'react';
-import { getEmpresaId, getRol } from '@/components/localStorage/localStorageService';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
+import { getRol } from '@/components/localStorage/localStorageService';
+import EmpresaAutocomplete from '../components/EmpresaAutocomplete';
+import { calcularDetalleConvenio } from '../components/detalleHelper';
+import { buscarEmpresaPorCuit, buscarEmpresaPorNombre, fetchEmpresaData, generarConvenio, actualizarConvenio } from '../components/empresaHelper';
+import { crearBodyConvenio } from '../components/convenioHelper';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -89,36 +86,35 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   useEffect(() => {
     setRol(getRol());
     const isEditar = window.location.hash.includes('/editar');
-    console.log('isEditar:', isEditar);
     if (isEditar) {
-      //const hash = window.location.hash; // Ejemplo: #/dashboard/gestiondeuda/3/editar/UOMA
       const parts = window.location.hash.split('/');
-      console.log(parts[parts.indexOf('convenio') + 1])
       setConvenioId(parts[parts.indexOf('convenio') + 1]);
       setCuitInput(parts[parts.indexOf('cuit') + 1]);
-      console.log('cuitInput:', parts[parts.indexOf('cuit') + 1]);
     }
     setFechaDelDia(new Date());
-    fetchData(isEditar, null)
+    fetchEmpresaData(
+      isEditar,
+      null,
+      ID_EMPRESA,
+      ENTIDAD,
+      axiosGestionDeudas,
+      setDetalleConvenio,
+      setFechaIntencion,
+      setIntereses,
+      setImporteDeDeuda,
+      setSaldosAFavor,
+      setCuotas,
+      setDeclaracionesJuradas,
+      setActas,
+      setConvenios,
+      setSelectedActas,
+      setSelectedDeclaracionesJuradas,
+      setSelectedSaldosAFavor,
+      setTotalDeuda
+    );
     if (isEditar) {
       setIsCheckedEstadoDeDeduda(false);
-      console.log('Estoy en editar')
-      const idsActas = actas
-        .filter((objeto) => objeto.convenioActaId)
-        .map((objeto) => objeto.id);
-      setSelectedActas(idsActas);
-
-      const idsDeclaracionesJuradas = declaracionesJuradas
-        .filter((objeto) => objeto.convenioDdjjId)
-        .map((objeto) => objeto.id);
-      setSelectedDeclaracionesJuradas(idsDeclaracionesJuradas);
-
-      const idsSaldosAFavor = saldosAFavor
-        .filter((objeto) => objeto.convenioSaldoAFavorId)
-        .map((objeto) => objeto.id);
-      setSelectedSaldosAFavor(idsSaldosAFavor);
     }
-    ;
   }, []);
 
   useEffect(() => {
@@ -134,148 +130,117 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     }
     fetchEmpresas();
   }, []);
+  useEffect(() => {
+    const isEditar = window.location.hash.includes('/editar');
+    if (!isEditar || !cuitInput || empresas.length === 0) return;
 
-
-  const buscarPorCuit = (cuitInput) => {
-    console.log('cuitInput:', cuitInput);
-    const getEmpresaByID = async () => {
-      const empresaID = await axiosGestionDeudas.getEmpresaByCuit(cuitInput, empresas)
-      if (empresaID === null) {
-
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se encontró la empresa con el CUIT proporcionado.',
-          confirmButtonText: 'Aceptar',
-        });
-        return;
-      }
-      fetchData(false, empresaID);
-      setEmpresaId(empresaID)
-      const empr = empresas.find((e => e.cuit === cuitInput));
-      setNombreEmpresa(empr.razonSocial)
-      console.log('Empresa ID:', empresaID);
+    const empresa = empresas.find(e => e.cuit === cuitInput);
+    if (empresa) {
+      setNombreEmpresa(empresa.razonSocial);
+      setEmpresaId(empresa.id);
     }
-    getEmpresaByID();
-  }
+  }, [empresas, cuitInput]);
 
-  const buscarPorNombre = (nombreEmpresa) => {
-    console.log('nombreEmpresa:', nombreEmpresa);
-    const getEmpresaID = async () => {
-      const empresaID = await axiosGestionDeudas.getEmpresaByNombre(nombreEmpresa, empresas)
-      if (empresaID === null) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se encontró la empresa con el nombre proporcionado.',
-          confirmButtonText: 'Aceptar',
-        });
-        return;
-      }
-      fetchData(false, empresaID);
+  const buscarPorCuit = (valor) => {
+    buscarEmpresaPorCuit({
+      valor,
+      empresas,
+      axiosGestionDeudas,
+      setEmpresaId,
+      setNombreEmpresa,
+      fetchData: (editar, empresa) =>
+        fetchEmpresaData(
+          editar,
+          empresa,
+          ID_EMPRESA,
+          ENTIDAD,
+          axiosGestionDeudas,
+          setDetalleConvenio,
+          setFechaIntencion,
+          setIntereses,
+          setImporteDeDeuda,
+          setSaldosAFavor,
+          setCuotas,
+          setDeclaracionesJuradas,
+          setActas,
+          setConvenios,
+          setSelectedActas,
+          setSelectedDeclaracionesJuradas,
+          setSelectedSaldosAFavor,
+          setTotalDeuda
+        ),
+    });
+  };
 
-      const empr = empresas.find((e => e.razonSocial === nombreEmpresa));
-      setCuitInput(empr.cuit)
-      setEmpresaId(empresaID)
-      console.log('Empresa ID:', empresaID);
-    }
-    setCuitInput
-    getEmpresaID();
-  }
+  const buscarPorNombre = (valor) => {
+    buscarEmpresaPorNombre({
+      valor,
+      empresas,
+      axiosGestionDeudas,
+      setEmpresaId,
+      setCuitInput,
+      fetchData: (editar, empresa) =>
+        fetchEmpresaData(
+          editar,
+          empresa,
+          ID_EMPRESA,
+          ENTIDAD,
+          axiosGestionDeudas,
+          setDetalleConvenio,
+          setFechaIntencion,
+          setIntereses,
+          setImporteDeDeuda,
+          setSaldosAFavor,
+          setCuotas,
+          setDeclaracionesJuradas,
+          setActas,
+          setConvenios,
+          setSelectedActas,
+          setSelectedDeclaracionesJuradas,
+          setSelectedSaldosAFavor,
+          setTotalDeuda
+        ),
+    });
+  };
 
 
-  /*
-    useEffect(() => {
-      calcularDetalle();
-    }, [selectedActas, selectedDeclaracionesJuradas, selectedSaldosAFavor, cuotas, fechaIntencion]);
-  */
   const handleGenerarConvenio = async () => {
-
     setShowLoading(true);
-    const bodyConvenio = {
-      entidad: ENTIDAD,
-      cantidadCuota: cuotas,
-      fechaPago: fechaIntencion ? fechaIntencion.format("YYYY-MM-DD") : null,
-      actas: selectedActas,
-      ddjjs: selectedDeclaracionesJuradas,
-      ajustes: selectedSaldosAFavor,
-    };
-
-    const camposNulos = Object.entries(bodyConvenio)
-      .filter(([clave, valor]) => valor === null)
-      .map(([clave]) => clave);
-
-    if (camposNulos.length > 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: `Por favor, complete todos los campos requeridos: ${camposNulos.join(', ')}`,
-        confirmButtonText: 'Aceptar',
-      });
-      setShowLoading(false);
-    } else {
-      console.log("Todos los valores están definidos.");
-      console.log('Body Convenio:', bodyConvenio);
-
-      const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA;
-      console.log('ID_EMPRESA:', empresa);
-      const response = await generarConvenio(empresa, bodyConvenio);
-      if (response === true) {
-        Swal.fire({
-          icon: 'success',
-          title: '¡Convenio generado!',
-          text: 'Serás redirigido al resumen',
-          confirmButtonText: 'Aceptar',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            navigate('/dashboard/convenios');
-          }
-        });
-      }
-      setShowLoading(false);
-
+    const bodyConvenio = crearBodyConvenio({
+      ENTIDAD,
+      cuotas,
+      fechaIntencion,
+      selectedActas,
+      selectedDeclaracionesJuradas,
+      selectedSaldosAFavor,
+    });
+    const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA;
+    const ok = await generarConvenio(empresa, bodyConvenio, axiosGestionDeudas, Swal, setShowLoading);
+    if (ok) {
+      navigate('/dashboard/convenios');
     }
   };
 
   const handleActualizarConvenio = async () => {
     setShowLoading(true);
-    const bodyConvenio = {
-      entidad: ENTIDAD,
-      cantidadCuota: cuotas,
-      fechaPago: fechaIntencion ? fechaIntencion.format("YYYY-MM-DD") : null,
-      actas: selectedActas,
-      ddjjs: selectedDeclaracionesJuradas,
-      ajustes: selectedSaldosAFavor,
-    };
-    const camposNulos = Object.entries(bodyConvenio)
-      .filter(([clave, valor]) => valor === null)
-      .map(([clave]) => clave);
-    if (camposNulos.length > 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: `Por favor, complete todos los campos requeridos: ${camposNulos.join(', ')}`,
-        confirmButtonText: 'Aceptar',
-      });
-      setShowLoading(false);
-    } else {
-      console.log("Todos los valores están definidos.");
-      console.log('Body Convenio:', bodyConvenio);
-      const empresa = await axiosGestionDeudas.getEmpresaByCuit(cuitInput);
-      //const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA;
-      console.log('ID_EMPRESA:', empresa);
-      console.log('CONVENIOID:', convenio_id);
-      const result = await axiosGestionDeudas.putActualizarConvenio(empresa, convenio_id, bodyConvenio);
-      if (result) {
-        navigate('/dashboard/convenios');
-      }
-      setShowLoading(false);
+    const bodyConvenio = crearBodyConvenio({
+      ENTIDAD,
+      cuotas,
+      fechaIntencion,
+      selectedActas,
+      selectedDeclaracionesJuradas,
+      selectedSaldosAFavor,
+    });
+    const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA;
+    const ok = await actualizarConvenio(empresa, convenio_id, bodyConvenio, axiosGestionDeudas, Swal);
+    setShowLoading(false);
+    if (ok) {
+      navigate('/dashboard/convenios');
     }
   };
 
   useEffect(() => {
-    //TODO: cuando este evento se dispare se deben setear todas las selected declaracionesJuradas y todas las actas en sus
-    // respectivos arreglos
+
     setShowLoadingDetalle(true);
     if (isCheckedEstadoDeDeduda) {
       const idsActas = actas.map((objeto) => objeto.id);
@@ -352,108 +317,6 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
 
   }, [convenios]);
 
-  const fetchData = async (editar, empresa) => {
-
-    try {
-      let response;
-      if (!editar) {
-        empresa = empresa || ID_EMPRESA; // si no se pasa empresa, se usa ID_EMPRESA
-        if (empresa !== "833") {
-          response = await axiosGestionDeudas.getDeclaracionesJuradas(
-            empresa,
-            ENTIDAD,
-          );
-        }
-      } else {
-        const parts = window.location.hash.split('/');
-        const CONVENIOID = parts[parts.indexOf('convenio') + 1];
-        response = await axiosGestionDeudas.getDeclaracionesJuradasEditar(
-          ID_EMPRESA,
-          CONVENIOID
-        );
-        console.log('Response Editar:', response);
-        if (response.lstCuotas) {
-          console.log('Response lstCuotas:', response.lstCuotas);
-          setDetalleConvenio(response.lstCuotas);
-          //detalleCargado.current = true;
-        }
-      }
-      //calcularDetalle();
-      if (response.intencionPago) {
-        setFechaIntencion(response.intencionPago ? moment(response.intencionPago) : null);
-      }
-      if (response.interes) {
-        setIntereses(response.interes);
-      }
-      if (response.deuda) {
-        setImporteDeDeuda(response.deuda);
-      }
-      if (response.saldoAFavor) {
-        setSaldosAFavor(response.saldoAFavor);
-      }
-      if (response.cuotas) {
-        setCuotas(response.cuotas);
-      } else {
-        setCuotas(1);
-      }
-
-
-
-      setDeclaracionesJuradas(response['declaracionesJuradas']);
-      setActas(response['actas']);
-      setConvenios(response['convenios']);
-      setSaldosAFavor(response['saldosAFavor'])
-      const idsActas = response['actas'].map((objeto) => objeto.id);
-      setSelectedActas(idsActas);
-      if (editar) {
-        const preselectedActas = response['actas']
-          .filter((item) => item.convenioActaId !== null && item.convenioActaId !== undefined)
-          .map((item) => item.id);
-
-        if (preselectedActas.length > 0 && preselectedActas.some(id => !selectedActas.includes(id))) {
-          setSelectedActas((prev) => Array.from(new Set([...prev, ...preselectedActas])));
-        }
-        console.log('Preselected IDs:', preselectedActas);
-
-        const preselected = response['declaracionesJuradas']
-          .filter((item) => item.convenioDdjjId !== null && item.convenioDdjjId !== undefined)
-          .map((item) => item.id);
-
-        if (preselected.length > 0 && preselected.some(id => !selectedDeclaracionesJuradas.includes(id))) {
-          setSelectedDeclaracionesJuradas((prev) => Array.from(new Set([...prev, ...preselected])));
-        }
-        console.log(response['declaracionesJuradas'])
-        console.log('Preselected IDs:', preselected);
-
-        const preselectedAjustes = response['saldosAFavor']
-          .filter((item) => item.convenioAjusteId !== null && item.convenioAjusteId !== undefined)
-          .map((item) => item.id);
-
-        if (preselectedAjustes.length > 0 && preselectedAjustes.some(id => !selectedDeclaracionesJuradas.includes(id))) {
-          setSelectedSaldosAFavor((prev) => Array.from(new Set([...prev, ...preselectedAjustes])));
-        }
-        console.log('PreselectedAjustes IDs:', preselectedAjustes);
-      } else {
-        const idsActas = response['actas'].map((objeto) => objeto.id);
-        setSelectedActas(idsActas);
-
-        const idsdeclaracionesJuradas = response['declaracionesJuradas'].map((objeto) => objeto.id);
-        setSelectedDeclaracionesJuradas(idsdeclaracionesJuradas);
-
-        const idSelectedSaldosAFavor = response['saldosAFavor'].map((objeto) => objeto.id);
-        setSelectedSaldosAFavor(idSelectedSaldosAFavor);
-        //console.log(idSelectedSaldosAFavor)
-      }
-
-      const totalDeudaCalculada =
-        response['declaracionesJuradas'].reduce((acc, dj) => acc + (dj.importeTotal || 0), 0) +
-        response['actas'].reduce((acc, acta) => acc + (acta.importeTotal || 0), 0);
-      setTotalDeuda(totalDeudaCalculada);
-
-    } catch (error) {
-      console.error('Error al obtener las declaracionesJuradas: ', error);
-    }
-  };
 
   useEffect(() => {
     const totalDeudaCalculada =
@@ -463,7 +326,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   }, [ENTIDAD, declaracionesJuradas, actas]);
 
   useEffect(() => {
-    if (!shouldCalculate) return; // Solo si ya permitimos calcular
+    if (!shouldCalculate) return;
 
     calcularDetalle();
   }, [selectedActas, selectedDeclaracionesJuradas, selectedSaldosAFavor, cuotas, fechaIntencion]);
@@ -490,103 +353,36 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   };
 
   const calcularDetalle = async () => {
-    try {
-      const sumaDeclaracionesJuradas = declaracionesJuradas
-        .filter((dj) => selectedDeclaracionesJuradas.includes(dj.id))
-        .reduce((acc, dj) => acc + (dj.importeTotal || 0), 0);
+    const resultado = await calcularDetalleConvenio({
+      declaracionesJuradas,
+      selectedDeclaracionesJuradas,
+      actas,
+      selectedActas,
+      saldosAFavor,
+      selectedSaldosAFavor,
+      cuotas,
+      fechaIntencion,
+      ID_EMPRESA,
+      axiosGestionDeudas
+    });
 
-      const sumaActas = actas
-        .filter((acta) => selectedActas.includes(acta.id))
-        .reduce((acc, acta) => acc + (acta.importeTotal || 0), 0);
-
-      const sumaSaldosAFavor = saldosAFavor
-        .filter((saldo) => selectedSaldosAFavor.includes(saldo.id))
-        .reduce((acc, saldo) => acc + (saldo.importe || 0), 0);
-
-
-      setImporteDeDeuda(sumaDeclaracionesJuradas + sumaActas);
-
-
-      const body = {
-        "importeDeuda": sumaDeclaracionesJuradas + sumaActas - sumaSaldosAFavor,
-        "cantidadCuota": cuotas,
-        "fechaIntencionPago": fechaIntencion
-          ? fechaIntencion.format("YYYY-MM-DD")
-          : null,
-      }
-      const response = await axiosGestionDeudas.getDetalleConvenio(
-        ID_EMPRESA,
-        body,
-      );
-      console.log('Detalle Convenio:', response);
-
-
-      setDetalleConvenio(response);
-    } catch (error) {
-      console.error('Error al calcular el detalle: ', error);
-    }
+    setImporteDeDeuda(resultado.importeDeuda);
+    setDetalleConvenio(resultado.detalle);
   };
 
 
   return (
     <div className="container_grilla">
       {rol == 'OSPIM_EMPLEADO' && (
-<>
-  <Box display="flex" alignItems="center" mb={2} gap={2}>
-    <TextField
-      label="Ingrese CUIT"
-      variant="outlined"
-      value={cuitInput || ''}
-      onChange={(e) => setCuitInput(e.target.value)}
-      style={{ width: 320 }}
-    />
-    <button
-      onClick={() => buscarPorCuit(cuitInput)}
-      style={{
-        padding: '8px 16px',
-        fontSize: '16px',
-        borderRadius: '4px',
-        background: '#1976d2',
-        color: '#fff',
-        border: 'none',
-        cursor: 'pointer',
-      }}
-    >
-      Buscar
-    </button>
-  </Box>
-
-  <Box display="flex" alignItems="center" mb={2} gap={2}>
-    <Autocomplete
-      options={Array.isArray(empresas) ? empresas.map(e => e.razonSocial) : []}
-      value={nombreEmpresa || ''}
-      onInputChange={(event, newInputValue) => setNombreEmpresa(newInputValue)}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Ingrese nombre de la empresa"
-          variant="outlined"
+        <EmpresaAutocomplete
+          empresas={empresas}
+          cuitInput={cuitInput}
+          nombreEmpresa={nombreEmpresa}
+          setCuitInput={setCuitInput}
+          setNombreEmpresa={setNombreEmpresa}
+          buscarPorCuit={buscarPorCuit}
+          buscarPorNombre={buscarPorNombre}
         />
-      )}
-      freeSolo
-      style={{ width: 320 }}
-    />
-    <button
-      onClick={() => buscarPorNombre(nombreEmpresa)}
-      style={{
-        padding: '8px 16px',
-        fontSize: '16px',
-        borderRadius: '4px',
-        background: '#1976d2',
-        color: '#fff',
-        border: 'none',
-        cursor: 'pointer',
-      }}
-    >
-      Buscar
-    </button>
-  </Box>
-</>
       )}
 
       <div className="mb-4em">
