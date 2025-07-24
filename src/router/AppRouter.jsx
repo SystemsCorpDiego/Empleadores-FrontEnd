@@ -157,31 +157,13 @@ const AppRouter = () => {
             }
           />
           <Route
-            path="boletas/Actas"
-            element={
-              rolFuncionalidades.ACTAS_CONSULTA ? <Boletas /> : <Navigate to="/dashboard/inicio" replace />
-            }
-          />
-          <Route
             path="boletas/nueva"
             element={
               rolFuncionalidades.MIS_BOLETAS ? <Boletas /> : <Navigate to="/dashboard/inicio" replace />
             }
           />
           <Route
-            path="pagos"
-            element={
-              rolFuncionalidades.PAGOS_CONSULTA ? <PagosPage /> : <Navigate to="/dashboard/inicio" replace />
-            }
-          />
-          <Route
             path="misdatos"
-            element={
-              rolFuncionalidades.DATOS_PERFIL ? <DatosPerfil /> : <Navigate to="/dashboard/inicio" replace />
-            }
-          />
-          <Route
-            path="datos/usuario"
             element={
               rolFuncionalidades.DATOS_PERFIL ? <DatosPerfil /> : <Navigate to="/dashboard/inicio" replace />
             }
@@ -219,7 +201,7 @@ const AppRouter = () => {
           <Route
             path="detalleboleta/:numero_boleta"
             element={
-              rolFuncionalidades.DETALLE_BOLETA ? <DetalleBoleta /> : <Navigate to="/dashboard/inicio" replace />
+              rolFuncionalidades.MIS_BOLETAS ? <DetalleBoleta /> : <Navigate to="/dashboard/inicio" replace />
             }
           />
           <Route
