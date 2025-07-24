@@ -1,3 +1,4 @@
+import { UserProvider } from './context/userProvider';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, HashRouter } from 'react-router-dom';
@@ -8,7 +9,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <HashRouter>
-      <App />
+      <UserProvider>
+        <App />
+      </UserProvider>
     </HashRouter>
   </React.StrictMode>,
 );
