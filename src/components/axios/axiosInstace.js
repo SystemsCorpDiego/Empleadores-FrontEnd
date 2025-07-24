@@ -48,6 +48,12 @@ oAxios.interceptors.response.use(
     console.log('originalRequest:', originalRequest);
 
     if (error.response) {
+      // Evitar refresh en la ruta de login
+      //if (window.location.pathname.includes('#/login')) {
+      //  console.log('No intento refresh porque estoy en /login');
+      //  return Promise.reject(error);
+     // }
+
       if (error.response.status && error.response.status == 401) {
         console.log(
           '** oAxios.interceptors.response - HTTP-ERROR 401 - ERROR AUTH ',

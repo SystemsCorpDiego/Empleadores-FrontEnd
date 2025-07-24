@@ -49,13 +49,16 @@ const PagosPage = () => (
 );
 
 const AppRouter = () => {
-  const { sesionToken } = useContext(UserContext);
+  //const { sesionToken } = useContext(UserContext);
   const rol = localStorageService.getRol();
   const [rolFuncionalidades, setRolFuncionalidades] = useState({});
   useEffect(() => {
     const fetchData = async () => {
-      const { funcionalidades } = await getFuncionalidadesByRol(rol);
-      //console.log('DashboardPage - funcionalidades:', funcionalidades);
+      //const { funcionalidades } = await getFuncionalidadesByRol(rol);
+      
+      if (rol !== null || rol !== undefined) {
+       const {funcionalidades}    = await getFuncionalidadesByRol(rol);
+             //console.log('DashboardPage - funcionalidades:', funcionalidades);
       const roles = {};
       funcionalidades.forEach((funcionalidad) => {
         roles[funcionalidad.descripcion] = funcionalidad.activo;
@@ -63,10 +66,13 @@ const AppRouter = () => {
       console.log(roles);
       setRolFuncionalidades(roles);
       console.log('DashboardPage - roles: ', roles);
+      }
+      
+
     };
 
     fetchData();
-  }, [sesionToken]);
+  }, []);
   return (
     <UserProvider>
       <Routes>

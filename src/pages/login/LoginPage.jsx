@@ -172,7 +172,7 @@ export const LoginPage = () => {
   const getUsuarioLogueadoInfo = (usuarioLogueado, token, refreshToken) => {
     console.log('usuarioInfoFinal - init');
     console.log(usuarioLogueado);
-    setSesionToken(token); // Esto disparará el useEffect del AppRouter
+    //setSesionToken(token); // Esto disparará el useEffect del AppRouter
     if (usuarioLogueado.hasOwnProperty('usuario')) {
       usuarioLogueado.usuario.token = token;
       usuarioLogueado.usuario.tokenRefresco = refreshToken;
