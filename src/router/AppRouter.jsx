@@ -213,7 +213,7 @@ const AppRouter = () => {
           <Route
             path="generarboletas/:id"
             element={
-              rolFuncionalidades.GENERAR_BOLETAS ? <GenerarBoletas /> : <Navigate to="/dashboard/inicio" replace />
+              rolFuncionalidades.MIS_DDJJ ? <GenerarBoletas /> : <Navigate to="/dashboard/inicio" replace />
             }
           />
           <Route

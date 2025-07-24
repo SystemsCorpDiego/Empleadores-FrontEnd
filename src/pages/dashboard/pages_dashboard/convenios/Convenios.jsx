@@ -198,6 +198,8 @@ export const Convenios = () => {
       console.log('Datos de la empresa:', response);
 
       const convenioInfo = {
+        cuit: row.cuit,
+
         convenioId: row.id,
         fecha: row.fecha,
         numero: row.numero,
@@ -220,6 +222,7 @@ export const Convenios = () => {
       }));
 
       const headerMap = {
+        cuit: 'CUIT',
         convenioId: 'ID Convenio',
         fecha: 'Fecha',
         numero: 'Numero',
@@ -232,6 +235,7 @@ export const Convenios = () => {
         importeCuota: 'Importe de Cuota',
         cheques: 'Cheques',
         totalCheques: 'Total Cheques',
+        vencimiento: 'Fecha de vto de la cuota',
         periodos: 'Periodos',
         actas: 'Actas',
       };
