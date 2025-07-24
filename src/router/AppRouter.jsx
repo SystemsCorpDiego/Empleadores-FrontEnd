@@ -291,7 +291,7 @@ const AppRouter = () => {
           <Route
             path="convenio/:id/cuotas"
             element={
-              rolFuncionalidades.CUOTAS_CONVENIO
+              rolFuncionalidades.GESTION_DEUDA
                 ? <Cuotas />
                 : <Navigate to="/dashboard/inicio" replace />
             }
