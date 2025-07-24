@@ -4,6 +4,8 @@ import {
   logonDFA,
   usuarioLogueadoHabilitadoDFA,
 } from './LoginApi.js';
+import { useContext } from 'react';
+import { UserContext } from '@/context/userContext';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useFormLoginInternalUser } from '../../hooks/useFormLoginInternalUser.js';
@@ -39,7 +41,7 @@ export const LoginPage = () => {
   const [refreshToken, setRefreshToken] = useState(null);
   const [showLoading, setShowLoading] = useState(true);
   const [showInputComponent, setShowInputComponent] = useState(false);
-
+  const { setSesionToken } = useContext(UserContext);
   /////////////////////////////////////////////////////////////////////////////////////////////
   const [showPassword, setShowPassword] = useState(false);
 
@@ -170,6 +172,7 @@ export const LoginPage = () => {
   const getUsuarioLogueadoInfo = (usuarioLogueado, token, refreshToken) => {
     console.log('usuarioInfoFinal - init');
     console.log(usuarioLogueado);
+    setSesionToken(token); // Esto disparará el useEffect del AppRouter
     if (usuarioLogueado.hasOwnProperty('usuario')) {
       usuarioLogueado.usuario.token = token;
       usuarioLogueado.usuario.tokenRefresco = refreshToken;

@@ -1,16 +1,13 @@
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import { getRol } from '@/components/localStorage/localStorageService';
+import { getFuncionalidadesByRol } from '@/pages/dashboard/DashboardPageApi';
+///Users/ferminpaez/Documents/GitHub/Empleadores-FrontEnd/src/pages/dashboard/DashboardPage.jsx
+///Users/ferminpaez/Documents/GitHub/Empleadores-FrontEnd/src/router/AppRouter.jsx
+import { useEffect, useState, useContext } from 'react';
+import localStorageService from '@/components/localStorage/localStorageService';
 
-const EmpleadoRoute = ({ children }) => {
-  const rol = getRol();
-  console.log('EmpleadoRoute - rol:', rol);
-  if (rol !== 'OSPIM_EMPLEADO') {
-    
-    return <Navigate to="/dashboard/inicio" replace />;
-  }
-  return children;
-};
+import { UserContext } from '@/context/userContext';
 import { Inicio } from '../pages/dashboard/pages_dashboard/inicio/Inicio';
 import NavBar from '../components/navbar/NavBar';
 import { DatosEmpresa } from '../pages/dashboard/pages_dashboard/datos_empresa/DatosEmpresa';
@@ -52,6 +49,24 @@ const PagosPage = () => (
 );
 
 const AppRouter = () => {
+  const { sesionToken } = useContext(UserContext);
+  const rol = localStorageService.getRol();
+  const [rolFuncionalidades, setRolFuncionalidades] = useState({});
+  useEffect(() => {
+    const fetchData = async () => {
+      const { funcionalidades } = await getFuncionalidadesByRol(rol);
+      //console.log('DashboardPage - funcionalidades:', funcionalidades);
+      const roles = {};
+      funcionalidades.forEach((funcionalidad) => {
+        roles[funcionalidad.descripcion] = funcionalidad.activo;
+      });
+      console.log(roles);
+      setRolFuncionalidades(roles);
+      console.log('DashboardPage - roles: ', roles);
+    };
+
+    fetchData();
+  }, [sesionToken]);
   return (
     <UserProvider>
       <Routes>
@@ -74,83 +89,213 @@ const AppRouter = () => {
             </PrivateRoute>
           }
         >
-          <Route path="inicio" index element={<Inicio />} />
-          <Route path="publicaciones" element={<Publicaciones />} />
-          <Route path="feriados" element={<Feriados />} />
-          <Route path="ddjj" element={<DDJJTabs />} />
-          <Route path="ddjj/alta" element={<DDJJTabs />} />
-          <Route path="ddjj/consulta" element={<DDJJTabs />} />
-          <Route path="ddjjconsultaempleado" element={<DDJJFiltro />} />
+          <Route
+            path="inicio"
+            index
+            element={
+             <Inicio />
+            }
+          />
+          <Route
+            path="publicaciones"
+            element={
+              rolFuncionalidades.PUBLICACIONES ? <Publicaciones /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="feriados"
+            element={
+              rolFuncionalidades.FERIADOS ? <Feriados /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="ddjj"
+            element={
+              rolFuncionalidades.DDJJ_CONSULTA ? <DDJJTabs /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="ddjj/alta"
+            element={
+              rolFuncionalidades.NUEVA_DDJJ ? <DDJJTabs /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="ddjj/consulta"
+            element={
+              rolFuncionalidades.MIS_DDJJ ? <DDJJTabs /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="ddjjconsultaempleado"
+            element={
+              rolFuncionalidades.DDJJ_CONSULTA ? <DDJJFiltro /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
           <Route
             path="boletas/empleado/consulta"
-            element={<BoletaEmpleadoFiltro />}
+            element={
+              rolFuncionalidades.BOLETAS_CONSULTA ? <BoletaEmpleadoFiltro /> : <Navigate to="/dashboard/inicio" replace />
+            }
           />
-          <Route path="boletas" element={<Boletas />} />
-          <Route path="boletas/periodos" element={<Boletas />} />
-          <Route path="boletas/Actas" element={<Boletas />} />
-          <Route path="boletas/nueva" element={<Boletas />} />
-          <Route path="pagos" element={<PagosPage />} />
-          <Route path="misdatos" element={<DatosPerfil />} />
-          <Route path="datos/usuario" element={<DatosPerfil />} />
-
-          <Route path="empresas" element={<DatosEmpresa />} />
-
-          <Route path="usuariointerno" element={<UsuarioInterno />} />
-          <Route path="cuitsrestringidos" element={<CuitsRestringidos />} />
-          <Route path="roles" element={<Roles />} />
-          <Route path="generarboletas/:id" element={<GenerarBoletas />} />
+          <Route
+            path="boletas"
+            element={
+              rolFuncionalidades.MIS_BOLETAS ? <Boletas /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="boletas/periodos"
+            element={
+              rolFuncionalidades.MIS_BOLETAS ? <Boletas /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="boletas/Actas"
+            element={
+              rolFuncionalidades.ACTAS_CONSULTA ? <Boletas /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="boletas/nueva"
+            element={
+              rolFuncionalidades.MIS_BOLETAS ? <Boletas /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="pagos"
+            element={
+              rolFuncionalidades.PAGOS_CONSULTA ? <PagosPage /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="misdatos"
+            element={
+              rolFuncionalidades.DATOS_PERFIL ? <DatosPerfil /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="datos/usuario"
+            element={
+              rolFuncionalidades.DATOS_PERFIL ? <DatosPerfil /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="empresas"
+            element={
+              rolFuncionalidades.CONSULTA_EMPRESA ? <DatosEmpresa /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="usuariointerno"
+            element={
+              rolFuncionalidades.USUARIO_INTERNO ? <UsuarioInterno /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="cuitsrestringidos"
+            element={
+              rolFuncionalidades.CUITS_RESTRINGIDOS ? <CuitsRestringidos /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="roles"
+            element={
+              rolFuncionalidades.ROLES ? <Roles /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="generarboletas/:id"
+            element={
+              rolFuncionalidades.GENERAR_BOLETAS ? <GenerarBoletas /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
           <Route
             path="detalleboleta/:numero_boleta"
-            element={<DetalleBoleta />}
+            element={
+              rolFuncionalidades.DETALLE_BOLETA ? <DetalleBoleta /> : <Navigate to="/dashboard/inicio" replace />
+            }
           />
-          <Route path="generarotrospagos" element={<GenerarOtrosPagos />} />
+          <Route
+            path="generarotrospagos"
+            element={
+              rolFuncionalidades.BOLETA_ACTAS ? <GenerarOtrosPagos /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
           <Route
             path="detalleotrospagos"
-            errorElement={<DetalleOtrosPagos />}
+            errorElement={
+              rolFuncionalidades.BOLETA_ACTAS ? <DetalleOtrosPagos /> : <Navigate to="/dashboard/inicio" replace />
+            }
           />
-          <Route path="interesesafip" element={<InteresesAfip />} />
-          <Route path="ajustes" element={<Ajustes />} />
-          <Route path="gestion-roles" element={<GestionRoles />} />
-          <Route path="aportes" element={<Aportes />} />
-          <Route path="parametros-convenios" element={<ParametrosConvenios />} />
+          <Route
+            path="interesesafip"
+            element={
+              rolFuncionalidades.INTERESES ? <InteresesAfip /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="ajustes"
+            element={
+              rolFuncionalidades.AJUSTES ? <Ajustes /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="gestion-roles"
+            element={
+              rolFuncionalidades.GESTION_ROLES ? <GestionRoles /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="aportes"
+            element={
+              rolFuncionalidades.APORTES ? <Aportes /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
+          <Route
+            path="parametros-convenios"
+            element={
+              rolFuncionalidades.PARAMETROS_CONVENIOS ? <ParametrosConvenios /> : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
           <Route
             path="gestiondeuda"
             element={
-              <EmpleadoRoute>
-                <GestionDeudas />
-              </EmpleadoRoute>
+              rolFuncionalidades.GESTION_DEUDA
+                ? <GestionDeudas />
+                : <Navigate to="/dashboard/inicio" replace />
             }
           />
           <Route
             path="gestiondeuda/:id"
             element={
-              <EmpleadoRoute>
-                <GestionDeudas />
-              </EmpleadoRoute>
+              rolFuncionalidades.GESTION_DEUDA
+                ? <GestionDeudas />
+                : <Navigate to="/dashboard/inicio" replace />
             }
           />
           <Route
             path="gestiondeuda/:id/editar/:entidad/convenio/:convenioid/cuit/:cuit"
             element={
-              <EmpleadoRoute>
-                <GestionDeudas />
-              </EmpleadoRoute>
+              rolFuncionalidades.GESTION_DEUDA
+                ? <GestionDeudas />
+                : <Navigate to="/dashboard/inicio" replace />
             }
           />
           <Route
             path="convenio/:id/cuotas"
             element={
-              <EmpleadoRoute>
-                <Cuotas />
-              </EmpleadoRoute>
+              rolFuncionalidades.CUOTAS_CONVENIO
+                ? <Cuotas />
+                : <Navigate to="/dashboard/inicio" replace />
             }
           />
           <Route
             path="convenios"
             element={
-              <EmpleadoRoute>
-                <Convenios />
-              </EmpleadoRoute>
+              rolFuncionalidades.CONVENIO_CONSULTA
+                ? <Convenios />
+                : <Navigate to="/dashboard/inicio" replace />
             }
           />
         </Route>
