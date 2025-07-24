@@ -1,6 +1,16 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Navigate } from 'react-router';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
+import { getRol } from '@/components/localStorage/localStorageService';
+
+const EmpleadoRoute = ({ children }) => {
+  const rol = getRol();
+  console.log('EmpleadoRoute - rol:', rol);
+  if (rol !== 'OSPIM_EMPLEADO') {
+    
+    return <Navigate to="/dashboard/inicio" replace />;
+  }
+  return children;
+};
 import { Inicio } from '../pages/dashboard/pages_dashboard/inicio/Inicio';
 import NavBar from '../components/navbar/NavBar';
 import { DatosEmpresa } from '../pages/dashboard/pages_dashboard/datos_empresa/DatosEmpresa';
@@ -34,6 +44,8 @@ import { DDJJTabs } from '@/pages/dashboard/pages_dashboard/ddjj/DDJJTabs';
 import { UserProvider } from '@/context/userProvider';
 import { GestionDeudas } from '@/pages/dashboard/pages_dashboard/gestion_deudas/GestionDeudas';
 import { Convenios } from '@/pages/dashboard/pages_dashboard/convenios/Convenios';
+import { Cuotas } from '@/pages/dashboard/pages_dashboard/convenios/cuotas/Cuotas';
+import { ParametrosConvenios } from '@/pages/dashboard/pages_dashboard/ParametrosConvenios/ParametrosConvenios';
 
 const PagosPage = () => (
   <div className="otros_pagos_container">Contenido de la página de pagos</div>
@@ -100,10 +112,47 @@ const AppRouter = () => {
           <Route path="ajustes" element={<Ajustes />} />
           <Route path="gestion-roles" element={<GestionRoles />} />
           <Route path="aportes" element={<Aportes />} />
-          <Route path="gestiondeuda" element={<GestionDeudas />} />
-          <Route path="gestiondeuda/:id" element={<GestionDeudas />} />
-
-          <Route path="convenios" element={<Convenios />} />
+          <Route path="parametros-convenios" element={<ParametrosConvenios />} />
+          <Route
+            path="gestiondeuda"
+            element={
+              <EmpleadoRoute>
+                <GestionDeudas />
+              </EmpleadoRoute>
+            }
+          />
+          <Route
+            path="gestiondeuda/:id"
+            element={
+              <EmpleadoRoute>
+                <GestionDeudas />
+              </EmpleadoRoute>
+            }
+          />
+          <Route
+            path="gestiondeuda/:id/editar/:entidad/convenio/:convenioid/cuit/:cuit"
+            element={
+              <EmpleadoRoute>
+                <GestionDeudas />
+              </EmpleadoRoute>
+            }
+          />
+          <Route
+            path="convenio/:id/cuotas"
+            element={
+              <EmpleadoRoute>
+                <Cuotas />
+              </EmpleadoRoute>
+            }
+          />
+          <Route
+            path="convenios"
+            element={
+              <EmpleadoRoute>
+                <Convenios />
+              </EmpleadoRoute>
+            }
+          />
         </Route>
         <Route path="registercompany" element={<RegistroEmpresa />} />
         <Route index element={<Navigate to="/login" />} />

@@ -1,399 +1,383 @@
 import oAxios from '@components/axios/axiosInstace';
 import { axiosCrud } from '@/components/axios/axiosCrud';
 import swal from '@/components/swal/swal';
+import Swal from 'sweetalert2';
 
 const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
-const HTTP_MSG_MODI = import.meta.env.VITE_HTTP_MSG_MODI;
 const HTTP_MSG_MODI_ERROR = import.meta.env.VITE_HTTP_MSG_MODI_ERROR;
-
+const VITE_HTTP_MSG_ALTA_ERROR = import.meta.env.VITE_HTTP_MSG_ALTA_ERROR;
 const emuRespuesta = {
-  declaracionesJuradas: [
+  "id": 20,
+  "entidad": "UOMA",
+  "empresaId": "836",
+  "cuit": "30537582916",
+  "razonSocial": "PUEBA 30537582916",
+  "deuda": 994435.14,
+  "interes": 7359340.84,
+  "saldoFavor": 100000,
+  "intencionPago": "2025-06-20",
+  "cuotas": 3,
+  "medioPago": "CHEQUE",
+  "convenioNro": null,
+  "actas": [],
+  "declaracionesJuradas": [
     {
-      id: 1233,
-      periodo: '2024-04-01',
-      rectificativa: 10,
-      aporteCodigo: 'Cuota Social',
-      aporteDescripcion: '',
-      importe: 20.0,
-      interes: 176.8,
-      importeTotal: 196.8,
+      "convenioDdjjId": 57,
+      "id": 7872028,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "ART46",
+      "aporteDescripcion": "Art. 46",
+      "importe": 14056.78,
+      "intereses": 4566.08,
+      "importeTotal": 18622.86
     },
     {
-      id: 9312,
-      periodo: '2024-04-01',
-      rectificativa: 10,
-      aporteCodigo: 'UOMACS',
-      aporteDescripcion: 'Cuota Social UOMA',
-      importe: 20.0,
-      interes: 176.8,
-      importeTotal: 196.8
+      "convenioDdjjId": 57,
+      "id": 7872028,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "UOMAAS",
+      "aporteDescripcion": "Aporte Solidario UOMA",
+      "importe": 353000,
+      "intereses": 110121.96,
+      "importeTotal": 463121.96
     },
+    {
+      "convenioDdjjId": 57,
+      "id": 7872028,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "UOMACS",
+      "aporteDescripcion": "Cuota Social UOMA",
+      "importe": 353000,
+      "intereses": 114647.52,
+      "importeTotal": 467647.52
+    },
+    {
+      "convenioDdjjId": 57,
+      "id": 7872028,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "UOMACU",
+      "aporteDescripcion": "Cuota Usufructo",
+      "importe": 34000,
+      "intereses": 11042.8,
+      "importeTotal": 45042.8
+    },
+    {
+      "convenioDdjjId": null,
+      "id": 7872027,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "ART46",
+      "aporteDescripcion": "Art. 46",
+      "importe": 14056.78,
+      "intereses": 4566.08,
+      "importeTotal": 18622.86
+    },
+    {
+      "convenioDdjjId": null,
+      "id": 7872027,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "UOMAAS",
+      "aporteDescripcion": "Aporte Solidario UOMA",
+      "importe": 353000,
+      "intereses": 110121.96,
+      "importeTotal": 463121.96
+    },
+    {
+      "convenioDdjjId": null,
+      "id": 7872027,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "UOMACS",
+      "aporteDescripcion": "Cuota Social UOMA",
+      "importe": 353000,
+      "intereses": 114647.52,
+      "importeTotal": 467647.52
+    },
+    {
+      "convenioDdjjId": null,
+      "id": 7872027,
+      "periodo": "2025-01-01",
+      "rectificativa": 0,
+      "aporteCodigo": "UOMACU",
+      "aporteDescripcion": "Cuota Usufructo",
+      "importe": 34000,
+      "intereses": 11042.8,
+      "importeTotal": 45042.8
+    }
   ],
-  actas: [
+  "saldosAFavor": [
     {
-      id: 95,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '123',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 100,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '124',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 101,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '125',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 102,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '126',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 103,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '127',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 104,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '128',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 105,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '129',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-  ],
-  convenios: [
-    {
-      id: 1,
-      estado: 'PENDIENTE',
-      nroConvenio: 1,
-      nroCuota: 2,
-      totalCuota: 234,
-      intereses: 42,
-      totalActualizado: 276,
-    },
-    {
-      id: 2,
-      estado: 'PENDIENTE',
-      nroConvenio: 1,
-      nroCuota: 3,
-      totalCuota: 234,
-      intereses: 42,
-      totalActualizado: 276,
-    },
-  ],
-  saldoAFavor: 2000,
-};
-const emuRespuestaOSPIM = {
-  boletas: [
-    {
-      id: 97,
-      periodo: '2024-04-01',
-      numero_boleta: 10,
-      concepto: 'Cuota Social',
-      totalConcepto: 20.0,
-      interes: 126.8,
-      total_final: 146.8,
-    },
-    {
-      id: 98,
-      periodo: '2024-04-01',
-      numero_boleta: 10,
-      concepto: 'Cuota Social',
-      totalConcepto: 20.0,
-      interes: 126.8,
-      total_final: 146.8,
-    },
-  ],
-  actas: [
-    {
-      id: 95,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '123',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 13.0,
-      importeTotal: 136.0,
-    },
-    {
-      id: 100,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '124',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 13.0,
-      importeTotal: 136.0,
-    },
-    {
-      id: 103,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '127',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 104,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '128',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 105,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '129',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-  ],
-  convenios: [
-    {
-      id: 1,
-      estado: 'PENDIENTE',
-      nroConvenio: 1,
-      nroCuota: 2,
-      totalCuota: 234,
-      intereses: 42,
-      totalActualizado: 276,
-    },
-    {
-      id: 2,
-      estado: 'PENDIENTE',
-      nroConvenio: 1,
-      nroCuota: 3,
-      totalCuota: 234,
-      intereses: 42,
-      totalActualizado: 276,
-    },
-  ],
-  saldoAFavor: 2000,
-};
-const emuRespuestaAMTIMA = {
-  boletas: [
-    {
-      id: 97,
-      periodo: '2024-04-01',
-      numero_boleta: 10,
-      concepto: 'Cuota Social',
-      totalConcepto: 20.0,
-      interes: 176.8,
-      total_final: 196.8,
-    },
-    {
-      id: 98,
-      periodo: '2024-04-01',
-      numero_boleta: 10,
-      concepto: 'Cuota Social',
-      totalConcepto: 20.0,
-      interes: 176.8,
-      total_final: 196.8,
-    },
-    {
-      id: 99,
-      periodo: '2024-04-01',
-      numero_boleta: 10,
-      concepto: 'Cuota Social',
-      totalConcepto: 20.0,
-      interes: 176.8,
-      total_final: 196.8,
-    },
-  ],
-  actas: [
-    {
-      id: 95,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '123',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 100,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '124',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-    {
-      id: 101,
-      estadoDeuda: 'PENDIENTE',
-      nroActa: '125',
-      fechaActa: '2024-05-30',
-      importe: 123.0,
-      intereses: 23.0,
-      importeTotal: 146.0,
-    },
-  ],
-  convenios: [
-    {
-      id: 1,
-      estado: 'PENDIENTE',
-      nroConvenio: 1,
-      nroCuota: 2,
-      totalCuota: 234,
-      intereses: 42,
-      totalActualizado: 276,
-    },
-    {
-      id: 2,
-      estado: 'PENDIENTE',
-      nroConvenio: 1,
-      nroCuota: 3,
-      totalCuota: 234,
-      intereses: 42,
-      totalActualizado: 276,
-    },
-  ],
-  saldoAFavor: 2000,
-};
-const emuRespuestaDetalleConvenio = {
-  importeDeDeuda: 33000,
-  interesesDeFinanciacion: 230,
-  saldoAFavor: 200,
-  saldoAFavorUtilizado: 200,
-  totalAPagar: 33030,
-  cantidadCuotas: 3,
-  detalleCuota: [
-    {
-      numero: 1,
-      valor: 11010,
-      vencimiento: '21/07/2024',
-    },
-    {
-      numero: 2,
-      valor: 11010,
-      vencimiento: '21/08/2024',
-    },
-    {
-      numero: 3,
-      valor: 11010,
-      vencimiento: '21/08/2024',
-    },
-  ],
-};
+      "convenioAjusteId": 70,
+      "id": 9243,
+      "motivo": "O",
+      "importe": -100000,
+      "vigencia": "2025-01-01"
+    }
+  ]
+}
 
-const bodyConvenio = {
-  actas: [1, 2, 3], //acta_id
-  periodos: [], //fecha o id boleta o id DDJJ
-  cantCuotas: 1,
-  fechaIntencionDePago: '2024-01-31',
-  usarSaldoAFavor: true,
-};
+const ordenaGrillaPeriodo = (response) => {
+  console.log('response', response.declaracionesJuradas);
+  if (response.declaracionesJuradas !== null || response.declaracionesJuradas.length !== 0) {
+    const agrupado = response.declaracionesJuradas.reduce((acc, curr) => {
+      const clave = `${curr.id}`;
+      if (!acc[clave]) {
+        acc[clave] = {
+          id: curr.id,
+          convenioDdjjId: curr.convenioDdjjId,
+          periodo: curr.periodo,
+          rectificativa: curr.rectificativa,
+        };
+      }
+      acc[clave][curr.aporteDescripcion] = curr.importe;
+      acc[clave].importeTotal = (acc[clave].importeTotal || 0) + curr.importeTotal;
+      acc[clave].intereses = (acc[clave].intereses || 0) + curr.intereses;
+      return acc;
+    }, {});
+
+    console.log('agrupado', agrupado);
+    const resultado = Object.values(agrupado);
+
+    response.declaracionesJuradas = resultado;
+  } else {
+    response.declaracionesJuradas = [];
+  }
+  if (response.actas === null || response.actas.length === 0) {
+    response.actas = [];
+  }
+  if (response.saldosAFavor === null || response.saldosAFavor.length === 0) {
+    response.saldosAFavor = [];
+  }
+  return response
+}
+
+export const getGestionDeuda = async (empresa_id, entidad) => {
+  const URL = `/empresa/${empresa_id}/deuda/entidad/${entidad}`;
+  const response = await axiosCrud.consultar(URL);
+  console.log(response)
+  if (
+    response &&
+    response.declaracionesJuradas &&
+    response.actas &&
+    response.saldosAFavor &&
+    response.declaracionesJuradas.length === 0 &&
+    response.actas.length === 0 &&
+    response.saldosAFavor.length === 0
+  ) {
+
+    Swal.fire({
+      icon: 'info',
+      title: 'Sin Deuda',
+      text: 'No se registra deuda al día de la fecha',
+    });
+
+  }
+  return response
+}
+
+export const getGestionEditar = async (empresa_id, convenioId) => {
+  const URL = `/empresa/${empresa_id}/convenios/${convenioId}/deudaDto`;
+
+  const response = await axiosCrud.consultar(URL);
+  return response
+  //return emuRespuesta
+}
 
 export const getDeclaracionesJuradas = async (empresa_id, entidad) => {
   try {
-    const URL = `/empresa/${empresa_id}/boletas/gestion-deuda/${entidad}`;
-    //const response = axiosCrud.consultar(URL);
-    console.log('Llegamos a esta parte')
-    //return response;
-    switch (entidad) {
-      case 'AMTIMA':
-        return emuRespuestaAMTIMA;
-      case 'OSPIM':
-        return emuRespuestaOSPIM;
-      case 'UOMA':
-        return emuRespuesta;
-      default:
-        console.log('Entidad invalida');
-    }
 
-    return emuRespuesta;
+    const response = await getGestionDeuda(empresa_id, entidad);
+    const grilaOrdenada = ordenaGrillaPeriodo(response);
+    return grilaOrdenada;
+
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
-    swal.showErrorBackEnd(HTTP_MSG, error);
-    //sacar cuando este el back
-
-    //sacar cuando este el back
+    throw error;
   }
 };
 
-export const getBoletasUsuarioInterno = async (entidad) =>{
+export const getBoletasUsuarioInterno = async (entidad) => {
   const URL = `/empresa/boletas/gestion-deuda/${entidad}`;
   //const response = axiosCrud.consultar(URL);
   //return response;
   switch (entidad) {
     case 'AMTIMA':
-      return emuRespuestaAMTIMA;
+      return emuRespuesta;
     case 'OSPIM':
-      return emuRespuestaOSPIM;
+      return emuRespuesta;
     case 'UOMA':
       return emuRespuesta;
     default:
       console.log('Entidad invalida');
   }
 
-  return emuRespuesta
-}
+  return emuRespuesta;
+};
 
-export const getDetalleConvenio = async (empresa_id, entidad, body) => {
+export const getDetalleConvenio = async (empresa_id, body) => {
   try {
-    const URL = `/empresa/${empresa_id}/gestion-deuda/${entidad}/detalle-convenio`;
+    const URL = `/empresa/${empresa_id}/convenios/calcular-cuota`;
+    console.log('body', body);
+    if (body.fechaIntencionPago !== null && body.fechaIntencionPago !== 'Invalid Date') {
+      console.log('body', body);
+      const response = await axiosCrud.crear(URL, body);
+      return response;
+    }
+    return {
+      "importeDeuda": 0,
+      "cantidadCuota": 1,
+      "fechaIntencionPago": "",
+      "importeCuota": 0,
+      "importeInteresTotal": 0
+    };
+    //const URL = `/empresa/${empresa_id}/gestion-deuda/${entidad}/detalle-convenio`;
     //const reponse = axiosCrud.crear(URL,body)
     //return response;
-    return emuRespuestaDetalleConvenio;
+
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
-    swal.showErrorBackEnd(HTTP_MSG, error);
+    throw error;
   }
 };
 
-export const generarConvenio = async (empresa_id, body) => {
+
+export const generarConvenio = async (idEmpresa, bodyConvenio) => {
   try {
-    const URL = `sigeco/empresa/${idEmpresa}/deuda/entidad/${codigoEntidad}/convenio`;
-    //const response = axiosCrud.crear(URL,body);
-    //return reponse;
-    return 'OK'
+    const URL = `/empresa/${idEmpresa}/convenios`;
+    const response = await axiosCrud.crear(URL, bodyConvenio);
+    if (response && response.id) {
+      console.log('Convenio generado:', response);
+      return true;
+    }
+    else {
+      throw new Error(VITE_HTTP_MSG_ALTA_ERROR);
+    }
+
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getDeclaracionesJuradasEditar = async (empresa_id, convenioId) => {
+  try {
+
+    //const empresa_id = localStorage.getItem('empresaId');
+    const response = await getGestionEditar(empresa_id, convenioId);
+    console.log('response', response);
+
+    const grilaOrdenada = ordenaGrillaPeriodo(response);
+    //const grilaOrdenada = ordenaGrillaPeriodo(emuRespuesta);
+    console.log('grilaOrdenada', grilaOrdenada);
+    return grilaOrdenada;
+
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
-    swal.showErrorBackEnd(HTTP_MSG, error);
+    throw error;
+  }
+}
+
+const putActualizarConvenio = async (empresa_id, convenioId, body) => {
+  try {
+    const URL = `/empresa/${empresa_id}/convenios`;
+    if (body.hasOwnProperty('entidad')) {
+      delete body.entidad;
+    }
+    const response = await axiosCrud.actualizar(URL, body, convenioId);
+    console.log('response', response);
+    if (response === true) {
+      return true;
+    } else {
+      throw new Error(HTTP_MSG_MODI_ERROR);
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+
+const getEmpresaByCuit = async (cuit,empresas) => {
+  try {
+    //console.log('getEmpresaByCuit - cuit:', cuit);
+    //const URL = `/empresa`;
+
+    let response = empresas
+    if (response === null || response === undefined) {
+      try {
+        response = await axiosGestionDeudas.getEmpresas()
+      } catch (error) {
+        throw new Error('Error al obtener las empresas: ' + error.message);
+      }
+    }
+    console.log('response', response);
+    if (response && response.length > 0) {
+
+      const empresaEncontrada = response.find(e => e.cuit == cuit);
+      console.log('empresaEncontrada', empresaEncontrada);
+      if (!empresaEncontrada) {
+        throw new Error('No se encontró la empresa con el CUIT proporcionado.');
+      }
+      return empresaEncontrada.id? empresaEncontrada.id : null;
+    } else {
+      throw new Error('No se encontró la empresa con el CUIT proporcionado.');
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getEmpresaByNombre = async (nombreEmpresa, empresas) => {
+  try {
+    //console.log('getEmpresaByCuit - cuit:', cuit);
+    
+    const response =empresas
+    console.log('response', response);
+    if (response && response.length > 0) {
+
+      const empresaEncontrada = response.find(e => e.razonSocial == nombreEmpresa);
+      console.log('empresaEncontrada', empresaEncontrada);
+      if (!empresaEncontrada) {
+        throw new Error('No se encontró la empresa con el CUIT proporcionado.');
+      }
+      return empresaEncontrada.id? empresaEncontrada.id : null;
+    } else {
+      throw new Error('No se encontró la empresa con el CUIT proporcionado.');
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getEmpresas = async () => {
+  try {
+    const URL = `/empresa`;
+    const response = await axiosCrud.consultar(URL);
+    console.log('response', response);
+    if (response && response.length > 0) {
+      return response;
+    } else {
+      throw new Error('No se encontraron empresas.');
+    }
+  } catch (error) {
+    throw error;
   }
 };
 
 export const axiosGestionDeudas = {
   getDeclaracionesJuradas,
   getDetalleConvenio,
+  getDeclaracionesJuradasEditar,
+  putActualizarConvenio,
+  getEmpresaByCuit,
+  getEmpresaByNombre,
+  getEmpresas,
+  generarConvenio
 };

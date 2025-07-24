@@ -26,11 +26,11 @@ import { UserContext } from '@/context/userContext';
 export const Aportes = () => {
   const [locale, setLocale] = useState('esES');
   const [categorias, setCategorias] = useState([]);
-  
+
   const [camaras, setCamaras] = useState([]);
   const [rows, setRows] = useState([]);
   const [aportes, setAportes] = useState([])
-  const [entidades, setEntidades] = useState(['UOMA','AMTIMA','OSPIM']);
+  const [entidades, setEntidades] = useState(['UOMA', 'AMTIMA', 'OSPIM', '']);
   const [rowModesModel, setRowModesModel] = useState({});
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
@@ -57,13 +57,13 @@ export const Aportes = () => {
 
   const consultaAportesRows = async () => {
     const response = await axiosAportes.consultar();
-    setRows(response);
+    setRows(sanitizeRows(response));
   };
 
   const getEntidades = async () => {
     const response = await consultaEntidades();
     const entidades = [...new Set(response.map(item => item.entidad))]
-
+    
     setEntidades(entidades)
     setAportes(response)
   }
@@ -151,6 +151,23 @@ export const Aportes = () => {
     }
   };
 
+  function sanitizeRows(rows) {
+    return rows.map(row => ({
+      ...row,
+      entidad: row.entidad ?? '',
+      aporte: row.aporte ?? '',
+      socio: row.socio ?? false,
+      calculoTipo: row.calculoTipo ?? '',
+      calculoValor: row.calculoValor ?? '',
+      calculoBase: row.calculoBase ?? '',
+      camara: row.camara ?? '',
+      camaraCategoria: row.camaraCategoria ?? 'A',
+      camaraAntiguedad: row.camaraAntiguedad ?? '',
+      desde: row.desde ?? '',
+      hasta: row.hasta ?? '',
+    }));
+  }
+
   const processRowUpdate = async (newRow, oldRow) => {
     let bOk = false;
     console.log(`estoy entrando`);
@@ -218,7 +235,176 @@ export const Aportes = () => {
   };
 
   const columns = [
+
     {
+      field: 'entidad',
+      headerName: 'Entidad',
+      type: 'singleSelect',
+      valueOptions: entidades.map(e => e ?? ''),
+      flex: 1,
+      headerAlign: 'left',
+      editable: true,
+      align: 'left',
+      headerClassName: 'header--cell',
+      valueGetter: (params) => params.row.entidad ?? '',
+    },
+{
+  field: 'aporte',
+  headerName: 'Aporte',
+  type: 'singleSelect',
+  valueOptions: (params) => {
+    if (aportes) {
+      const filtered = aportes.filter(item => item?.entidad === params.row?.entidad);
+      const options = filtered.map(item => ({
+        value: item.codigo,
+        label: item.descripcion,
+      }));
+      options.push({ value: '', label: '' });
+      return options;
+    }
+    return [{ value: '', label: '' }];
+  },
+  valueGetter: (params) => params.row.aporte ?? '',
+  renderCell: (params) => {
+    const found = aportes.find(
+      a => a.codigo === params.value && a.entidad === params.row.entidad
+    );
+    return found ? found.descripcion : '';
+  },
+  editable: true,
+  flex: 1,
+  headerAlign: 'left',
+  align: 'left',
+  headerClassName: 'header--cell',
+},
+    {
+      field: 'socio',
+      headerName: 'Socio',
+      type: 'singleSelect',
+      valueOptions: [
+        { value: true, label: 'Si' },
+        { value: false, label: 'No' },
+      ],
+      valueGetter: (params) => params.row.socio ?? false,
+      editable: true,
+      flex: 1,
+      headerAlign: 'left',
+      headerClassName: 'header--cell',
+      align: 'left',
+      valueFormatter: ({ value }) => value ? 'Si' : 'No',
+    },
+    {
+      field: 'calculoTipo',
+      headerName: 'Cálculo Tipo',
+      editable: true,
+      type: 'singleSelect',
+      valueOptions: [
+        { value: 'PO', label: 'Porcentaje' },
+        { value: 'EN', label: 'Entero' },
+      ],
+      valueGetter: (params) => params.row.calculoTipo ?? '',
+      flex: 1,
+      headerAlign: 'left',
+      align: 'left',
+      headerClassName: 'header--cell',
+    },
+    {
+      field: 'calculoValor',
+      headerName: 'Cálculo Valor',
+      editable: true,
+      flex: 1,
+      headerAlign: 'right',
+      align: 'right',
+      headerClassName: 'header--cell',
+      valueGetter: (params) => params.row.calculoValor ?? '',
+      valueFormatter: ({ value }) => {
+        if (value === '' || value === null) return '';
+        return formatter.currency.format(value || 0);
+      },
+    },
+    {
+      field: 'calculoBase',
+      headerName: 'Cálculo Base',
+      flex: 1,
+      editable: true,
+      type: 'singleSelect',
+      headerAlign: 'left',
+      align: 'left',
+      headerClassName: 'header--cell',
+      valueGetter: (params) => params.row.calculoBase ?? '',
+      valueOptions: [
+        { value: 'PJ', label: 'Paritaria Jornal' },
+        { value: 'PS', label: 'Paritaria Salarial' },
+        { value: 'RE', label: 'Remunerativo' },
+        { value: '', label: '' },
+      ],
+    },
+    {
+      field: 'camara',
+      headerName: 'Cámara',
+      flex: 1,
+      type: 'singleSelect',
+      valueOptions: camaras,
+      editable: true,
+      headerAlign: 'left',
+      valueGetter: (params) => params.row.camara ?? '',
+      align: 'left',
+      headerClassName: 'header--cell',
+    },
+    {
+      field: 'camaraCategoria',
+      headerName: 'Categoría',
+      flex: 1,
+      editable: true,
+      type: 'singleSelect',
+      valueOptions: (params) => {
+        if (categorias) {
+          const filtered = categorias.filter(item => item?.camara === params.row?.camara).map(item => item.categoria);
+          filtered.push('');
+          return [...new Set(filtered)];
+        }
+        return [''];
+      },
+      valueGetter: (params) => params.row.camaraCategoria ?? 'A',
+      headerAlign: 'left',
+      align: 'left',
+      headerClassName: 'header--cell',
+    },
+    {
+      field: 'camaraAntiguedad',
+      headerName: 'Antigüedad',
+      flex: 1,
+      editable: true,
+      valueGetter: (params) => params.row.camaraAntiguedad ?? '',
+      headerAlign: 'left',
+      align: 'left',
+      headerClassName: 'header--cell',
+    },
+    {
+      field: 'desde',
+      headerName: 'Desde',
+      flex: 1,
+      editable: true,
+      type: 'date',
+      valueGetter: (params) => params.row.desde ?? '',
+      headerAlign: 'left',
+      align: 'left',
+      headerClassName: 'header--cell',
+      valueFormatter: (params) => formatter.dateString(params.value),
+    },
+    {
+      field: 'hasta',
+      headerName: 'Hasta',
+      editable: true,
+      flex: 1,
+      type: 'date',
+      valueGetter: (params) => params.row.hasta ?? '',
+      headerAlign: 'left',
+      align: 'left',
+      headerClassName: 'header--cell',
+      valueFormatter: (params) => formatter.dateString(params.value),
+    },
+        {
       field: 'actions',
       type: 'actions',
       headerName: 'Acciones',
@@ -265,168 +451,6 @@ export const Aportes = () => {
             color="inherit"
           />,
         ];
-      },
-    },
-    {
-      field: 'entidad',
-      headerName: 'Entidad',
-      type: 'singleSelect',
-      valueOptions: entidades,
-      flex: 1,
-      headerAlign: 'left',
-      editable: true,
-      align: 'left',
-      headerClassName: 'header--cell',
-    },
-    {
-      field: 'aporte',
-      headerName: 'Aporte',
-      type: 'singleSelect',
-      valueOptions: (params) => {
-        if (aportes) {
-          const filteredCategories = aportes
-            .filter((item) => item?.entidad === params.row?.entidad)
-            .map((item) => item.codigo);
-          filteredCategories.push('');
-          return [...new Set(filteredCategories)];
-        }
-        return [];
-      },
-      valueGetter: (params) => params.row.aporte || '',
-      editable: true,
-      flex: 1,
-      headerAlign: 'left',
-      align: 'left',
-      headerClassName: 'header--cell',
-    },
-    {
-      field: 'socio',
-      headerName: 'Socio',
-      type: 'singleSelect',
-      valueOptions: [
-        { value: true, label: 'Si' },
-        { value: false, label: 'No' },
-      ],
-      editable: true,
-      flex: 1,
-      headerAlign: 'left',
-      headerClassName: 'header--cell',
-      align: 'left',
-      valueFormatter: ({ value }) => {
-        return value ? 'Si' : 'No';
-      },
-    },
-    {
-      field: 'calculoTipo',
-      headerName: 'Cálculo Tipo',
-      editable: true,
-      type: 'singleSelect',
-      valueOptions: [
-        { value: 'PO', label: 'Porcentaje' },
-        { value: 'EN', label: 'Entero' },
-      ],
-      flex: 1,
-      headerAlign: 'left',
-      align: 'left',
-      headerClassName: 'header--cell',
-    },
-    {
-      field: 'calculoValor',
-      headerName: 'Cálculo Valor',
-      editable: true,
-      flex: 1,
-      headerAlign: 'right',
-      align: 'right',
-      headerClassName: 'header--cell',
-      valueFormatter: ({ value }) => {
-        if (value === '') return '';
-        if (value === null) return '';
-        return formatter.currency.format(value || 0);
-      },
-    },
-    {
-      field: 'calculoBase',
-      headerName: 'Cálculo Base',
-      flex: 1,
-      editable: true,
-      headerAlign: 'left',
-      type: 'singleSelect',
-      align: 'left',
-      headerClassName: 'header--cell',
-      valueOptions: [
-        { value: 'PJ', label: 'Paritaria Jornal' },
-        { value: 'PS', label: 'Paritaria Salarial' },
-        { value: 'RE', label: 'Remunerativo' },
-        { value: '', label: '' },
-
-      ],
-    },
-    {
-      field: 'camara',
-      headerName: 'Cámara',
-      flex: 1,
-      type: 'singleSelect',
-      valueOptions: camaras,
-      editable: true,
-      headerAlign: 'left',
-      valueGetter: (params) => params.row.camara || '',
-      align: 'left',
-      headerClassName: 'header--cell',
-    },
-    {
-      field: 'camaraCategoria',
-      headerName: 'Categoría',
-      flex: 1,
-      editable: true,
-      type: 'singleSelect',
-      valueOptions: (params) => {
-        if (categorias) {
-          const filteredCategories = categorias
-            .filter((item) => item?.camara === params.row?.camara)
-            .map((item) => item.categoria);
-          filteredCategories.push('');
-          return [...new Set(filteredCategories)];
-        }
-        return [];
-      },
-      valueGetter: (params) => params.row.camaraCategoria || 'A',
-      headerAlign: 'left',
-      align: 'left',
-      headerClassName: 'header--cell',
-    },
-    {
-      field: 'camaraAntiguedad',
-      headerName: 'Antigüedad',
-      flex: 1,
-      editable: true,
-      headerAlign: 'left',
-      align: 'left',
-      headerClassName: 'header--cell',
-    },
-    {
-      field: 'desde',
-      headerName: 'Desde',
-      flex: 1,
-      editable: true,
-      type: 'date',
-      headerAlign: 'left',
-      align: 'left',
-      headerClassName: 'header--cell',
-      valueFormatter: (params) => {
-        return formatter.dateString(params.value);
-      },
-    },
-    {
-      field: 'hasta',
-      headerName: 'Hasta',
-      editable: true,
-      flex: 1,
-      type: 'date',
-      headerAlign: 'left',
-      align: 'left',
-      headerClassName: 'header--cell',
-      valueFormatter: (params) => {
-        return formatter.dateString(params.value);
       },
     },
   ];

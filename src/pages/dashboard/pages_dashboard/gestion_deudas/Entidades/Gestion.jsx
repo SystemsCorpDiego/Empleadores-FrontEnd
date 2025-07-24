@@ -3,18 +3,23 @@ import { Box, Typography } from '@mui/material';
 import { UserContext } from '@/context/userContext';
 import PropTypes from 'prop-types';
 import { GrillaActas } from '../Grillas/GrillaActas';
-import { GrillaConvenio } from '../Grillas/GrillaConvenio';
 import { GrillaPeriodo } from '../Grillas/GrillaPeriodos';
 import { EstadoDeDeuda } from '../EstadoDeDeuda/EstadoDeDeuda';
 import { OpcionesDePago } from '../OpcionesDePago/OpcionesDePago';
 import { axiosGestionDeudas } from './GestionApi';
-
 import Accordion from '@mui/material/Accordion';
-import AccordionActions from '@mui/material/AccordionActions';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import formatter from '@/common/formatter';
+import { GrillaSaldoAFavor } from '../Grillas/GrillaSaldoAFavor';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
+import { getRol } from '@/components/localStorage/localStorageService';
+import EmpresaAutocomplete from '../components/EmpresaAutocomplete';
+import { calcularDetalleConvenio } from '../components/detalleHelper';
+import { buscarEmpresaPorCuit, buscarEmpresaPorNombre, fetchEmpresaData, generarConvenio, actualizarConvenio } from '../components/empresaHelper';
+import { crearBodyConvenio } from '../components/convenioHelper';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -44,6 +49,7 @@ CustomTabPanel.propTypes = {
 
 export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   useContext(UserContext);
+  const navigate = useNavigate();
   const [actas, setActas] = useState([]); //Se usa para guardar las actas que vienen del backend
   const [selectedActas, setSelectedActas] = useState([]); //Se usa para guardar los ids de las actas seleccionadas
   const [totalActas, setTotalActas] = useState(0); //Se usa para mostrar en la cabecera del acordion
@@ -55,129 +61,337 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   const [isCheckedEstadoDeDeduda, setIsCheckedEstadoDeDeduda] = useState(true); //Se utiliza para tildar o destildar todas las rows
   const [cuotas, setCuotas] = useState(1); //Se utiliza para guardar la cantidad de cuotas seleccionadas por el usuario
   const [fechaIntencion, setFechaIntencion] = useState(null); //Se utiliza para guardar la fecha de intencion de pago que con la que vamos a generar el convenio
-  const [detalleConvenio, setDetalleConvenio] = useState({
-    importeDeDeuda: 0,
-    interesesDeFinanciacion: 0,
-    saldoAFavor: 0,
-    saldoAFavorUtilizado: 0,
-    totalAPagar: 0,
-    cantidadCuotas: 0,
-    detalleCuota: [],
-  }); //Propiedades del detalle convenio
-
+  const [saldosAFavor, setSaldosAFavor] = useState([])
+  const [selectedSaldosAFavor, setSelectedSaldosAFavor] = useState([])
+  const [totalSaldosAFavor, setTotalSaldosAFavor] = useState(0)
+  const [totalSaldosAFavorSelected, setTotalSaldosAFavorSelected] = useState(0); //Se usa para guardar el total de saldos a favor seleccionados
+  const [detalleConvenio, setDetalleConvenio] = useState({}); //Propiedades del detalle convenio
+  const [showLoading, setShowLoading] = useState(false); // Estado para mostrar el loading
+  const [showLoadingDetalle, setShowLoadingDetalle] = useState(false); // Estado para mostrar el loading del detalle
   const [noUsar, setNoUsar] = useState(true); // Estado que identifica si se utiliza el saldo a favor o no
   const [medioPago, setMedioPago] = useState('CHEQUE'); //Queda por si en algun momento se agrega otro medio de pago
+  const [totalDeuda, setTotalDeuda] = useState(0); //Se usa para mostrar el total de la deuda en el estado de deuda
+  const [importeDeDeuda, setImporteDeDeuda] = useState(0); //Se usa para mostrar el importe de la deuda en el estado de deuda
+  const [fechaDelDia, setFechaDelDia] = useState(null); //Se usa para guardar la fecha del dia actual
+  const [convenio_id, setConvenioId] = useState(null); //Se usa para guardar el id del convenio si se esta editando
+  const [cuitInput, setCuitInput] = useState(null); //Se usa para guardar el cuit de la empresa
+  const [nombreEmpresa, setNombreEmpresa] = useState(null); //Se usa para guardar el nombre de la empresa
+  const [rol, setRol] = useState(null); //Se usa para guardar el rol del usuario
+  const [empresa_id, setEmpresaId] = useState(null); //Se usa para guardar el id de la empresa
+  const [shouldCalculate, setShouldCalculate] = useState(!window.location.hash.includes('/editar'));
+  const [intereses, setIntereses] = useState(0); //Se usa para guardar los intereses de la deuda
+  const [empresas, setEmpresas] = useState([]); //Se usa para guardar las empresas que vienen del backend
+
 
   useEffect(() => {
-    fetchData();
+    setRol(getRol());
+    const isEditar = window.location.hash.includes('/editar');
+    if (isEditar) {
+      const parts = window.location.hash.split('/');
+      setConvenioId(parts[parts.indexOf('convenio') + 1]);
+      setCuitInput(parts[parts.indexOf('cuit') + 1]);
+    }
+    setFechaDelDia(new Date());
+    fetchEmpresaData(
+      isEditar,
+      null,
+      ID_EMPRESA,
+      ENTIDAD,
+      axiosGestionDeudas,
+      setDetalleConvenio,
+      setFechaIntencion,
+      setIntereses,
+      setImporteDeDeuda,
+      setSaldosAFavor,
+      setCuotas,
+      setDeclaracionesJuradas,
+      setActas,
+      setConvenios,
+      setSelectedActas,
+      setSelectedDeclaracionesJuradas,
+      setSelectedSaldosAFavor,
+      setTotalDeuda
+    );
+    if (isEditar) {
+      setIsCheckedEstadoDeDeduda(false);
+    }
   }, []);
 
   useEffect(() => {
-    //TODO: cuando este evento se dispare se deben setear todas las selected declaracionesJuradas y todas las actas en sus
-    // respectivos arreglos
+    const fetchEmpresas = async () => {
+
+      try {
+        const response = await axiosGestionDeudas.getEmpresas()
+        setEmpresas(response);
+        console.log("Empresas", response)
+      } catch (error) {
+        console.error('Error al obtener las empresas:', error);
+      }
+    }
+    fetchEmpresas();
+  }, []);
+  useEffect(() => {
+    const isEditar = window.location.hash.includes('/editar');
+    if (!isEditar || !cuitInput || empresas.length === 0) return;
+
+    const empresa = empresas.find(e => e.cuit === cuitInput);
+    if (empresa) {
+      setNombreEmpresa(empresa.razonSocial);
+      setEmpresaId(empresa.id);
+    }
+  }, [empresas, cuitInput]);
+
+  const buscarPorCuit = (valor) => {
+    buscarEmpresaPorCuit({
+      valor,
+      empresas,
+      axiosGestionDeudas,
+      setEmpresaId,
+      setNombreEmpresa,
+      fetchData: (editar, empresa) =>
+        fetchEmpresaData(
+          editar,
+          empresa,
+          ID_EMPRESA,
+          ENTIDAD,
+          axiosGestionDeudas,
+          setDetalleConvenio,
+          setFechaIntencion,
+          setIntereses,
+          setImporteDeDeuda,
+          setSaldosAFavor,
+          setCuotas,
+          setDeclaracionesJuradas,
+          setActas,
+          setConvenios,
+          setSelectedActas,
+          setSelectedDeclaracionesJuradas,
+          setSelectedSaldosAFavor,
+          setTotalDeuda
+        ),
+    });
+  };
+
+  const buscarPorNombre = (valor) => {
+    buscarEmpresaPorNombre({
+      valor,
+      empresas,
+      axiosGestionDeudas,
+      setEmpresaId,
+      setCuitInput,
+      fetchData: (editar, empresa) =>
+        fetchEmpresaData(
+          editar,
+          empresa,
+          ID_EMPRESA,
+          ENTIDAD,
+          axiosGestionDeudas,
+          setDetalleConvenio,
+          setFechaIntencion,
+          setIntereses,
+          setImporteDeDeuda,
+          setSaldosAFavor,
+          setCuotas,
+          setDeclaracionesJuradas,
+          setActas,
+          setConvenios,
+          setSelectedActas,
+          setSelectedDeclaracionesJuradas,
+          setSelectedSaldosAFavor,
+          setTotalDeuda
+        ),
+    });
+  };
+
+
+  const handleGenerarConvenio = async () => {
+    setShowLoading(true);
+    const bodyConvenio = crearBodyConvenio({
+      ENTIDAD,
+      cuotas,
+      fechaIntencion,
+      selectedActas,
+      selectedDeclaracionesJuradas,
+      selectedSaldosAFavor,
+    });
+    const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA;
+    const ok = await generarConvenio(empresa, bodyConvenio, axiosGestionDeudas, Swal, setShowLoading);
+    if (ok) {
+      navigate('/dashboard/convenios');
+    }
+  };
+
+  const handleActualizarConvenio = async () => {
+    setShowLoading(true);
+    const bodyConvenio = crearBodyConvenio({
+      ENTIDAD,
+      cuotas,
+      fechaIntencion,
+      selectedActas,
+      selectedDeclaracionesJuradas,
+      selectedSaldosAFavor,
+    });
+    const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA;
+    const ok = await actualizarConvenio(empresa, convenio_id, bodyConvenio, axiosGestionDeudas, Swal);
+    setShowLoading(false);
+    if (ok) {
+      navigate('/dashboard/convenios');
+    }
+  };
+
+  useEffect(() => {
+
+    setShowLoadingDetalle(true);
     if (isCheckedEstadoDeDeduda) {
       const idsActas = actas.map((objeto) => objeto.id);
       setSelectedActas(idsActas);
       const idsdeclaracionesJuradas = declaracionesJuradas.map((objeto) => objeto.id);
       setSelectedDeclaracionesJuradas(idsdeclaracionesJuradas);
-    } else {
+      const idsSaldosAFavor = saldosAFavor.map((objeto) => objeto.id);
+      setSelectedSaldosAFavor(idsSaldosAFavor)
+      console.log('Estoy en el if de isCheckedEstadoDeDeduda')
+    }
+
+    else {
       setSelectedActas([]);
       setSelectedDeclaracionesJuradas([]);
+      setSelectedSaldosAFavor([]);
     }
+    setShowLoadingDetalle(false);
   }, [isCheckedEstadoDeDeduda]);
 
-  useEffect(() => {
-    //
-  }, [selectedActas, selectedDeclaracionesJuradas, fechaIntencion, noUsar]);
 
   useEffect(() => {
+    setShowLoadingDetalle(true);
     const ATotal = actas
       .filter((item) => selectedActas.includes(item.id))
-      .reduce((acc, item) => (acc += item.importeTotal), 0);
-    console.log('Esto es lo que se tendria que imprimir', ATotal);
+      .reduce((acc, item) => (acc += item.estadoDeuda !== 'JUDICIALIZADO' ? item.importeTotal : 0), 0);
+
     setTotalActas(ATotal);
+
+    setShowLoadingDetalle(false);
   }, [selectedActas]);
 
   useEffect(() => {
+    setShowLoadingDetalle(true);
     const BTotal = declaracionesJuradas
       .filter((item) => selectedDeclaracionesJuradas.includes(item.id))
       .reduce((acc, item) => (acc += item.importeTotal), 0);
-    console.log('Esto es lo que se tendria que imprimir', BTotal);
+
+
     setTotalDeclaracionesJuradas(BTotal);
-  }, [selectedDeclaracionesJuradas]);
+    setShowLoadingDetalle(false);
+  }, [selectedDeclaracionesJuradas, ENTIDAD]);
 
   useEffect(() => {
-    const CTotal = convenios.reduce(
-      (acc, item) => (acc += item.totalActualizado),
-      0,
-    );
-    console.log('Esto es lo que se tendria que imprimir', CTotal);
-    setTotalConvenios(CTotal);
+    setShowLoadingDetalle(true);
+    const CTotal = saldosAFavor
+      .reduce((acc, item) => (acc += item.importe), 0);
+
+    setTotalSaldosAFavor(CTotal);
+    setShowLoadingDetalle(false);
+  }, [saldosAFavor, ENTIDAD]);
+
+  useEffect(() => {
+    setShowLoadingDetalle(true);
+    const totalSaldosAFavorSelecteds = saldosAFavor
+      .filter((item) => selectedSaldosAFavor.includes(item.id))
+      .reduce((acc, item) => (acc += item.importe), 0);
+
+    setTotalSaldosAFavorSelected(totalSaldosAFavorSelecteds);
+    setShowLoadingDetalle(false);
+  }, [selectedSaldosAFavor, ENTIDAD]);
+
+  useEffect(() => {
+    setShowLoadingDetalle(true);
+    if (convenios) {
+      const CTotal = convenios.reduce(
+        (acc, item) => (acc += item.totalActualizado),
+        0,
+      );
+
+      setTotalConvenios(CTotal);
+    }
+    setShowLoadingDetalle(false);
+
+
   }, [convenios]);
 
-  const fetchData = async () => {
-    try {
-      console.log(ID_EMPRESA);
-      console.log(ENTIDAD);
-      const response = await axiosGestionDeudas.getDeclaracionesJuradas(
-        ID_EMPRESA,
-        ENTIDAD,
-      );
-      console.log(response)
-      calcularDetalle();
 
-      console.log('axiosdeclaracionesJuradas.getDeclaracionesJuradas - response:', response);
-      
-      console.log(response['declaracionesJuradas'])
+  useEffect(() => {
+    const totalDeudaCalculada =
+      declaracionesJuradas.reduce((acc, dj) => acc + (dj.importeTotal || 0), 0) +
+      actas.reduce((acc, acta) => acc + (acta.importeTotal || 0), 0);
+    setTotalDeuda(totalDeudaCalculada);
+  }, [ENTIDAD, declaracionesJuradas, actas]);
 
-      setDeclaracionesJuradas(response['declaracionesJuradas']);
-      setActas(response['actas']);
-      setConvenios(response['convenios']);
+  useEffect(() => {
+    if (!shouldCalculate) return;
 
-      const idsActas = response['actas'].map((objeto) => objeto.id);
-      setSelectedActas(idsActas);
+    calcularDetalle();
+  }, [selectedActas, selectedDeclaracionesJuradas, selectedSaldosAFavor, cuotas, fechaIntencion]);
 
-      const idsdeclaracionesJuradas = response['declaracionesJuradas'].map((objeto) => objeto.id);
-      setSelectedDeclaracionesJuradas(idsdeclaracionesJuradas);
-
-      //setSaldoAFavor(response['saldoAFavor']);
-    } catch (error) {
-      console.error('Error al obtener las declaracionesJuradas: ', error);
-    }
+  const handleChangeActas = (value) => {
+    setSelectedActas(value);
+    if (!shouldCalculate) setShouldCalculate(true);
+  };
+  const handleChangeDDJJ = (value) => {
+    setSelectedDeclaracionesJuradas(value);
+    if (!shouldCalculate) setShouldCalculate(true);
+  };
+  const handleChangeSaldo = (value) => {
+    setSelectedSaldosAFavor(value);
+    if (!shouldCalculate) setShouldCalculate(true);
+  };
+  const handleChangeCuotas = (value) => {
+    setCuotas(value);
+    if (!shouldCalculate) setShouldCalculate(true);
+  };
+  const handleChangeFecha = (value) => {
+    setFechaIntencion(value);
+    if (!shouldCalculate) setShouldCalculate(true);
   };
 
   const calcularDetalle = async () => {
-    try {
-      const body = {
-        entidad: 'UOMA',
-        actas: selectedActas,
-        declaracionesJuradas: selectedDeclaracionesJuradas,
-        convenios: convenios.map((convenio) => convenio.id),
-        cuotas: 2,
-        medioDePago: 'CHEQUE',
-        usarSaldoAFavor: true,
-      };
+    const resultado = await calcularDetalleConvenio({
+      declaracionesJuradas,
+      selectedDeclaracionesJuradas,
+      actas,
+      selectedActas,
+      saldosAFavor,
+      selectedSaldosAFavor,
+      cuotas,
+      fechaIntencion,
+      ID_EMPRESA,
+      axiosGestionDeudas
+    });
 
-      const response = await axiosGestionDeudas.getDetalleConvenio(
-        ID_EMPRESA,
-        'UOMA',
-        body,
-      );
-      setDetalleConvenio(response);
-    } catch (error) {
-      console.error('Error al calcular el detalle: ', error);
-    }
+    setImporteDeDeuda(resultado.importeDeuda);
+    setDetalleConvenio(resultado.detalle);
   };
+
 
   return (
     <div className="container_grilla">
+      {rol == 'OSPIM_EMPLEADO' && (
+        <EmpresaAutocomplete
+          empresas={empresas}
+          cuitInput={cuitInput}
+          nombreEmpresa={nombreEmpresa}
+          setCuitInput={setCuitInput}
+          setNombreEmpresa={setNombreEmpresa}
+          buscarPorCuit={buscarPorCuit}
+          buscarPorNombre={buscarPorNombre}
+        />
+      )}
+
       <div className="mb-4em">
         <EstadoDeDeuda
           isCheckedEstadoDeDeduda={isCheckedEstadoDeDeduda}
           setIsCheckedEstadoDeDeduda={setIsCheckedEstadoDeDeduda}
-          fecha_total={'09/07/2024'}
-          deuda={detalleConvenio.totalAPagar}
-          saldo_a_favor={detalleConvenio.saldoAFavor}
+          fecha_total={fechaDelDia ? formatter.dateString(fechaDelDia) : ''}
+          deuda={totalDeuda}
+          saldo_a_favor={totalSaldosAFavor}
         ></EstadoDeDeuda>
         <Accordion>
           <AccordionSummary
@@ -203,7 +417,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
             <GrillaActas
               actas={actas}
               selectedActas={selectedActas}
-              setSelectedActas={setSelectedActas}
+              setSelectedActas={handleChangeActas}
             />
           </AccordionDetails>
         </Accordion>
@@ -232,11 +446,11 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
             <GrillaPeriodo
               declaracionesJuradas={declaracionesJuradas}
               selectedDeclaracionesJuradas={selectedDeclaracionesJuradas}
-              setSelectedDeclaracionesJuradas={setSelectedDeclaracionesJuradas}
+              setSelectedDeclaracionesJuradas={handleChangeDDJJ}
             />
           </AccordionDetails>
         </Accordion>
-        {/*
+
         <Accordion>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -250,27 +464,38 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
               alignItems="center"
             >
               <Typography variant="h6" color="primary">
-                Convenios
+                Saldos a favor
               </Typography>
               <Typography variant="h6" color="primary">
-                TOTAL: {formatter.currencyString(totalConvenios)}
+                TOTAL: {formatter.currencyString(totalSaldosAFavorSelected)}
               </Typography>
             </Box>
           </AccordionSummary>
           <AccordionDetails>
-            <GrillaConvenio convenios={convenios} />
+            <GrillaSaldoAFavor
+              saldoAFavor={saldosAFavor}
+              selectedSaldosAFavor={selectedSaldosAFavor}
+              setSelectedSaldosAFavor={handleChangeSaldo}
+            />
           </AccordionDetails>
         </Accordion>
-      */}
         <OpcionesDePago
           cuotas={cuotas}
-          setCuotas={setCuotas}
+          intereses={intereses}
+          setCuotas={handleChangeCuotas}
           fechaIntencion={fechaIntencion}
-          setFechaIntencion={setFechaIntencion}
+          setFechaIntencion={handleChangeFecha}
+          saldoAFavor={formatter.currencyString(totalSaldosAFavorSelected)}
           noUsar={noUsar}
           setNoUsar={setNoUsar}
           medioPago={medioPago}
+          importeDeDeuda={importeDeDeuda}
           detalleConvenio={detalleConvenio}
+          saldoAFavorUtilizado={totalSaldosAFavorSelected}
+          handleGenerarConvenio={handleGenerarConvenio}
+          handleActualizarConvenio={handleActualizarConvenio}
+          isEditar={window.location.hash.includes('/editar')}
+          showLoading={showLoading}
         ></OpcionesDePago>
       </div>
     </div>
