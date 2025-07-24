@@ -27,6 +27,7 @@ import { ThreeCircles } from 'react-loader-spinner';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import NavBar from '@/components/navbar/NavBar.jsx';
 
+
 const VITE_WELCOME_PORTAL = import.meta.env.VITE_WELCOME_PORTAL;
 
 export const LoginPage = () => {
@@ -41,7 +42,7 @@ export const LoginPage = () => {
   const [refreshToken, setRefreshToken] = useState(null);
   const [showLoading, setShowLoading] = useState(true);
   const [showInputComponent, setShowInputComponent] = useState(false);
-  const { setSesionToken } = useContext(UserContext);
+  const { triggerSessionRefresh } = useContext(UserContext);
   /////////////////////////////////////////////////////////////////////////////////////////////
   const [showPassword, setShowPassword] = useState(false);
 
@@ -129,13 +130,14 @@ export const LoginPage = () => {
         const usuarioLogueado = await consultarUsuarioLogueado(loginDto.token);
         console.log('usuarioLogueado: ');
         console.log(usuarioLogueado);
+        
 
         getUsuarioLogueadoInfo(
           usuarioLogueado,
           loginDto.token,
           loginDto.tokenRefresco,
         );
-
+        triggerSessionRefresh();
         //showSwalSuccess(VITE_WELCOME_PORTAL);
       }
     } else {
@@ -176,6 +178,7 @@ export const LoginPage = () => {
     if (usuarioLogueado.hasOwnProperty('usuario')) {
       usuarioLogueado.usuario.token = token;
       usuarioLogueado.usuario.tokenRefresco = refreshToken;
+      triggerSessionRefresh();
       console.log(usuarioLogueado);
       navigate('/dashboard/inicio', {
         replace: true,

@@ -6,7 +6,7 @@ import * as locales from '@mui/material/locale';
 
 export const UserProvider = ({ children }) => {
   //const [sesionToken, setSesionToken] = useState(null);
-  const pageSizeOptions = [ 50, 75, 100];
+  const pageSizeOptions = [50, 75, 100];
   const [paginationModel, setPaginationModel] = useState({
     pageSize: 50,
     page: 0,
@@ -17,6 +17,11 @@ export const UserProvider = ({ children }) => {
     () => createTheme(theme, locales[localSet]),
     [localSet, theme],
   );
+  const [sessionVersion, setSessionVersion] = useState(0);
+
+  const triggerSessionRefresh = () => {
+    setSessionVersion(prev => prev + 1);
+  };
 
   return (
     <UserContext.Provider
@@ -26,7 +31,8 @@ export const UserProvider = ({ children }) => {
         pageSizeOptions,
         localSet,
         themeWithLocale,
-        //setSesionToken
+        sessionVersion,
+        triggerSessionRefresh
       }}
     >
       {children}

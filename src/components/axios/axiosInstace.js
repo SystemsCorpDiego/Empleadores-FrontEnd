@@ -67,7 +67,7 @@ oAxios.interceptors.response.use(
           return rta;
         }
         console.log('oAxios.interceptors.response - GO LOGIN');
-        window.location.href = '/';
+        window.location.href = '/empleadores/#/login';
         return error;
       }
 
@@ -119,7 +119,7 @@ const execTokenRefresh = async () => {
         console.log(
           '** oAxios.interceptors.response - token/refresh:ERROR - VOY AL LOGUIN',
         );
-        window.location.href = '/';
+        window.location.href = '/empleadores/#/login';
         return false;
       });
     return rta;

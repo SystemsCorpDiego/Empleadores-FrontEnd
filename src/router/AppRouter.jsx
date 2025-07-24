@@ -2,8 +2,7 @@ import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import { getRol } from '@/components/localStorage/localStorageService';
 import { getFuncionalidadesByRol } from '@/pages/dashboard/DashboardPageApi';
-///Users/ferminpaez/Documents/GitHub/Empleadores-FrontEnd/src/pages/dashboard/DashboardPage.jsx
-///Users/ferminpaez/Documents/GitHub/Empleadores-FrontEnd/src/router/AppRouter.jsx
+
 import { useEffect, useState, useContext } from 'react';
 import localStorageService from '@/components/localStorage/localStorageService';
 
@@ -13,7 +12,7 @@ import NavBar from '../components/navbar/NavBar';
 import { DatosEmpresa } from '../pages/dashboard/pages_dashboard/datos_empresa/DatosEmpresa';
 import { DatosPerfil } from '@/pages/dashboard/pages_dashboard/datosPerfil/DatosPerfil';
 import { Publicaciones } from '../pages/dashboard/pages_dashboard/publicaciones/Publicaciones';
-//import { RecuperoPage } from '../pages/recupero/RecuperoPage';
+
 import { RecuperarClave } from '@/pages/login/recuperarClave/RecuperarClave';
 import { RecuperarClaveForm } from '@/pages/login/recuperarClave/RecuperarClaveForm';
 import DashboardPage from '../pages/dashboard/DashboardPage';
@@ -44,37 +43,38 @@ import { Convenios } from '@/pages/dashboard/pages_dashboard/convenios/Convenios
 import { Cuotas } from '@/pages/dashboard/pages_dashboard/convenios/cuotas/Cuotas';
 import { ParametrosConvenios } from '@/pages/dashboard/pages_dashboard/ParametrosConvenios/ParametrosConvenios';
 
+
+
 const PagosPage = () => (
   <div className="otros_pagos_container">Contenido de la página de pagos</div>
 );
 
 const AppRouter = () => {
-  //const { sesionToken } = useContext(UserContext);
-  const rol = localStorageService.getRol();
-  const [rolFuncionalidades, setRolFuncionalidades] = useState({});
-  useEffect(() => {
-    const fetchData = async () => {
-      //const { funcionalidades } = await getFuncionalidadesByRol(rol);
-      
-      if (rol !== null || rol !== undefined) {
-       const {funcionalidades}    = await getFuncionalidadesByRol(rol);
-             //console.log('DashboardPage - funcionalidades:', funcionalidades);
-      const roles = {};
-      funcionalidades.forEach((funcionalidad) => {
-        roles[funcionalidad.descripcion] = funcionalidad.activo;
-      });
-      console.log(roles);
-      setRolFuncionalidades(roles);
-      console.log('DashboardPage - roles: ', roles);
-      }
-      
 
+  const [rol, setRol] = useState(null);
+
+  const [rolFuncionalidades, setRolFuncionalidades] = useState({});
+  const { sessionVersion } = useContext(UserContext);
+  useEffect(() => {
+    console.log('Se dispara el useEffect de AppRouter');
+    const fetchData = async () => {
+      const nuevoRol = localStorageService.getRol();
+      if (nuevoRol === rol) return;
+      setRol(nuevoRol);
+      if (nuevoRol !== null && nuevoRol !== undefined) {
+        const { funcionalidades } = await getFuncionalidadesByRol(nuevoRol);
+        const roles = {};
+        funcionalidades.forEach((f) => {
+          roles[f.descripcion] = f.activo;
+        });
+        setRolFuncionalidades(roles);
+      }
     };
 
     fetchData();
-  }, []);
+  }, [sessionVersion, rol]);
   return (
-    <UserProvider>
+    
       <Routes>
         <Route path="login" element={<LoginPage />} />
         <Route path="recupero" element={<RecuperarClave />} />
@@ -99,7 +99,7 @@ const AppRouter = () => {
             path="inicio"
             index
             element={
-             <Inicio />
+              <Inicio />
             }
           />
           <Route
@@ -307,9 +307,9 @@ const AppRouter = () => {
         </Route>
         <Route path="registercompany" element={<RegistroEmpresa />} />
         <Route index element={<Navigate to="/login" />} />
-        {/* </Route> */}
+        
       </Routes>
-    </UserProvider>
+    
   );
 };
 
