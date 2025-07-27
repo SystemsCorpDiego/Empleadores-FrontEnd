@@ -167,8 +167,7 @@ const showErrorBackEnd = async (HTTP_MSG, rta) => {
       }
     } else {
       console.log('* showErrorBackEnd - NOOO ticket');
-      console.log(rta);
-      if (rta.status === 401) return // Si es un error 401, no mostrar swal
+     
       if (rta.code && rta.code == 'ECONNABORTED') {
         showSwalError(
           'Error de TimeOut en el Servidor.<br>Por favor realice alguna de las siguientes acciones:<br><br>1)Si intentó registrar información: consulte los datos para verificar el estado y vuelva a intentarlo de ser necesario.<br>2)Si intentó consultar información: por favor filtre la búsqueda.',

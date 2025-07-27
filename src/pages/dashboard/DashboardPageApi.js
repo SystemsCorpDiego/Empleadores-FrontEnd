@@ -11,6 +11,6 @@ export const getFuncionalidadesByRol = async (rol) => {
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
-    swal.showErrorBackEnd(HTTP_MSG, error);
+    
   }
 };
