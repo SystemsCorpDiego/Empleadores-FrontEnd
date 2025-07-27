@@ -170,7 +170,7 @@ export const generarConvenio = async (ID_EMPRESA, bodyConvenio, axiosGestionDeud
     const response = await axiosGestionDeudas.generarConvenio(ID_EMPRESA, bodyConvenio);
     console.log('Respuesta del servidor:', response);
     setShowLoading(false);
-    if (response) {
+    if (response === true) { 
       await swal.fire({
         icon: 'success',
         title: 'Convenio generado correctamente',
@@ -181,7 +181,7 @@ export const generarConvenio = async (ID_EMPRESA, bodyConvenio, axiosGestionDeud
       await swal.fire({
         icon: 'error',
         title: 'Error',
-        text: (response && response.message) ? response.message : 'No se pudo generar el convenio.',
+        text: (response && response.descripcion) ? response.descripcion : 'No se pudo generar el convenio.',
         confirmButtonText: 'Aceptar'
       });
       return false;
@@ -224,13 +224,14 @@ export const actualizarConvenio = async (ID_EMPRESA, convenioId, bodyConvenio, a
     });
     return true;
   } catch (error) {
-
+/*
     await swal.fire({
       icon: 'error',
       title: 'Error',
       text: error?.response?.data?.message || error.message || 'Ocurrió un error al actualizar el convenio.',
       confirmButtonText: 'Aceptar'
     });
+    */
     return false;
   }
 };

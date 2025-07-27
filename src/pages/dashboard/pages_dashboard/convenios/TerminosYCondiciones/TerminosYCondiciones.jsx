@@ -15,6 +15,13 @@ const TerminosYCondiciones = ({open, setOpen, rowTyC, setRowTyC, fetchData}) => 
         handleClose();
         setRowTyC(null); // Limpiar el estado de la fila después de aceptar
         fetchData()
+        Swal.fire({
+            icon: 'success',
+            title: 'Términos y Condiciones Aceptados',
+            text: 'convenio generado, el mismo será aprobado por ospim.',
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#1a76d2',
+        });
     }
     React.useEffect(() => {
         if (open) {
@@ -35,6 +42,7 @@ const TerminosYCondiciones = ({open, setOpen, rowTyC, setRowTyC, fetchData}) => 
                 }
             }).then(async (result) => {
                 if (result.isConfirmed) {
+
                     await handleAceptar();
                 }
                 handleClose();

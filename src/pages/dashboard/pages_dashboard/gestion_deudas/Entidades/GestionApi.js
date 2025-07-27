@@ -6,120 +6,6 @@ import Swal from 'sweetalert2';
 const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
 const HTTP_MSG_MODI_ERROR = import.meta.env.VITE_HTTP_MSG_MODI_ERROR;
 const VITE_HTTP_MSG_ALTA_ERROR = import.meta.env.VITE_HTTP_MSG_ALTA_ERROR;
-const emuRespuesta = {
-  "id": 20,
-  "entidad": "UOMA",
-  "empresaId": "836",
-  "cuit": "30537582916",
-  "razonSocial": "PUEBA 30537582916",
-  "deuda": 994435.14,
-  "interes": 7359340.84,
-  "saldoFavor": 100000,
-  "intencionPago": "2025-06-20",
-  "cuotas": 3,
-  "medioPago": "CHEQUE",
-  "convenioNro": null,
-  "actas": [],
-  "declaracionesJuradas": [
-    {
-      "convenioDdjjId": 57,
-      "id": 7872028,
-      "periodo": "2025-01-01",
-      "rectificativa": 0,
-      "aporteCodigo": "ART46",
-      "aporteDescripcion": "Art. 46",
-      "importe": 14056.78,
-      "intereses": 4566.08,
-      "importeTotal": 18622.86
-    },
-    {
-      "convenioDdjjId": 57,
-      "id": 7872028,
-      "periodo": "2025-01-01",
-      "rectificativa": 0,
-      "aporteCodigo": "UOMAAS",
-      "aporteDescripcion": "Aporte Solidario UOMA",
-      "importe": 353000,
-      "intereses": 110121.96,
-      "importeTotal": 463121.96
-    },
-    {
-      "convenioDdjjId": 57,
-      "id": 7872028,
-      "periodo": "2025-01-01",
-      "rectificativa": 0,
-      "aporteCodigo": "UOMACS",
-      "aporteDescripcion": "Cuota Social UOMA",
-      "importe": 353000,
-      "intereses": 114647.52,
-      "importeTotal": 467647.52
-    },
-    {
-      "convenioDdjjId": 57,
-      "id": 7872028,
-      "periodo": "2025-01-01",
-      "rectificativa": 0,
-      "aporteCodigo": "UOMACU",
-      "aporteDescripcion": "Cuota Usufructo",
-      "importe": 34000,
-      "intereses": 11042.8,
-      "importeTotal": 45042.8
-    },
-    {
-      "convenioDdjjId": null,
-      "id": 7872027,
-      "periodo": "2025-01-01",
-      "rectificativa": 0,
-      "aporteCodigo": "ART46",
-      "aporteDescripcion": "Art. 46",
-      "importe": 14056.78,
-      "intereses": 4566.08,
-      "importeTotal": 18622.86
-    },
-    {
-      "convenioDdjjId": null,
-      "id": 7872027,
-      "periodo": "2025-01-01",
-      "rectificativa": 0,
-      "aporteCodigo": "UOMAAS",
-      "aporteDescripcion": "Aporte Solidario UOMA",
-      "importe": 353000,
-      "intereses": 110121.96,
-      "importeTotal": 463121.96
-    },
-    {
-      "convenioDdjjId": null,
-      "id": 7872027,
-      "periodo": "2025-01-01",
-      "rectificativa": 0,
-      "aporteCodigo": "UOMACS",
-      "aporteDescripcion": "Cuota Social UOMA",
-      "importe": 353000,
-      "intereses": 114647.52,
-      "importeTotal": 467647.52
-    },
-    {
-      "convenioDdjjId": null,
-      "id": 7872027,
-      "periodo": "2025-01-01",
-      "rectificativa": 0,
-      "aporteCodigo": "UOMACU",
-      "aporteDescripcion": "Cuota Usufructo",
-      "importe": 34000,
-      "intereses": 11042.8,
-      "importeTotal": 45042.8
-    }
-  ],
-  "saldosAFavor": [
-    {
-      "convenioAjusteId": 70,
-      "id": 9243,
-      "motivo": "O",
-      "importe": -100000,
-      "vigencia": "2025-01-01"
-    }
-  ]
-}
 
 const ordenaGrillaPeriodo = (response) => {
   console.log('response', response.declaracionesJuradas);
@@ -202,23 +88,7 @@ export const getDeclaracionesJuradas = async (empresa_id, entidad) => {
   }
 };
 
-export const getBoletasUsuarioInterno = async (entidad) => {
-  const URL = `/empresa/boletas/gestion-deuda/${entidad}`;
-  //const response = axiosCrud.consultar(URL);
-  //return response;
-  switch (entidad) {
-    case 'AMTIMA':
-      return emuRespuesta;
-    case 'OSPIM':
-      return emuRespuesta;
-    case 'UOMA':
-      return emuRespuesta;
-    default:
-      console.log('Entidad invalida');
-  }
 
-  return emuRespuesta;
-};
 
 export const getDetalleConvenio = async (empresa_id, body) => {
   try {
@@ -252,15 +122,17 @@ export const generarConvenio = async (idEmpresa, bodyConvenio) => {
   try {
     const URL = `/empresa/${idEmpresa}/convenios`;
     const response = await axiosCrud.crear(URL, bodyConvenio);
+    console.log('response', response);
     if (response && response.id) {
       console.log('Convenio generado:', response);
       return true;
     }
     else {
-      throw new Error(VITE_HTTP_MSG_ALTA_ERROR);
+      return response; //Envia en el response el mensaje de error a generarConvenio de empresaHelper.js
     }
 
   } catch (error) {
+    console.error('Error al generar el convenio:', error);
     throw error;
   }
 };
@@ -295,6 +167,12 @@ const putActualizarConvenio = async (empresa_id, convenioId, body) => {
     if (response === true) {
       return true;
     } else {
+            await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: response.descripcion,
+        confirmButtonText: 'Aceptar'
+      });
       throw new Error(HTTP_MSG_MODI_ERROR);
     }
   } catch (error) {
