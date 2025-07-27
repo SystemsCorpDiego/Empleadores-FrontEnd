@@ -20,8 +20,11 @@ export const fetchEmpresaData = async (
   setSelectedActas,
   setSelectedDeclaracionesJuradas,
   setSelectedSaldosAFavor,
-  setTotalDeuda
+  setTotalDeuda,
+  setLoadAllEmpresas
 ) => {
+  setLoadAllEmpresas(true);
+  
   try {
     let response;
     if (!editar) {
@@ -108,8 +111,10 @@ export const fetchEmpresaData = async (
       response['declaracionesJuradas'].reduce((acc, dj) => acc + (dj.importeTotal || 0), 0) +
       response['actas'].reduce((acc, acta) => acc + (acta.importeTotal || 0), 0);
     setTotalDeuda(totalDeudaCalculada);
+    setLoadAllEmpresas(false);
   } catch (error) {
     console.error('Error al obtener las declaracionesJuradas: ', error);
+    setLoadAllEmpresas(false);
   }
 };
 

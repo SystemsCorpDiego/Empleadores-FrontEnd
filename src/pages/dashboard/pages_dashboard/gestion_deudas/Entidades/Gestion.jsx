@@ -20,6 +20,8 @@ import EmpresaAutocomplete from '../components/EmpresaAutocomplete';
 import { calcularDetalleConvenio } from '../components/detalleHelper';
 import { buscarEmpresaPorCuit, buscarEmpresaPorNombre, fetchEmpresaData, generarConvenio, actualizarConvenio } from '../components/empresaHelper';
 import { crearBodyConvenio } from '../components/convenioHelper';
+import { ThreeCircles } from 'react-loader-spinner';
+
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -81,7 +83,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   const [shouldCalculate, setShouldCalculate] = useState(!window.location.hash.includes('/editar'));
   const [intereses, setIntereses] = useState(0); //Se usa para guardar los intereses de la deuda
   const [empresas, setEmpresas] = useState([]); //Se usa para guardar las empresas que vienen del backend
-
+  const [loadAllEmpresas, setLoadAllEmpresas] = useState(false); //Se usa para cargar todas las empresas al inicio
 
   useEffect(() => {
     setRol(getRol());
@@ -110,7 +112,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       setSelectedActas,
       setSelectedDeclaracionesJuradas,
       setSelectedSaldosAFavor,
-      setTotalDeuda
+      setTotalDeuda,
+      setLoadAllEmpresas
     );
     if (isEditar) {
       setIsCheckedEstadoDeDeduda(false);
@@ -371,7 +374,28 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   };
 
 
-  return (
+  return loadAllEmpresas ? (
+ <div
+  className="container_grilla"
+  style={{
+    height: '50vh', // o una altura razonable
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+  }}
+>
+  <p style={{ marginBottom: '1em' }}>Cargando empresas...</p>
+  <ThreeCircles
+    visible={loadAllEmpresas}
+    height="100"
+    width="100"
+    color="#1A76D2"
+    ariaLabel="three-circles-loading"
+  />
+</div>
+  ) : (
     <div className="container_grilla">
       {rol == 'OSPIM_EMPLEADO' && (
         <EmpresaAutocomplete
