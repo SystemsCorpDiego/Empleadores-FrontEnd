@@ -170,7 +170,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           setSelectedActas,
           setSelectedDeclaracionesJuradas,
           setSelectedSaldosAFavor,
-          setTotalDeuda
+          setTotalDeuda,
+          setLoadAllEmpresas
         ),
     });
   };
