@@ -3,25 +3,27 @@ import { Modal, Button } from 'react-bootstrap';
 import ConveniosService from '@/pages/dashboard/pages_dashboard/convenios/ConveniosApi';
 import Swal from 'sweetalert2';
 
-const TerminosYCondiciones = ({open, setOpen, rowTyC, setRowTyC, fetchData}) => {
+const TerminosYCondiciones = ({ open, setOpen, rowTyC, setRowTyC, fetchData }) => {
     const handleClose = () => setOpen(false);
 
-    const handleAceptar =async () => {
-        
+    const handleAceptar = async () => {
+
         console.log(rowTyC)
         const response = await ConveniosService.aceptarTerminosYCondiciones(rowTyC)
-        
+
         console.log('Términos y condiciones aceptados:', response);
         handleClose();
         setRowTyC(null); // Limpiar el estado de la fila después de aceptar
         fetchData()
-        Swal.fire({
-            icon: 'success',
-            title: 'Términos y Condiciones Aceptados',
-            text: 'convenio generado, el mismo será aprobado por ospim.',
-            confirmButtonText: 'Aceptar',
-            confirmButtonColor: '#1a76d2',
-        });
+        if (response === true) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Términos y Condiciones Aceptados',
+                text: 'convenio generado, el mismo será aprobado por ospim.',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#1a76d2',
+            });
+        }
     }
     React.useEffect(() => {
         if (open) {
@@ -38,7 +40,7 @@ const TerminosYCondiciones = ({open, setOpen, rowTyC, setRowTyC, fetchData}) => 
                 reverseButtons: true,
                 customClass: {
                     popup: 'swal2-modal-tyc',
-                    
+
                 }
             }).then(async (result) => {
                 if (result.isConfirmed) {

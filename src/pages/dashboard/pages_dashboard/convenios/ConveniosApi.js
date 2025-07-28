@@ -217,7 +217,8 @@ const ConveniosService = {
                 `axiosCrud.actualizar()`,
                 error,
             );
-            swal.showErrorBackEnd(error.response.data.descripcion,);
+            swal.showErrorBackEnd(error.response.data.descripcion ? error.response.data.descripcion :`Error en la respuesta del servidor.` ,);
+            
             return false
         }
     },

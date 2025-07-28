@@ -36,7 +36,8 @@ import TerminosYCondiciones from './TerminosYCondiciones/TerminosYCondiciones';
 import localStorageService from '@/components/localStorage/localStorageService';
 import { consultar as consultarCuotas } from './cuotas/CuotasApi';
 
-import {axiosGestionDeudas} from './../gestion_deudas/Entidades/GestionApi';
+import { axiosGestionDeudas } from './../gestion_deudas/Entidades/GestionApi';
+import * as XLSX from 'xlsx';
 //import { consultarCuotas } from './cuotas/CuotasApi';
 //import { getConveniosByDateAndState } from './ConveniosApi';
 // Columnas del DataGrid
@@ -173,33 +174,26 @@ export const Convenios = () => {
   const handleDownload = (row) => async () => {
     console.log('Descargando cuotas para el convenio:', row.id);
     try {
-
-
       const empresaID = await axiosGestionDeudas.getEmpresaByCuit(row.cuit)
       const cuotas = await consultarCuotas(row.id, empresaID)
       if (!Array.isArray(cuotas)) throw new Error('Formato de cuotas inesperado');
 
-      const response = await axiosGestionDeudas.getDeclaracionesJuradasEditar(empresaID,row.id);
+      const response = await axiosGestionDeudas.getDeclaracionesJuradasEditar(empresaID, row.id);
       const actas = response.actas;
-      console.log('Actas:', actas);
-      const nroActasStr = Array.isArray(actas) && actas.length > 0
-        ? actas.map(a => a.nroActa).join('/ ')
-        : '';
 
-        console.log('Números de actas:', nroActasStr);
+      const nroActasStr = Array.isArray(actas) && actas.length > 0 ? actas.map(a => a.nroActa).join('/ ') : '';
+
       const declaracionesJuradas = response.declaracionesJuradas;
 
-      console.log('Declaraciones Juradas:', declaracionesJuradas);
-      const periodosStr = Array.isArray(declaracionesJuradas) && declaracionesJuradas.length > 0
-        ? declaracionesJuradas.map(a => a.periodo).join('/ ')
-        : '';
-      console.log('Períodos de declaraciones juradas:', periodosStr);
+
+      const periodosStr = Array.isArray(declaracionesJuradas) && declaracionesJuradas.length > 0 ? declaracionesJuradas.map(a => a.periodo).join('/ ') : '';
+
 
       console.log('Datos de la empresa:', response);
 
       const convenioInfo = {
         cuit: row.cuit,
-
+        razonSocial: response.razonSocial,
         convenioId: row.id,
         fecha: row.fecha,
         numero: row.numero,
@@ -223,6 +217,7 @@ export const Convenios = () => {
 
       const headerMap = {
         cuit: 'CUIT',
+        razonSocial: 'Razon Social',
         convenioId: 'ID Convenio',
         fecha: 'Fecha',
         numero: 'Numero',
@@ -241,24 +236,23 @@ export const Convenios = () => {
       };
 
       const headers = Object.keys(headerMap);
-      const headerLabels = headers.map((key) => headerMap[key]);
 
-      const csvContent = [
-        headerLabels.join(','), // encabezados legibles
-        ...allRows.map((r) =>
-          headers.map((h) => `"${String(r[h] ?? '').replace(/"/g, '""')}"`).join(',')
-        ),
-      ].join('\r\n');
 
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const worksheet = XLSX.utils.json_to_sheet(allRows, { header: headers });
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Deuda');
+
+      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+      const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = `${row.cuit}_convenio_${row.id}_cuotas.csv`;
-      a.style.display = 'none';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
+
     } catch (error) {
       console.error('Error generando CSV:', error);
       alert('Ocurrió un error al descargar las cuotas del convenio.');
@@ -384,17 +378,17 @@ export const Convenios = () => {
             sx={{ color: 'primary.main' }}
             onClick={() => handleImprimir(row)}
           />,
-          ...(row.estado !== 'PRES' && row.estado !== 'Presentado' 
+          ...(row.estado !== 'PRES' && row.estado !== 'Presentado'
             ? [
-          <GridActionsCellItem
-            icon={<EditIcon />} 
-            label="Editar"
-            title="Editar"
-            sx={{ color: 'primary.main' }}
-            onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/editar/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`)}
-            color="inherit"
-          />,
-              ]
+              <GridActionsCellItem
+                icon={<EditIcon />}
+                label="Editar"
+                title="Editar"
+                sx={{ color: 'primary.main' }}
+                onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/editar/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`)}
+                color="inherit"
+              />,
+            ]
             : []),
           <GridActionsCellItem
             icon={<AccountBalanceWalletIcon />}
@@ -609,7 +603,7 @@ export const Convenios = () => {
     */
     setRows(filteredRows);
   }
-  
+
 
   return (
     <Box>
@@ -658,7 +652,7 @@ export const Convenios = () => {
           <Button variant="contained" color="primary" onClick={() => handleBuscar(filtros)}>
             Buscar
           </Button>
-          
+
         </Box>
         {/* DataGrid */}
         <Box sx={{ height: 450, width: '100%' }}>
