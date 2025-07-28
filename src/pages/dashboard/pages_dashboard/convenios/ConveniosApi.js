@@ -107,14 +107,15 @@ const ConveniosService = {
         }
     },
 
-    getConveniosByDateAndState: async (filtro, empresaId) => {
+    getConveniosByDateAndState: async (filtro, empresaId, rol) => {
         const { fechaDesde, fechaHasta, estado } = filtro;
+        console.log('empresaId = ',  empresaId)
         console.log('fechaDesde:', fechaDesde);
         console.log('fechaHasta:', fechaHasta);
         console.log('fechaHasta == null:', fechaHasta == '');
         console.log('estado:', estado);
-        const emp = empresaId == '833' ? '' : empresaId;
-
+        const emp = rol === 'OSPIM_EMPLEADO' ? '' : empresaId;
+        console.log('emp:', emp);
         try {
             // Construir los parámetros dinámicamente
             const params = [];
@@ -177,7 +178,7 @@ const ConveniosService = {
                 swal.showErrorBackEnd(`Error al actualizar el convenio`, response.data.descripcion);
                 return false;
             }
-            
+
             return true;
         } catch (error) {
             console.log(
@@ -193,7 +194,7 @@ const ConveniosService = {
 
         try {
             const response = await oAxios.post(`/convenios/${updatedRow.id}/estado-set/PRES`, {});
-          //const response = await oAxios.post(URL, {});
+            //const response = await oAxios.post(URL, {});
             console.log('Convenio actualizado:', response);
             if (
                 response.status !== 204 &&
@@ -206,17 +207,17 @@ const ConveniosService = {
                         response,
                     )} `,
                 );
-                swal.showErrorBackEnd( response.data.descripcion,`Error al actualizar el convenio`);
+                swal.showErrorBackEnd(response.data.descripcion, `Error al actualizar el convenio`);
                 return false;
             }
-            
+
             return true;
         } catch (error) {
             console.log(
                 `axiosCrud.actualizar()`,
                 error,
             );
-            swal.showErrorBackEnd(error.response.data.descripcion, );
+            swal.showErrorBackEnd(error.response.data.descripcion,);
             return false
         }
     },

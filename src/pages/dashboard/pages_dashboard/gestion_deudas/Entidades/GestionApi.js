@@ -2,6 +2,7 @@ import oAxios from '@components/axios/axiosInstace';
 import { axiosCrud } from '@/components/axios/axiosCrud';
 import swal from '@/components/swal/swal';
 import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
 
 const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
 const HTTP_MSG_MODI_ERROR = import.meta.env.VITE_HTTP_MSG_MODI_ERROR;
@@ -167,7 +168,7 @@ const putActualizarConvenio = async (empresa_id, convenioId, body) => {
     if (response === true) {
       return true;
     } else {
-            await Swal.fire({
+      await Swal.fire({
         icon: 'error',
         title: 'Error',
         text: response.descripcion,
@@ -182,7 +183,7 @@ const putActualizarConvenio = async (empresa_id, convenioId, body) => {
 
 
 
-const getEmpresaByCuit = async (cuit,empresas) => {
+const getEmpresaByCuit = async (cuit, empresas) => {
   try {
     //console.log('getEmpresaByCuit - cuit:', cuit);
     //const URL = `/empresa`;
@@ -203,7 +204,7 @@ const getEmpresaByCuit = async (cuit,empresas) => {
       if (!empresaEncontrada) {
         throw new Error('No se encontró la empresa con el CUIT proporcionado.');
       }
-      return empresaEncontrada.id? empresaEncontrada.id : null;
+      return empresaEncontrada.id ? empresaEncontrada.id : null;
     } else {
       throw new Error('No se encontró la empresa con el CUIT proporcionado.');
     }
@@ -215,8 +216,8 @@ const getEmpresaByCuit = async (cuit,empresas) => {
 const getEmpresaByNombre = async (nombreEmpresa, empresas) => {
   try {
     //console.log('getEmpresaByCuit - cuit:', cuit);
-    
-    const response =empresas
+
+    const response = empresas
     console.log('response', response);
     if (response && response.length > 0) {
 
@@ -225,7 +226,7 @@ const getEmpresaByNombre = async (nombreEmpresa, empresas) => {
       if (!empresaEncontrada) {
         throw new Error('No se encontró la empresa con el CUIT proporcionado.');
       }
-      return empresaEncontrada.id? empresaEncontrada.id : null;
+      return empresaEncontrada.id ? empresaEncontrada.id : null;
     } else {
       throw new Error('No se encontró la empresa con el CUIT proporcionado.');
     }
@@ -249,6 +250,132 @@ const getEmpresas = async () => {
   }
 };
 
+const downloadDeuda = async () => {
+  try {
+    const uriApi = `/deuda/`;
+    const response = await axiosCrud.consultar(uriApi);
+    console.log('response', response);
+    if (!Array.isArray(response)) throw new Error('Formato de Deudas inesperado');
+
+    const DEUDA_INFO = response.map((item) => ({
+      id: item.id,
+      acta_id: item.acta_id,
+      ddjj_id: item.ddjj_id,
+      cuit: item.cuit,
+      periodo: item.periodo,
+      aporte: item.aporte,
+      entidad: item.entidad,
+      interes: item.interes,
+      aporteDescripcion: item.aporteDescripcion,
+      vencimiento: item.vencimiento,
+      convenio_id: item.convenio_id,
+      boletaPago_secuencia: item.boletaPago_secuencia,
+      boleta_id: item.boleta_id,
+      ddjj_secuencia: item.ddjj_secuencia,
+      aporte_pago_fecha_info: item.aporte_pago_fecha_info,
+      aporte_pago: item.aporte_pago,
+      aporte_importe: item.aporte_importe,
+    }));
+
+    const HEADER_MAP = {
+      id: 'ID',
+      acta_id: 'Acta ID',
+      ddjj_id: 'DDJJ ID',
+      cuit: 'CUIT',
+      periodo: 'Periodo',
+      aporte: 'Aporte',
+      entidad: 'Entidad',
+      interes: 'Interés',
+      aporteDescripcion: 'Descripción Aporte',
+      vencimiento: 'Vencimiento',
+      convenio_id: 'Convenio ID',
+      boletaPago_secuencia: 'Boleta Pago Secuencia',
+      boleta_id: 'Boleta ID',
+      ddjj_secuencia: 'DDJJ Secuencia',
+      aporte_pago_fecha_info: 'Fecha Pago Aporte Info',
+      aporte_pago: 'Pago Aporte',
+      aporte_importe: 'Importe Aporte'
+    }
+
+    const headers = Object.keys(HEADER_MAP);
+    const headerLabels = headers.map((key) => HEADER_MAP[key]);
+
+    const csvContent = [
+      headerLabels.join(','), // encabezados legibles
+      ...DEUDA_INFO.map((r) =>
+        headers.map((h) => `"${String(r[h] ?? '').replace(/"/g, '""')}"`).join(',')
+      ),
+    ].join('\r\n');
+
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `deudaTotal.csv`;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+
+    return response;
+  } catch (error) {
+    //const HTTP_MSG =
+    //  HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
+    //throw error;
+    console.error('Error generando CSV:', error);
+    alert('Ocurrió un error al descargar las cuotas del convenio.');
+  }
+};
+
+const downloadExcel = async () => {
+  try {
+    const urlApi = `/deuda/`;
+    const response = await axiosCrud.consultar(urlApi);
+    console.log('response', response);
+    if (!Array.isArray(response)) throw new Error('Formato de Deudas inesperado');
+
+    const DEUDA_INFO = response.map((item) => ({
+      ID: item.id,
+      'Acta ID': item.acta_id,
+      'DDJJ ID': item.ddjj_id,
+      CUIT: item.cuit,
+      Periodo: item.periodo,
+      Aporte: item.aporte,
+      Entidad: item.entidad,
+      Interés: item.interes,
+      'Descripción Aporte': item.aporteDescripcion,
+      Vencimiento: item.vencimiento,
+      'Convenio ID': item.convenio_id,
+      'Boleta Pago Secuencia': item.boletaPago_secuencia,
+      'Boleta ID': item.boleta_id,
+      'DDJJ Secuencia': item.ddjj_secuencia,
+      'Fecha Pago Aporte Info': item.aporte_pago_fecha_info,
+      'Pago Aporte': item.aporte_pago,
+      'Importe Aporte': item.aporte_importe,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(DEUDA_INFO);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Deuda');
+    
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'deudaTotal.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch (error) {
+    console.error('Error generando Excel:', error);
+    alert('Ocurrió un error al descargar el archivo Excel.');
+  }
+};
+
 export const axiosGestionDeudas = {
   getDeclaracionesJuradas,
   getDetalleConvenio,
@@ -257,5 +384,7 @@ export const axiosGestionDeudas = {
   getEmpresaByCuit,
   getEmpresaByNombre,
   getEmpresas,
-  generarConvenio
+  generarConvenio,
+  downloadDeuda,
+  downloadExcel
 };

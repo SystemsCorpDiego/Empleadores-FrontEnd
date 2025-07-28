@@ -21,7 +21,8 @@ export const fetchEmpresaData = async (
   setSelectedDeclaracionesJuradas,
   setSelectedSaldosAFavor,
   setTotalDeuda,
-  setLoadAllEmpresas
+  setLoadAllEmpresas,
+  rol
 ) => {
   setLoadAllEmpresas(true);
   
@@ -29,7 +30,7 @@ export const fetchEmpresaData = async (
     let response;
     if (!editar) {
       empresa = empresa || ID_EMPRESA; 
-      if (empresa !== "833") {
+      if (rol !== "OSPIM_EMPLEADO") {
         response = await axiosGestionDeudas.getDeclaracionesJuradas(
           empresa,
           ENTIDAD,
@@ -46,7 +47,7 @@ export const fetchEmpresaData = async (
         setDetalleConvenio(response.lstCuotas);
       }
     }
-    if (response.intencionPago) {
+    if (response.intencionPago && response.intencionPago !== null && response.intencionPago !== undefined) {
       setFechaIntencion(response.intencionPago ? moment(response.intencionPago) : null);
     }
     if (response.interes) {

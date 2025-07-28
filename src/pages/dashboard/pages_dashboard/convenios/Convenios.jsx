@@ -587,7 +587,7 @@ export const Convenios = () => {
     //const { estado, fechaDesde, fechaHasta } = filtros;
     let filteredRows = rows;
 
-    ConveniosService.getConveniosByDateAndState(filtros, empresaId)
+    ConveniosService.getConveniosByDateAndState(filtros, empresaId, rol)
       .then((data) => {
         setRows(data);
       })

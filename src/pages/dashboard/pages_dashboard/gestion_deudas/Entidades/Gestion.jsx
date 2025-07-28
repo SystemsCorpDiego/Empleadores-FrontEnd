@@ -113,7 +113,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       setSelectedDeclaracionesJuradas,
       setSelectedSaldosAFavor,
       setTotalDeuda,
-      setLoadAllEmpresas
+      setLoadAllEmpresas,
+      rol
     );
     if (isEditar) {
       setIsCheckedEstadoDeDeduda(false);
@@ -171,7 +172,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           setSelectedDeclaracionesJuradas,
           setSelectedSaldosAFavor,
           setTotalDeuda,
-          setLoadAllEmpresas
+          setLoadAllEmpresas,
+          rol
         ),
     });
   };
@@ -202,7 +204,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           setSelectedActas,
           setSelectedDeclaracionesJuradas,
           setSelectedSaldosAFavor,
-          setTotalDeuda
+          setTotalDeuda,
+          rol
         ),
     });
   };
@@ -218,7 +221,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       selectedDeclaracionesJuradas,
       selectedSaldosAFavor,
     });
-    const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA;
+    const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA; //TODO cambiar y probar con rol y no con 833
     const ok = await generarConvenio(empresa, bodyConvenio, axiosGestionDeudas, Swal, setShowLoading);
     if (ok) {
       navigate('/dashboard/convenios');
@@ -235,7 +238,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       selectedDeclaracionesJuradas,
       selectedSaldosAFavor,
     });
-    const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA;
+    const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA; //TODO cambiar y probar con rol y no con 833
     const ok = await actualizarConvenio(empresa, convenio_id, bodyConvenio, axiosGestionDeudas, Swal);
     setShowLoading(false);
     if (ok) {
