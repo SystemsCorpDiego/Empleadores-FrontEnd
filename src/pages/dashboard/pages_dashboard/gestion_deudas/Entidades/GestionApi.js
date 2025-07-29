@@ -10,7 +10,10 @@ const VITE_HTTP_MSG_ALTA_ERROR = import.meta.env.VITE_HTTP_MSG_ALTA_ERROR;
 
 const ordenaGrillaPeriodo = (response) => {
   console.log('response', response.declaracionesJuradas);
-  if (response.declaracionesJuradas !== null || response.declaracionesJuradas.length !== 0) {
+  if (
+    response.declaracionesJuradas !== null ||
+    response.declaracionesJuradas.length !== 0
+  ) {
     const agrupado = response.declaracionesJuradas.reduce((acc, curr) => {
       const clave = `${curr.id}`;
       if (!acc[clave]) {
@@ -22,7 +25,8 @@ const ordenaGrillaPeriodo = (response) => {
         };
       }
       acc[clave][curr.aporteDescripcion] = curr.importe;
-      acc[clave].importeTotal = (acc[clave].importeTotal || 0) + curr.importeTotal;
+      acc[clave].importeTotal =
+        (acc[clave].importeTotal || 0) + curr.importeTotal;
       acc[clave].intereses = (acc[clave].intereses || 0) + curr.intereses;
       return acc;
     }, {});
@@ -40,13 +44,13 @@ const ordenaGrillaPeriodo = (response) => {
   if (response.saldosAFavor === null || response.saldosAFavor.length === 0) {
     response.saldosAFavor = [];
   }
-  return response
-}
+  return response;
+};
 
 export const getGestionDeuda = async (empresa_id, entidad) => {
   const URL = `/empresa/${empresa_id}/deuda/entidad/${entidad}`;
   const response = await axiosCrud.consultar(URL);
-  console.log(response)
+  console.log(response);
   if (
     response &&
     response.declaracionesJuradas &&
@@ -56,68 +60,63 @@ export const getGestionDeuda = async (empresa_id, entidad) => {
     response.actas.length === 0 &&
     response.saldosAFavor.length === 0
   ) {
-
     Swal.fire({
       icon: 'info',
       title: 'Sin Deuda',
       text: 'No se registra deuda al día de la fecha',
     });
-
   }
-  return response
-}
+  return response;
+};
 
 export const getGestionEditar = async (empresa_id, convenioId) => {
   const URL = `/empresa/${empresa_id}/convenios/${convenioId}/deudaDto`;
 
   const response = await axiosCrud.consultar(URL);
-  return response
+  return response;
   //return emuRespuesta
-}
+};
 
 export const getDeclaracionesJuradas = async (empresa_id, entidad) => {
   try {
-
     const response = await getGestionDeuda(empresa_id, entidad);
     const grilaOrdenada = ordenaGrillaPeriodo(response);
     return grilaOrdenada;
-
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
     throw error;
   }
 };
-
-
 
 export const getDetalleConvenio = async (empresa_id, body) => {
   try {
     const URL = `/empresa/${empresa_id}/convenios/calcular-cuota`;
     console.log('body', body);
-    if (body.fechaIntencionPago !== null && body.fechaIntencionPago !== 'Invalid Date') {
+    if (
+      body.fechaIntencionPago !== null &&
+      body.fechaIntencionPago !== 'Invalid Date'
+    ) {
       console.log('body', body);
       const response = await axiosCrud.crear(URL, body);
       return response;
     }
     return {
-      "importeDeuda": 0,
-      "cantidadCuota": 1,
-      "fechaIntencionPago": "",
-      "importeCuota": 0,
-      "importeInteresTotal": 0
+      importeDeuda: 0,
+      cantidadCuota: 1,
+      fechaIntencionPago: '',
+      importeCuota: 0,
+      importeInteresTotal: 0,
     };
     //const URL = `/empresa/${empresa_id}/gestion-deuda/${entidad}/detalle-convenio`;
     //const reponse = axiosCrud.crear(URL,body)
     //return response;
-
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
     throw error;
   }
 };
-
 
 export const generarConvenio = async (idEmpresa, bodyConvenio) => {
   try {
@@ -127,11 +126,9 @@ export const generarConvenio = async (idEmpresa, bodyConvenio) => {
     if (response && response.id) {
       console.log('Convenio generado:', response);
       return true;
-    }
-    else {
+    } else {
       return response; //Envia en el response el mensaje de error a generarConvenio de empresaHelper.js
     }
-
   } catch (error) {
     console.error('Error al generar el convenio:', error);
     throw error;
@@ -140,7 +137,6 @@ export const generarConvenio = async (idEmpresa, bodyConvenio) => {
 
 const getDeclaracionesJuradasEditar = async (empresa_id, convenioId) => {
   try {
-
     //const empresa_id = localStorage.getItem('empresaId');
     const response = await getGestionEditar(empresa_id, convenioId);
     console.log('response', response);
@@ -149,13 +145,12 @@ const getDeclaracionesJuradasEditar = async (empresa_id, convenioId) => {
     //const grilaOrdenada = ordenaGrillaPeriodo(emuRespuesta);
     console.log('grilaOrdenada', grilaOrdenada);
     return grilaOrdenada;
-
   } catch (error) {
     const HTTP_MSG =
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
     throw error;
   }
-}
+};
 
 const putActualizarConvenio = async (empresa_id, convenioId, body) => {
   try {
@@ -172,34 +167,31 @@ const putActualizarConvenio = async (empresa_id, convenioId, body) => {
         icon: 'error',
         title: 'Error',
         text: response.descripcion,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
       throw new Error(HTTP_MSG_MODI_ERROR);
     }
   } catch (error) {
     throw error;
   }
-}
-
-
+};
 
 const getEmpresaByCuit = async (cuit, empresas) => {
   try {
     //console.log('getEmpresaByCuit - cuit:', cuit);
     //const URL = `/empresa`;
 
-    let response = empresas
+    let response = empresas;
     if (response === null || response === undefined) {
       try {
-        response = await axiosGestionDeudas.getEmpresas()
+        response = await axiosGestionDeudas.getEmpresas();
       } catch (error) {
         throw new Error('Error al obtener las empresas: ' + error.message);
       }
     }
     console.log('response', response);
     if (response && response.length > 0) {
-
-      const empresaEncontrada = response.find(e => e.cuit == cuit);
+      const empresaEncontrada = response.find((e) => e.cuit == cuit);
       console.log('empresaEncontrada', empresaEncontrada);
       if (!empresaEncontrada) {
         throw new Error('No se encontró la empresa con el CUIT proporcionado.');
@@ -217,11 +209,12 @@ const getEmpresaByNombre = async (nombreEmpresa, empresas) => {
   try {
     //console.log('getEmpresaByCuit - cuit:', cuit);
 
-    const response = empresas
+    const response = empresas;
     console.log('response', response);
     if (response && response.length > 0) {
-
-      const empresaEncontrada = response.find(e => e.razonSocial == nombreEmpresa);
+      const empresaEncontrada = response.find(
+        (e) => e.razonSocial == nombreEmpresa,
+      );
       console.log('empresaEncontrada', empresaEncontrada);
       if (!empresaEncontrada) {
         throw new Error('No se encontró la empresa con el CUIT proporcionado.');
@@ -255,47 +248,48 @@ const downloadDeuda = async () => {
     const uriApi = `/deuda/`;
     const response = await axiosCrud.consultar(uriApi);
     console.log('response', response);
-    if (!Array.isArray(response)) throw new Error('Formato de Deudas inesperado');
+    if (!Array.isArray(response))
+      throw new Error('Formato de Deudas inesperado');
 
     const DEUDA_INFO = response.map((item) => ({
       id: item.id,
-      acta_id: item.acta_id,
-      ddjj_id: item.ddjj_id,
       cuit: item.cuit,
+      entidad: item.entidad,
       periodo: item.periodo,
       aporte: item.aporte,
-      entidad: item.entidad,
-      interes: item.interes,
       aporteDescripcion: item.aporteDescripcion,
-      vencimiento: item.vencimiento,
-      convenio_id: item.convenio_id,
-      boletaPago_secuencia: item.boletaPago_secuencia,
-      boleta_id: item.boleta_id,
       ddjj_secuencia: item.ddjj_secuencia,
-      aporte_pago_fecha_info: item.aporte_pago_fecha_info,
-      aporte_pago: item.aporte_pago,
       aporte_importe: item.aporte_importe,
+      interes: item.interes,
+      vencimiento: item.vencimiento,
+      boletaPago_secuencia: item.boletaPago_secuencia,
+      aporte_pago: item.aporte_pago,
+      aporte_pago_fecha_info: item.aporte_pago_fecha_info,
+      ddjj_id: item.ddjj_id,
+      boleta_id: item.boleta_id,
+      acta_id: item.acta_id,
+      convenio_id: item.convenio_id,
     }));
 
     const HEADER_MAP = {
       id: 'ID',
-      acta_id: 'Acta ID',
-      ddjj_id: 'DDJJ ID',
       cuit: 'CUIT',
+      entidad: 'Entidad',
       periodo: 'Periodo',
       aporte: 'Aporte',
-      entidad: 'Entidad',
-      interes: 'Interés',
       aporteDescripcion: 'Descripción Aporte',
+      ddjj_secuencia: 'DDJJ Nro.',
+      aporte_importe: 'Importe Aporte',
+      interes: 'Interés',
       vencimiento: 'Vencimiento',
-      convenio_id: 'Convenio ID',
-      boletaPago_secuencia: 'Boleta Pago Secuencia',
+      boletaPago_secuencia: 'Boleta Pago Nro.',
+      aporte_pago: 'Pago',
+      aporte_pago_fecha_info: 'Fecha Pago',
+      ddjj_id: 'DDJJ ID',
       boleta_id: 'Boleta ID',
-      ddjj_secuencia: 'DDJJ Secuencia',
-      aporte_pago_fecha_info: 'Fecha Pago Aporte Info',
-      aporte_pago: 'Pago Aporte',
-      aporte_importe: 'Importe Aporte'
-    }
+      acta_id: 'Acta ID',
+      convenio_id: 'Convenio ID',
+    };
 
     const headers = Object.keys(HEADER_MAP);
     const headerLabels = headers.map((key) => HEADER_MAP[key]);
@@ -303,10 +297,11 @@ const downloadDeuda = async () => {
     const csvContent = [
       headerLabels.join(','), // encabezados legibles
       ...DEUDA_INFO.map((r) =>
-        headers.map((h) => `"${String(r[h] ?? '').replace(/"/g, '""')}"`).join(',')
+        headers
+          .map((h) => `"${String(r[h] ?? '').replace(/"/g, '""')}"`)
+          .join(','),
       ),
     ].join('\r\n');
-
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -317,7 +312,6 @@ const downloadDeuda = async () => {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-
 
     return response;
   } catch (error) {
@@ -334,33 +328,37 @@ const downloadExcel = async () => {
     const urlApi = `/deuda/`;
     const response = await axiosCrud.consultar(urlApi);
     console.log('response', response);
-    if (!Array.isArray(response)) throw new Error('Formato de Deudas inesperado');
+    if (!Array.isArray(response))
+      throw new Error('Formato de Deudas inesperado');
 
     const DEUDA_INFO = response.map((item) => ({
       ID: item.id,
-      'Acta ID': item.acta_id,
-      'DDJJ ID': item.ddjj_id,
       CUIT: item.cuit,
+      Entidad: item.entidad,
       Periodo: item.periodo,
       Aporte: item.aporte,
-      Entidad: item.entidad,
-      Interés: item.interes,
       'Descripción Aporte': item.aporteDescripcion,
-      Vencimiento: item.vencimiento,
-      'Convenio ID': item.convenio_id,
-      'Boleta Pago Secuencia': item.boletaPago_secuencia,
-      'Boleta ID': item.boleta_id,
-      'DDJJ Secuencia': item.ddjj_secuencia,
-      'Fecha Pago Aporte Info': item.aporte_pago_fecha_info,
-      'Pago Aporte': item.aporte_pago,
+      'DDJJ Nro.': item.ddjj_secuencia,
       'Importe Aporte': item.aporte_importe,
+      Interés: item.interes,
+      Vencimiento: item.vencimiento,
+      'Boleta Pago Nro.': item.boletaPago_secuencia,
+      Pago: item.aporte_pago,
+      'Fecha Pago': item.aporte_pago_fecha_info,
+      'DDJJ ID': item.ddjj_id,
+      'Boleta ID': item.boleta_id,
+      'Acta ID': item.acta_id,
+      'Convenio ID': item.convenio_id,
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(DEUDA_INFO);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Deuda');
-    
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
 
     const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
     const url = URL.createObjectURL(blob);
@@ -386,5 +384,5 @@ export const axiosGestionDeudas = {
   getEmpresas,
   generarConvenio,
   downloadDeuda,
-  downloadExcel
+  downloadExcel,
 };
