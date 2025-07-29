@@ -25,17 +25,18 @@ export const fetchEmpresaData = async (
   rol
 ) => {
   setLoadAllEmpresas(true);
-  
+
   try {
     let response;
     if (!editar) {
-      empresa = empresa || ID_EMPRESA; 
-      if (rol !== "OSPIM_EMPLEADO") {
-        response = await axiosGestionDeudas.getDeclaracionesJuradas(
-          empresa,
-          ENTIDAD,
-        );
-      }
+      empresa = empresa || ID_EMPRESA;
+
+      console.log('fetchEmpresaData - empresa:', empresa);
+      response = await axiosGestionDeudas.getDeclaracionesJuradas(
+        empresa,
+        ENTIDAD,
+      );
+
     } else {
       const parts = window.location.hash.split('/');
       const CONVENIOID = parts[parts.indexOf('convenio') + 1];
@@ -46,6 +47,18 @@ export const fetchEmpresaData = async (
       if (response.lstCuotas) {
         setDetalleConvenio(response.lstCuotas);
       }
+    }
+    if (response === null || response === undefined) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se encontraron datos para la empresa seleccionada.',
+        confirmButtonText: 'Aceptar',
+      });
+    }
+    if (response === null || response === undefined) {
+      setLoadAllEmpresas(false);
+      return;
     }
     if (response.intencionPago && response.intencionPago !== null && response.intencionPago !== undefined) {
       setFechaIntencion(response.intencionPago ? moment(response.intencionPago) : null);
@@ -139,6 +152,7 @@ export const buscarEmpresaPorCuit = async ({
   }
 
   const empresa = empresas.find(e => e.cuit === valor);
+  console.log('Empresa encontrada:', empresa);
   setNombreEmpresa(empresa?.razonSocial);
   setEmpresaId(empresaID);
   fetchData(false, empresaID);
@@ -176,7 +190,7 @@ export const generarConvenio = async (ID_EMPRESA, bodyConvenio, axiosGestionDeud
     const response = await axiosGestionDeudas.generarConvenio(ID_EMPRESA, bodyConvenio);
     console.log('Respuesta del servidor:', response);
     setShowLoading(false);
-    if (response === true) { 
+    if (response === true) {
       await swal.fire({
         icon: 'success',
         title: 'Convenio generado correctamente',
@@ -230,14 +244,14 @@ export const actualizarConvenio = async (ID_EMPRESA, convenioId, bodyConvenio, a
     });
     return true;
   } catch (error) {
-/*
-    await swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: error?.response?.data?.message || error.message || 'Ocurrió un error al actualizar el convenio.',
-      confirmButtonText: 'Aceptar'
-    });
-    */
+    /*
+        await swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error?.response?.data?.message || error.message || 'Ocurrió un error al actualizar el convenio.',
+          confirmButtonText: 'Aceptar'
+        });
+        */
     return false;
   }
 };
