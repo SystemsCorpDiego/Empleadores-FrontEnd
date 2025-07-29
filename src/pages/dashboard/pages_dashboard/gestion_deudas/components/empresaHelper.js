@@ -41,7 +41,7 @@ export const fetchEmpresaData = async (
       const parts = window.location.hash.split('/');
       const CONVENIOID = parts[parts.indexOf('convenio') + 1];
       response = await axiosGestionDeudas.getDeclaracionesJuradasEditar(
-        ID_EMPRESA,
+        empresa ? empresa : ID_EMPRESA,
         CONVENIOID
       );
       if (response.lstCuotas) {

@@ -15,7 +15,7 @@ import formatter from '@/common/formatter';
 import { GrillaSaldoAFavor } from '../Grillas/GrillaSaldoAFavor';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { getRol } from '@/components/localStorage/localStorageService';
+import { getEmpresaId, getRol } from '@/components/localStorage/localStorageService';
 import EmpresaAutocomplete from '../components/EmpresaAutocomplete';
 import { calcularDetalleConvenio } from '../components/detalleHelper';
 import { buscarEmpresaPorCuit, buscarEmpresaPorNombre, fetchEmpresaData, generarConvenio, actualizarConvenio } from '../components/empresaHelper';
@@ -93,37 +93,56 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       setConvenioId(parts[parts.indexOf('convenio') + 1]);
       setCuitInput(parts[parts.indexOf('cuit') + 1]);
     }
+    console.log(empresas)
     setFechaDelDia(new Date());
-    fetchEmpresaData(
-      isEditar,
-      null,
-      ID_EMPRESA,
-      ENTIDAD,
-      axiosGestionDeudas,
-      setDetalleConvenio,
-      setFechaIntencion,
-      setIntereses,
-      setImporteDeDeuda,
-      setSaldosAFavor,
-      setCuotas,
-      setDeclaracionesJuradas,
-      setActas,
-      setConvenios,
-      setSelectedActas,
-      setSelectedDeclaracionesJuradas,
-      setSelectedSaldosAFavor,
-      setTotalDeuda,
-      setLoadAllEmpresas,
-      rol
-    );
+
+    if (empresas.length > 0) {
+      let auxIdEmpresa = null
+      if (cuitInput !== null) {
+        auxIdEmpresa = empresas.find(e => e.cuit === cuitInput)?.id || null
+      } else {
+        auxIdEmpresa = getEmpresaId()
+        console.log('empresa_id = ', getEmpresaId())
+        console.log(localStorage.getItem('CUIT'))
+        console.log(auxIdEmpresa)
+      }
+      setEmpresaId(auxIdEmpresa);
+      console.log(cuitInput)
+      console.log(auxIdEmpresa)
+      if (auxIdEmpresa) {
+        fetchEmpresaData(
+          isEditar,
+          auxIdEmpresa,
+          ID_EMPRESA,
+          ENTIDAD,
+          axiosGestionDeudas,
+          setDetalleConvenio,
+          setFechaIntencion,
+          setIntereses,
+          setImporteDeDeuda,
+          setSaldosAFavor,
+          setCuotas,
+          setDeclaracionesJuradas,
+          setActas,
+          setConvenios,
+          setSelectedActas,
+          setSelectedDeclaracionesJuradas,
+          setSelectedSaldosAFavor,
+          setTotalDeuda,
+          setLoadAllEmpresas,
+          rol
+        );
+      }
+
+    }
+
     if (isEditar) {
       setIsCheckedEstadoDeDeduda(false);
     }
-  }, []);
+  }, [empresas]);
 
   useEffect(() => {
     const fetchEmpresas = async () => {
-
       try {
         const response = await axiosGestionDeudas.getEmpresas()
         setEmpresas(response);
@@ -134,6 +153,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     }
     fetchEmpresas();
   }, []);
+
   useEffect(() => {
     const isEditar = window.location.hash.includes('/editar');
     if (!isEditar || !cuitInput || empresas.length === 0) return;
@@ -381,26 +401,26 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
 
 
   return loadAllEmpresas ? (
- <div
-  className="container_grilla"
-  style={{
-    height: '50vh', // o una altura razonable
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-  }}
->
-  <p style={{ marginBottom: '1em' }}>Cargando empresas...</p>
-  <ThreeCircles
-    visible={loadAllEmpresas}
-    height="100"
-    width="100"
-    color="#1A76D2"
-    ariaLabel="three-circles-loading"
-  />
-</div>
+    <div
+      className="container_grilla"
+      style={{
+        height: '50vh', // o una altura razonable
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+      }}
+    >
+      <p style={{ marginBottom: '1em' }}>Cargando empresas...</p>
+      <ThreeCircles
+        visible={loadAllEmpresas}
+        height="100"
+        width="100"
+        color="#1A76D2"
+        ariaLabel="three-circles-loading"
+      />
+    </div>
   ) : (
     <div className="container_grilla">
       {rol == 'OSPIM_EMPLEADO' && (
