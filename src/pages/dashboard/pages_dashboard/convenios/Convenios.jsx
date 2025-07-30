@@ -248,13 +248,13 @@ export const Convenios = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${row.cuit}_convenio_${row.id}_cuotas.csv`;
+      a.download = `${row.cuit}_convenio_${row.id}_cuotas.xlsx`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
 
     } catch (error) {
-      console.error('Error generando CSV:', error);
+      console.error('Error generando xlsx:', error);
       alert('Ocurrió un error al descargar las cuotas del convenio.');
     }
   };
