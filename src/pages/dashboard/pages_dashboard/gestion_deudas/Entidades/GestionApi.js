@@ -266,7 +266,9 @@ const downloadDeuda = async () => {
       aporte_pago: item.aporte_pago,
       aporte_pago_fecha_info: item.aporte_pago_fecha_info,
       acta_nro: item.acta_nro,
+      acta_pago: item.acta_pago,
       convenio_nro: item.convenio_nro,
+      convenio_pago: item.convenio_pago,
 
       ddjj_id: item.ddjj_id,
       boleta_id: item.boleta_id,
@@ -290,7 +292,9 @@ const downloadDeuda = async () => {
       aporte_pago_fecha_info: 'Fecha Pago',
 
       acta_nro: 'Acta Nro.',
+      acta_pago: 'Acta Pago',
       convenio_nro: 'Convenio Nro.',
+      convenio_pago: 'Convenio Pago',
 
       ddjj_id: 'DDJJ ID',
       boleta_id: 'Boleta ID',
@@ -353,7 +357,9 @@ const downloadExcel = async () => {
       Pago: item.aporte_pago,
       'Fecha Pago': item.aporte_pago_fecha_info,
       'Acta Nro.': item.acta_nro,
+      'Acta Pago': item.acta_pago,
       'Convenio Nro.': item.convenio_nro,
+      'Convenio Pago': item.convenio_pago,
 
       'DDJJ ID': item.ddjj_id,
       'Boleta ID': item.boleta_id,
