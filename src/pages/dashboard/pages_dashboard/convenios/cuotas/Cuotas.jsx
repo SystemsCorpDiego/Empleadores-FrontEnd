@@ -49,6 +49,8 @@ export const Cuotas = () => {
   };
   const handleClose = () => {
     setOpen(false);
+    getCuotas();
+    navigate(window.location.hash.split('#')[1]);
   };
 
   const columns = [
