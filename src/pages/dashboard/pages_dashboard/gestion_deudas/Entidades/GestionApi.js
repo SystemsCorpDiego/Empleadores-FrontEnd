@@ -57,8 +57,8 @@ export const getGestionDeuda = async (empresa_id, entidad) => {
     response.actas &&
     response.saldosAFavor &&
     response.declaracionesJuradas.length === 0 &&
-    response.actas.length === 0 &&
-    response.saldosAFavor.length === 0
+    response.actas.length === 0 
+    
   ) {
     Swal.fire({
       icon: 'info',
