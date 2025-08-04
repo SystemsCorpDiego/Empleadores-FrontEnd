@@ -79,8 +79,6 @@ export const Convenios = () => {
 
   const KVESTADOS = {
     "PRCH": "Pendiente en recepción de cheque",
-    "CHRECI": "Cheque recibido",
-    "CHRECH": "Cheque rechazado",
     "PRES": "Presentado",
     "APROB": "Aprobado",
     "RECH": "Rechazado",
@@ -624,11 +622,11 @@ export const Convenios = () => {
           >
             <MenuItem value="TODOS">Todos</MenuItem>
             <MenuItem value="PENDIENTE">Pendiente</MenuItem>
-            <MenuItem value="CHRECI">Cheque Recibido</MenuItem>
-            <MenuItem value="CHRECH">Cheque Rechazado</MenuItem>
             <MenuItem value="PRES">Presentado</MenuItem>
             <MenuItem value="APROB">Aprobado</MenuItem>
             <MenuItem value="PRCH">Pendiente en recepción de cheque</MenuItem>
+            <MenuItem value="OBSR">Observado</MenuItem>
+            <MenuItem value="CAIDO">Caído</MenuItem>
           </TextField>
 
           <TextField
