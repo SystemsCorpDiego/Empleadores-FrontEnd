@@ -43,6 +43,19 @@ import Hidden from '@mui/material/Hidden';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { useMediaQuery } from "@mui/material";
 import HandshakeIcon from '@mui/icons-material/Handshake';
+import SettingsIcon from '@mui/icons-material/Settings';
+
+function MyComponent() {
+  return (
+    <div>
+      <SettingsIcon />
+      {/*  O con un IconButton: */}
+      {/* <IconButton aria-label="settings">
+        <SettingsIcon />
+      </IconButton> */}
+    </div>
+  );
+}
 
 const drawerWidth = 250;
 
@@ -330,6 +343,12 @@ const DashboardPage = () => {
                       : 'Mis Convenios'}</span>}
                 </NavLink>
                 )}
+                {rolFuncionalidades.PARAMETROS_CONVENIOS && (<NavLink to="./parametros-convenios" className="icon-container">
+                  <SettingsIcon className="icon-link" />{' '}
+                  {open && <span className="icon-link">Parametros Convenios</span>}
+                </NavLink>
+                )}
+                
               </ListItemIcon>
             </ListItemButton>
           </ListItem>
