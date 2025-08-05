@@ -76,14 +76,24 @@ export const getGestionEditar = async (empresa_id, convenioId) => {
     const response = await axiosCrud.consultar(URL);
     return response;
   } catch (error) {
-    const text = error.descripcion ? error.descripcion : VITE_HTTP_MSG_CONSUL_ERROR
+    console.error('Error capturado en getGestionEditar:', error);
+
+    let text = 'Error consultando datos';
+    
+    if (error?.response?.data?.descripcion) {
+      text = error.response.data.descripcion;
+    } else if (error?.descripcion) {
+      text = error.descripcion;
+    }
+
     await Swal.fire({
       icon: 'error',
       title: 'Error',
       text: text,
       confirmButtonText: 'Aceptar',
     });
-    // throw new Error(VITE_HTTP_MSG_CONSUL_ERROR);
+
+    return null;
   }
 
   //return emuRespuesta
