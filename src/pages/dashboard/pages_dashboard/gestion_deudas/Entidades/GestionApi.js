@@ -6,7 +6,7 @@ import * as XLSX from 'xlsx';
 
 const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
 const HTTP_MSG_MODI_ERROR = import.meta.env.VITE_HTTP_MSG_MODI_ERROR;
-const VITE_HTTP_MSG_ALTA_ERROR = import.meta.env.VITE_HTTP_MSG_ALTA_ERROR;
+const VITE_HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
 
 const ordenaGrillaPeriodo = (response) => {
   console.log('response', response.declaracionesJuradas);
@@ -57,8 +57,8 @@ export const getGestionDeuda = async (empresa_id, entidad) => {
     response.actas &&
     response.saldosAFavor &&
     response.declaracionesJuradas.length === 0 &&
-    response.actas.length === 0 
-    
+    response.actas.length === 0
+
   ) {
     Swal.fire({
       icon: 'info',
@@ -72,9 +72,22 @@ export const getGestionDeuda = async (empresa_id, entidad) => {
 export const getGestionEditar = async (empresa_id, convenioId) => {
   const URL = `/empresa/${empresa_id}/convenios/${convenioId}/deudaDto`;
 
-  const response = await axiosCrud.consultar(URL);
-  return response;
+  try {
+    const response = await axiosCrud.consultar(URL);
+    return response;
+  } catch (error) {
+    const text = error.descripcion ? error.descripcion : VITE_HTTP_MSG_CONSUL_ERROR
+    await Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: text,
+      confirmButtonText: 'Aceptar',
+    });
+    // throw new Error(VITE_HTTP_MSG_CONSUL_ERROR);
+  }
+
   //return emuRespuesta
+
 };
 
 export const getDeclaracionesJuradas = async (empresa_id, entidad) => {
