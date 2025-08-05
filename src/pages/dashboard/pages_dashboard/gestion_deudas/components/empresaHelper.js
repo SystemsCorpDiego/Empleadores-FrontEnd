@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 
 export const fetchEmpresaData = async (
   editar,
+  isVer,
   empresa,
   ID_EMPRESA,
   ENTIDAD,
@@ -28,7 +29,7 @@ export const fetchEmpresaData = async (
 
   try {
     let response;
-    if (!editar) {
+    if (!editar && !isVer) {
       empresa = empresa || ID_EMPRESA;
 
       console.log('fetchEmpresaData - empresa:', empresa);
@@ -185,6 +186,7 @@ export const buscarEmpresaPorNombre = async ({
 // Crear convenio
 export const generarConvenio = async (ID_EMPRESA, bodyConvenio, axiosGestionDeudas, swal, setShowLoading) => {
   try {
+    
     console.log('Generando convenio con los siguientes datos:', bodyConvenio);
     console.log('ID_EMPRESA:', ID_EMPRESA);
     const response = await axiosGestionDeudas.generarConvenio(ID_EMPRESA, bodyConvenio);
@@ -221,7 +223,7 @@ export const generarConvenio = async (ID_EMPRESA, bodyConvenio, axiosGestionDeud
 
 
 export const actualizarConvenio = async (ID_EMPRESA, convenioId, bodyConvenio, axiosGestionDeudas, swal) => {
-
+  console.log('Actualizando convenio con los siguientes datos:', bodyConvenio);
   const camposNulos = Object.entries(bodyConvenio)
     .filter(([clave, valor]) => valor === null)
     .map(([clave]) => clave);

@@ -12,7 +12,7 @@ import {
 } from '@mui/x-data-grid';
 import './Grilla.css';
 
-export const GrillaActas = ({ actas, selectedActas, setSelectedActas }) => {
+export const GrillaActas = ({ actas, selectedActas, setSelectedActas, isVer }) => {
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
 

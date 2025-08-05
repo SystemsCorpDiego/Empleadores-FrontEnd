@@ -92,10 +92,11 @@ export const getDeclaracionesJuradas = async (empresa_id, entidad) => {
 export const getDetalleConvenio = async (empresa_id, body) => {
   try {
     const URL = `/empresa/${empresa_id}/convenios/calcular-cuota`;
-    console.log('body', body);
+    console.log('body de detalle', body);
     if (
       body.fechaIntencionPago !== null &&
-      body.fechaIntencionPago !== 'Invalid Date'
+      body.fechaIntencionPago !== 'Invalid Date' &&
+      body.importeDeuda > 0
     ) {
       console.log('body', body);
       const response = await axiosCrud.crear(URL, body);

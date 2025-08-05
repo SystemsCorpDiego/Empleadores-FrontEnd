@@ -13,7 +13,7 @@ import { esES } from '@mui/x-data-grid';
 
 import './Grilla.css';
 
-export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [], setSelectedSaldosAFavor }) => {
+export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [], setSelectedSaldosAFavor, isVer }) => {
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
 
@@ -63,6 +63,7 @@ export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [],
                 checked={selectedSaldosAFavor.includes(params.id)}
                 //checked={params.row.convenioAjusteId !== null}
                 onChange={() => handleSelectionChange(params.id)}
+                disabled={isVer}
               />
             ),
             headerCheckboxSelection: true,

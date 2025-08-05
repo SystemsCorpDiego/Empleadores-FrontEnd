@@ -35,7 +35,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import TerminosYCondiciones from './TerminosYCondiciones/TerminosYCondiciones';
 import localStorageService from '@/components/localStorage/localStorageService';
 import { consultar as consultarCuotas } from './cuotas/CuotasApi';
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { axiosGestionDeudas } from './../gestion_deudas/Entidades/GestionApi';
 import * as XLSX from 'xlsx';
 //import { consultarCuotas } from './cuotas/CuotasApi';
@@ -342,6 +342,8 @@ export const Convenios = () => {
       type: 'actions',
       flex: 1.5,
       getActions: ({ id, row }) => {
+        //const { id, row } = params;
+        
         const isInEditMode = rowModesModel[id]?.mode === 'edit';
         if (isInEditMode) {
           return [
@@ -376,7 +378,7 @@ export const Convenios = () => {
             sx={{ color: 'primary.main' }}
             onClick={() => handleImprimir(row)}
           />,
-          ...(row.estado !== 'PRES' && row.estado !== 'Presentado'
+          ...(row.estado !== 'PRES' && row.estado !== 'Presentado' && row.estado !== 'PRESENTADO'
             ? [
               <GridActionsCellItem
                 icon={<EditIcon />}
@@ -387,7 +389,15 @@ export const Convenios = () => {
                 color="inherit"
               />,
             ]
-            : []),
+            : [  
+              <GridActionsCellItem
+                icon={<VisibilityIcon />}
+                label="Ver"
+                title="Ver"
+                sx={{ color: 'primary.main' }}
+                onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/ver/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`)}
+                color="inherit"
+              />,]),
           <GridActionsCellItem
             icon={<AccountBalanceWalletIcon />}
             label="Cheques"
@@ -525,14 +535,26 @@ export const Convenios = () => {
             sx={{ color: 'primary.main' }}
             onClick={() => handleImprimir(row)}
           />,
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Editar"
-            title="Editar"
-            sx={{ color: 'primary.main' }}
-            onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/editar/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`)}
-            color="inherit"
-          />,
+          ...(row.estado !== 'PRES' && row.estado !== 'Presentado' && row.estado !== 'PRESENTADO'
+            ? [
+              <GridActionsCellItem
+                icon={<EditIcon />}
+                label="Editar"
+                title="Editar"
+                sx={{ color: 'primary.main' }}
+                onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/editar/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`)}
+                color="inherit"
+              />,
+            ]
+            : [  
+              <GridActionsCellItem
+                icon={<VisibilityIcon />}
+                label="Ver"
+                title="Ver"
+                sx={{ color: 'primary.main' }}
+                onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/ver/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`)}
+                color="inherit"
+              />,]),
           <GridActionsCellItem
             icon={<AccountBalanceWalletIcon />}
             label="Cheques"

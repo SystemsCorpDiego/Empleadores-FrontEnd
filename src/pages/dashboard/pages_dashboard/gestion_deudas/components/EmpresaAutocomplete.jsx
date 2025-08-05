@@ -3,7 +3,7 @@ import { Box, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { axiosGestionDeudas } from '../Entidades/GestionApi';
 import React, { useState } from 'react';
-import { ThreeCircles } from 'react-loader-spinner'; 
+import { ThreeCircles } from 'react-loader-spinner';
 
 const EmpresaAutocomplete = ({
   empresas,
@@ -16,6 +16,8 @@ const EmpresaAutocomplete = ({
 }) => {
 
   const [isDownloading, setIsDownloading] = useState(false);
+  const isEditar = window.location.hash.includes('/editar');
+  const isVer = window.location.hash.includes('/ver')
 
   const handleBuscar = () => {
     if (cuitInput) {
@@ -34,23 +36,23 @@ const EmpresaAutocomplete = ({
       });
     }
   };
-const handleDescarga = async () => {
-  setIsDownloading(true);
-  try {
-    await axiosGestionDeudas.downloadDeuda();
-  } finally {
-    setIsDownloading(false);
-  }
-};
+  const handleDescarga = async () => {
+    setIsDownloading(true);
+    try {
+      await axiosGestionDeudas.downloadDeuda();
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
-const handleDescargaExcel = async () => {
-  setIsDownloading(true);
-  try {
-    await axiosGestionDeudas.downloadExcel();
-  } finally {
-    setIsDownloading(false);
-  }
-};
+  const handleDescargaExcel = async () => {
+    setIsDownloading(true);
+    try {
+      await axiosGestionDeudas.downloadExcel();
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   return (
     <Box display="flex" alignItems="center" gap={2} mb={2}>
@@ -64,6 +66,7 @@ const handleDescargaExcel = async () => {
             setNombreEmpresa(empresa.razonSocial);
           }
         }}
+        disabled={isVer || isEditar}
         renderInput={(params) => <TextField {...params} label="CUIT" variant="outlined" />}
         freeSolo
         style={{ width: 200 }}
@@ -78,12 +81,15 @@ const handleDescargaExcel = async () => {
             setCuitInput(empresa.cuit);
           }
         }}
+        disabled={isVer || isEditar}
         renderInput={(params) => <TextField {...params} label="Razón Social" variant="outlined" />}
         freeSolo
         style={{ width: 300 }}
       />
-      <button
+      {isVer || isEditar ? '' :
+       <button
         onClick={handleBuscar}
+        disabled={isVer || isEditar}
         style={{
           padding: '8px 20px',
           fontSize: '16px',
@@ -96,52 +102,57 @@ const handleDescargaExcel = async () => {
         }}
       >
         Buscar
-      </button>
-{isDownloading ? (
-  <Box display="flex" alignItems="center" gap={1}>
-    <p>Descargando...</p>
-    <ThreeCircles
-      height="40"
-      width="40"
-      color="#1A76D2"
-      visible={true}
-      ariaLabel="descargando"
-    />
-  </Box>
-) : (
-  <>
-    <button
-      onClick={handleDescarga}
-      style={{
-        padding: '8px 20px',
-        fontSize: '16px',
-        borderRadius: '4px',
-        background: '#1976d2',
-        color: '#fff',
-        border: 'none',
-        cursor: 'pointer',
-        height: '56px',
-      }}
-    >
-      Descargar Total Deudas CSV
-    </button>
-    <button
-      onClick={handleDescargaExcel}
-      style={{
-        padding: '8px 20px',
-        fontSize: '16px',
-        borderRadius: '4px',
-        background: '#1976d2',
-        color: '#fff',
-        border: 'none',
-        cursor: 'pointer',
-        height: '56px',
-      }}
-    >
-      Descargar Total Deudas XLSX
-    </button>
-  </>
-)}
+      </button>}
+
+      {isDownloading ? (
+        <Box display="flex" alignItems="center" gap={1}>
+          <p>Descargando...</p>
+          <ThreeCircles
+            height="40"
+            width="40"
+            color="#1A76D2"
+            visible={true}
+            ariaLabel="descargando"
+          />
+        </Box>
+      ) : (
+        <>
+        { isVer || isEditar ? '' : 
+        <>
+          <button
+            onClick={handleDescarga}
+            style={{
+              padding: '8px 20px',
+              fontSize: '16px',
+              borderRadius: '4px',
+              background: '#1976d2',
+              color: '#fff',
+              border: 'none',
+              cursor: 'pointer',
+              height: '56px',
+            }}
+          >
+            Descargar Total Deudas CSV
+          </button>
+          <button
+            onClick={handleDescargaExcel}
+            style={{
+              padding: '8px 20px',
+              fontSize: '16px',
+              borderRadius: '4px',
+              background: '#1976d2',
+              color: '#fff',
+              border: 'none',
+              cursor: 'pointer',
+              height: '56px',
+            }}
+          >
+            Descargar Total Deudas XLSX
+          </button>
+          </>
+        }</>
+
+      )}
     </Box>
   );
 };

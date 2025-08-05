@@ -270,6 +270,14 @@ const AppRouter = () => {
                 : <Navigate to="/dashboard/inicio" replace />
             }
           />
+                    <Route
+            path="gestiondeuda/:id/ver/:entidad/convenio/:convenioid/cuit/:cuit"
+            element={
+              rolFuncionalidades.GESTION_DEUDA
+                ? <GestionDeudas />
+                : <Navigate to="/dashboard/inicio" replace />
+            }
+          />
           <Route
             path="convenio/:id/cuotas"
             element={

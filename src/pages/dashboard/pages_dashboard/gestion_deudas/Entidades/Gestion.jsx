@@ -86,9 +86,12 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   const [loadAllEmpresas, setLoadAllEmpresas] = useState(false); //Se usa para cargar todas las empresas al inicio
 
   useEffect(() => {
+    
     setRol(getRol());
+    console.log('Volvió a ejecutarse el useEffect')
     const isEditar = window.location.hash.includes('/editar');
-    if (isEditar) {
+    const isVer = window.location.hash.includes('/ver')
+    if (isEditar || isVer) {
       const parts = window.location.hash.split('/');
       setConvenioId(parts[parts.indexOf('convenio') + 1]);
       setCuitInput(parts[parts.indexOf('cuit') + 1]);
@@ -98,13 +101,16 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
 
     if (empresas.length > 0) {
       let auxIdEmpresa = null
-      if (cuitInput !== null) {
+      if (cuitInput !== null && window.location.hash !== '#/dashboard/gestiondeuda') {
         auxIdEmpresa = empresas.find(e => e.cuit === cuitInput)?.id || null
+        
       } else {
         auxIdEmpresa = getEmpresaId()
-        console.log('empresa_id = ', getEmpresaId())
-        console.log(localStorage.getItem('CUIT'))
-        console.log(auxIdEmpresa)
+        const emp = empresas.find(e => e.id == getEmpresaId())
+        //Esto se hace para que cuando se vuelva a tocar Gestion deuda cuando se estuvo editando reinicie el cuit
+        //al valor de la empresa que esta consultando.
+        setNombreEmpresa(emp.razonSocial)
+        setCuitInput(emp.cuit)
       }
       setEmpresaId(auxIdEmpresa);
       console.log(cuitInput)
@@ -112,6 +118,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       if (auxIdEmpresa) {
         fetchEmpresaData(
           isEditar,
+          isVer,
           auxIdEmpresa,
           ID_EMPRESA,
           ENTIDAD,
@@ -136,10 +143,10 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
 
     }
 
-    if (isEditar) {
+    if (isEditar || isVer) {
       setIsCheckedEstadoDeDeduda(false);
     }
-  }, [empresas]);
+  }, [empresas,window.location.hash]);
 
   useEffect(() => {
     const fetchEmpresas = async () => {
@@ -156,7 +163,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
 
   useEffect(() => {
     const isEditar = window.location.hash.includes('/editar');
-    if (!isEditar || !cuitInput || empresas.length === 0) return;
+    const isVer = window.location.hash.includes('/ver');
+    if (!(isVer ||isEditar) || !cuitInput || empresas.length === 0) return;
 
     const empresa = empresas.find(e => e.cuit === cuitInput);
     if (empresa) {
@@ -175,6 +183,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       fetchData: (editar, empresa) =>
         fetchEmpresaData(
           editar,
+          null,
           empresa,
           ID_EMPRESA,
           ENTIDAD,
@@ -208,6 +217,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       fetchData: (editar, empresa) =>
         fetchEmpresaData(
           editar,
+          null,
           empresa,
           ID_EMPRESA,
           ENTIDAD,
@@ -225,6 +235,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           setSelectedDeclaracionesJuradas,
           setSelectedSaldosAFavor,
           setTotalDeuda,
+          setLoadAllEmpresas,
           rol
         ),
     });
@@ -468,6 +479,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
               actas={actas}
               selectedActas={selectedActas}
               setSelectedActas={handleChangeActas}
+              isVer={window.location.hash.includes('/ver')}
             />
           </AccordionDetails>
         </Accordion>
@@ -497,6 +509,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
               declaracionesJuradas={declaracionesJuradas}
               selectedDeclaracionesJuradas={selectedDeclaracionesJuradas}
               setSelectedDeclaracionesJuradas={handleChangeDDJJ}
+              isVer={window.location.hash.includes('/ver')}
             />
           </AccordionDetails>
         </Accordion>
@@ -532,6 +545,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         <OpcionesDePago
           cuotas={cuotas}
           intereses={intereses}
+          setIntereses = {setIntereses}
           setCuotas={handleChangeCuotas}
           fechaIntencion={fechaIntencion}
           setFechaIntencion={handleChangeFecha}
@@ -540,11 +554,13 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           setNoUsar={setNoUsar}
           medioPago={medioPago}
           importeDeDeuda={importeDeDeuda}
+          setImporteDeDeuda = {setImporteDeDeuda}
           detalleConvenio={detalleConvenio}
           saldoAFavorUtilizado={totalSaldosAFavorSelected}
           handleGenerarConvenio={handleGenerarConvenio}
           handleActualizarConvenio={handleActualizarConvenio}
           isEditar={window.location.hash.includes('/editar')}
+          isVer={window.location.hash.includes('/ver')}
           showLoading={showLoading}
         ></OpcionesDePago>
       </div>

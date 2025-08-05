@@ -16,6 +16,7 @@ export const GrillaPeriodo = ({
   declaracionesJuradas,
   selectedDeclaracionesJuradas,
   setSelectedDeclaracionesJuradas,
+  isVer
 }) => {
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
@@ -36,6 +37,7 @@ export const GrillaPeriodo = ({
         <Checkbox
           checked={selectedDeclaracionesJuradas.includes(params.id)}
           onChange={() => handleSelectionChange(params.id)}
+          disabled={isVer}
         />
       ),
       headerCheckboxSelection: true,
