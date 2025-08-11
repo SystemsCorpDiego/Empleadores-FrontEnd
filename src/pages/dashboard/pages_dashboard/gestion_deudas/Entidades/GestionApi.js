@@ -306,10 +306,10 @@ const downloadDeuda = async () => {
       entidad: 'Entidad',
       periodo: 'Periodo',
       aporte: 'Aporte',
-      aporteDescripcion: 'Descripción Aporte',
+      aporteDescripcion: 'Descripcipn Aporte',
       ddjj_secuencia: 'DDJJ Nro.',
       aporte_importe: 'Importe Aporte',
-      interes: 'Interés',
+      interes: 'Interes',
       vencimiento: 'Vencimiento',
       boletaPago_secuencia: 'Boleta Pago Nro.',
       aporte_pago: 'Pago',
@@ -330,11 +330,21 @@ const downloadDeuda = async () => {
     const headerLabels = headers.map((key) => HEADER_MAP[key]);
 
     const csvContent = [
-      headerLabels.join(','), // encabezados legibles
+      headerLabels.join(';'), // encabezados legibles
       ...DEUDA_INFO.map((r) =>
         headers
-          .map((h) => `"${String(r[h] ?? '').replace(/"/g, '""')}"`)
-          .join(','),
+          .map((h) => {
+            let value = r[h] ?? '';
+
+            // Si es numérico (o string numérico) y contiene punto decimal
+            if (!isNaN(value) && value.toString().includes('.')) {
+              value = value.toString().replace('.', ',');
+            }
+
+            // Escapar comillas y devolver con comillas dobles
+            return `"${String(value).replace(/"/g, '""')}"`;
+          })
+          .join(';'),
       ),
     ].join('\r\n');
 
