@@ -135,19 +135,26 @@ export const Convenios = () => {
     console.log(terminosYCondiciones);
   }
 
-  const processRowUpdate = async (updatedRow, originalRow) => {
-    if (updatedRow.estado !== originalRow.estado) {
-      console.log('Estado:', updatedRow.estado, 'ID:', updatedRow.id);
-    }
-    try {
-      const respuesta = await ConveniosService.updateConvenio(updatedRow);
-      console.log('Convenio actualizado:', respuesta);
-    } catch (error) {
-      console.error('Error al actualizar el convenio:', error);
-    }
+const processRowUpdate = async (updatedRow, originalRow) => {
+  if (updatedRow.estado !== originalRow.estado) {
+    console.log('Estado:', updatedRow.estado, 'ID:', updatedRow.id);
+  }
 
-    return updatedRow;
-  };
+  try {
+    const respuesta = await ConveniosService.updateConvenio(updatedRow);
+    console.log('Convenio actualizado:', respuesta);
+
+    if (respuesta === false) {
+      // Volver al valor original
+      return originalRow;
+    }
+  } catch (error) {
+    console.error('Error al actualizar el convenio:', error);
+    return originalRow; // En caso de error, restaurar estado original
+  }
+
+  return updatedRow; // Si todo salió bien
+};
 
   const handleCancelClick = (id) => () => {
     setRowModesModel((prevRowModesModel) => ({
@@ -408,7 +415,8 @@ export const Convenios = () => {
           />,
           ...(
 
-            rol !== 'OSPIM_EMPLEADO'
+            rol !== 'OSPIM_EMPLEADO' || row.cuit == '11111111111'
+            && row.estado !== 'PRES' && row.estado !== 'Presentado' 
               ? [
                 <GridActionsCellItem
                   icon={<CheckIcon />}
@@ -563,7 +571,9 @@ export const Convenios = () => {
             onClick={() => navigate(`/dashboard/convenio/${row.id}/cuotas`)}
             color="inherit"
           />,
-          ...(rol !== 'OSPIM_EMPLEADO' && row.estado !== 'PRES' && row.estado !== 'Presentado'
+          ...((rol !== 'OSPIM_EMPLEADO' || 
+              (rol !== 'OSPIM_EMPLEADO' && row.cuit != '11111111111' )) 
+              && row.estado !== 'PRES' && row.estado !== 'Presentado' 
             ? [
               <GridActionsCellItem
                 icon={<CheckIcon />}

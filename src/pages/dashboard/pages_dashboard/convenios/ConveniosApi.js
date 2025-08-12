@@ -109,7 +109,7 @@ const ConveniosService = {
 
     getConveniosByDateAndState: async (filtro, empresaId, rol) => {
         const { fechaDesde, fechaHasta, estado } = filtro;
-        console.log('empresaId = ',  empresaId)
+        console.log('empresaId = ', empresaId)
         console.log('fechaDesde:', fechaDesde);
         console.log('fechaHasta:', fechaHasta);
         console.log('fechaHasta == null:', fechaHasta == '');
@@ -169,7 +169,6 @@ const ConveniosService = {
                 response.status !== 200 &&
                 response.status !== 201
             ) {
-                //JsonServer devuelve 200
                 console.log(
                     `axiosCrud.actualizar() - ERROR 2 - UrlApi: ${URL} - response.status !== 204 - response: ${JSON.stringify(
                         response,
@@ -181,11 +180,18 @@ const ConveniosService = {
 
             return true;
         } catch (error) {
-            console.log(
-                `axiosCrud.actualizar()`,
-                error,
-            );
-            return false
+            console.log('axiosCrud.actualizar()', error);
+
+            // Extrae mensaje de forma segura (AxiosError)
+            const descripcion =
+                error?.response?.data?.descripcion ??
+                error?.response?.data?.message ??
+                error?.message ??
+                'Error desconocido';
+
+            console.error('error', descripcion);
+            swal.showErrorBackEnd( descripcion);
+            return false;
         }
     },
 
@@ -217,8 +223,8 @@ const ConveniosService = {
                 `axiosCrud.actualizar()`,
                 error,
             );
-            swal.showErrorBackEnd(error.response.data.descripcion ? error.response.data.descripcion :`Error en la respuesta del servidor.` ,);
-            
+            swal.showErrorBackEnd(error.response.data.descripcion ? error.response.data.descripcion : `Error en la respuesta del servidor.`,);
+
             return false
         }
     },

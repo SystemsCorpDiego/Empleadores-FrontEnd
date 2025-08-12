@@ -457,7 +457,7 @@ export const Aportes = () => {
 
   return (
     <div className="publicaciones_container">
-      <h1>Aportes</h1>
+      <h1>Configuración Aportes</h1>
       <Box
         sx={{
           height: '600px',
