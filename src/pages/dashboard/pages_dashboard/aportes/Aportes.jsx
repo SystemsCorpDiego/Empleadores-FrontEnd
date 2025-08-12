@@ -63,7 +63,7 @@ export const Aportes = () => {
   const getEntidades = async () => {
     const response = await consultaEntidades();
     const entidades = [...new Set(response.map(item => item.entidad))]
-    
+
     setEntidades(entidades)
     setAportes(response)
   }
@@ -161,7 +161,7 @@ export const Aportes = () => {
       calculoValor: row.calculoValor ?? '',
       calculoBase: row.calculoBase ?? '',
       camara: row.camara ?? '',
-      camaraCategoria: row.camaraCategoria ?? 'A',
+      camaraCategoria: row.camaraCategoria ?? '',
       camaraAntiguedad: row.camaraAntiguedad ?? '',
       desde: row.desde ?? '',
       hasta: row.hasta ?? '',
@@ -240,43 +240,48 @@ export const Aportes = () => {
       field: 'entidad',
       headerName: 'Entidad',
       type: 'singleSelect',
-      valueOptions: entidades.map(e => e ?? ''),
+      valueOptions: () => {
+        const ent = entidades.map(e => e ?? '');
+        ent.push('TODAS');
+        return ent
+      },
       flex: 1,
       headerAlign: 'left',
       editable: true,
       align: 'left',
       headerClassName: 'header--cell',
-      valueGetter: (params) => params.row.entidad ?? '',
+      valueGetter: (params) => params.row.entidad ?? 'TODAS',
     },
-{
-  field: 'aporte',
-  headerName: 'Aporte',
-  type: 'singleSelect',
-  valueOptions: (params) => {
-    if (aportes) {
-      const filtered = aportes.filter(item => item?.entidad === params.row?.entidad);
-      const options = filtered.map(item => ({
-        value: item.codigo,
-        label: item.descripcion,
-      }));
-      options.push({ value: '', label: '' });
-      return options;
-    }
-    return [{ value: '', label: '' }];
-  },
-  valueGetter: (params) => params.row.aporte ?? '',
-  renderCell: (params) => {
-    const found = aportes.find(
-      a => a.codigo === params.value && a.entidad === params.row.entidad
-    );
-    return found ? found.descripcion : '';
-  },
-  editable: true,
-  flex: 1,
-  headerAlign: 'left',
-  align: 'left',
-  headerClassName: 'header--cell',
-},
+    {
+      field: 'aporte',
+      headerName: 'Aporte',
+      type: 'singleSelect',
+      valueOptions: (params) => {
+        if (aportes) {
+          const filtered = aportes.filter(item => item?.entidad === params.row?.entidad);
+          const options = filtered.map(item => ({
+            value: item.codigo,
+            label: item.descripcion,
+          }));
+          options.push({ value: '', label: '' });
+          return options;
+        }
+        return [{ value: '', label: '' }];
+      },
+      valueGetter: (params) => params.row.aporte ?? '',
+      renderCell: (params) => {
+        
+        const found = aportes.find(
+          a => a.codigo === params.value && a.entidad === params.row.entidad
+        );
+        return found ? found.descripcion : '';
+      },
+      editable: true,
+      flex: 1,
+      headerAlign: 'left',
+      align: 'left',
+      headerClassName: 'header--cell',
+    },
     {
       field: 'socio',
       headerName: 'Socio',
@@ -284,14 +289,19 @@ export const Aportes = () => {
       valueOptions: [
         { value: true, label: 'Si' },
         { value: false, label: 'No' },
+        { value: 'Todos', label: 'Todos' },
       ],
-      valueGetter: (params) => params.row.socio ?? false,
+      valueGetter: (params) => params.row.socio ?? null,
       editable: true,
       flex: 1,
       headerAlign: 'left',
       headerClassName: 'header--cell',
       align: 'left',
-      valueFormatter: ({ value }) => value ? 'Si' : 'No',
+
+      valueFormatter: ({ value }) => {
+        if (value === null) return 'Todos';
+        return value === true ? 'Si' : 'No';
+      },
     },
     {
       field: 'calculoTipo',
@@ -302,8 +312,11 @@ export const Aportes = () => {
         { value: 'PO', label: 'Porcentaje' },
         { value: 'EN', label: 'Entero' },
       ],
-      valueGetter: (params) => params.row.calculoTipo ?? '',
-      flex: 1,
+      valueGetter: (params) => {
+        const value = params.row.calculoTipo;
+        return value === undefined || value === null || value === '' ? 'PO' : value;
+      },
+       flex: 1,
       headerAlign: 'left',
       align: 'left',
       headerClassName: 'header--cell',
@@ -316,7 +329,7 @@ export const Aportes = () => {
       headerAlign: 'right',
       align: 'right',
       headerClassName: 'header--cell',
-      valueGetter: (params) => params.row.calculoValor ?? '',
+      valueGetter: (params) => params.row.calculoValor ?? null,
       valueFormatter: ({ value }) => {
         if (value === '' || value === null) return '';
         return formatter.currency.format(value || 0);
@@ -331,12 +344,12 @@ export const Aportes = () => {
       headerAlign: 'left',
       align: 'left',
       headerClassName: 'header--cell',
-      valueGetter: (params) => params.row.calculoBase ?? '',
+      valueGetter: (params) => params.row.calculoBase ?? null,
       valueOptions: [
         { value: 'PJ', label: 'Paritaria Jornal' },
         { value: 'PS', label: 'Paritaria Salarial' },
         { value: 'RE', label: 'Remunerativo' },
-        { value: '', label: '' },
+        { value: null, label: 'Todos' },
       ],
     },
     {
@@ -347,35 +360,45 @@ export const Aportes = () => {
       valueOptions: camaras,
       editable: true,
       headerAlign: 'left',
-      valueGetter: (params) => params.row.camara ?? '',
+      valueGetter: (params) => params.row.camara ?? null,
       align: 'left',
       headerClassName: 'header--cell',
     },
-    {
-      field: 'camaraCategoria',
-      headerName: 'Categoría',
-      flex: 1,
-      editable: true,
-      type: 'singleSelect',
-      valueOptions: (params) => {
-        if (categorias) {
-          const filtered = categorias.filter(item => item?.camara === params.row?.camara).map(item => item.categoria);
-          filtered.push('');
-          return [...new Set(filtered)];
-        }
-        return [''];
-      },
-      valueGetter: (params) => params.row.camaraCategoria ?? 'A',
-      headerAlign: 'left',
-      align: 'left',
-      headerClassName: 'header--cell',
-    },
+{
+  field: 'camaraCategoria',
+  headerName: 'Categoría',
+  flex: 1,
+  editable: true,
+  type: 'singleSelect',
+  valueOptions: (params) => {
+    if (categorias) {
+      const filtered = categorias
+        .filter(item => item?.camara === params.row?.camara)
+        .map(item => item.categoria);
+
+      return [...new Set(filtered)];
+    }
+    return [null];
+  },
+  valueGetter: (params) => {
+    const value = params.row.camaraCategoria;
+    return value === null ? '' : value;
+  },
+  headerAlign: 'left',
+  align: 'left',
+  headerClassName: 'header--cell',
+},
     {
       field: 'camaraAntiguedad',
       headerName: 'Antigüedad',
       flex: 1,
       editable: true,
-      valueGetter: (params) => params.row.camaraAntiguedad ?? '',
+      valueGetter: (params) => {
+        const value = params.row.camaraAntiguedad;
+        return value === "" || value === undefined || value === null || isNaN(value)
+          ? 0
+          : Number(value);
+      },
       headerAlign: 'left',
       align: 'left',
       headerClassName: 'header--cell',
@@ -398,13 +421,16 @@ export const Aportes = () => {
       editable: true,
       flex: 1,
       type: 'date',
-      valueGetter: (params) => params.row.hasta ?? '',
+      valueGetter: (params) => {
+        const value = params.row.hasta;
+        return value === "" || value === undefined ? null : value;
+      },
       headerAlign: 'left',
       align: 'left',
       headerClassName: 'header--cell',
       valueFormatter: (params) => formatter.dateString(params.value),
     },
-        {
+    {
       field: 'actions',
       type: 'actions',
       headerName: 'Acciones',

@@ -49,8 +49,24 @@ export const consultar = async () => {
 };
 
 export const crear = async (registro) => {
+  registro.entidad = registro.entidad == '' ? null : registro.entidad;
+  registro.aporte = registro.aporte == '' ? null : registro.aporte;
+  registro.socio = registro.socio === '' ? null : registro.socio;
   registro.camara = registro.camara == '' ? null : registro.camara;
-  registro.categoria = registro.categoria == '' ? null : registro.categoria;
+  registro.camaraCategoria = registro.camaraCategoria == '' ? null : registro.camaraCategoria;
+  registro.calculoTipo = registro.calculoTipo == '' ? null : registro.calculoTipo;
+  registro.calculoBase = registro.calculoBase == '' ? null : registro.calculoBase;
+  registro.calculoValor = registro.calculoValor == '' ? null : registro.calculoValor
+  registro.desde = registro.desde == '' ? null : registro.desde;         
+  registro.hasta = registro.hasta == '' ? null : registro.hasta;
+  if ('camaraAntiguedad' in registro) {
+    registro.camaraAntiguedad = registro.camaraAntiguedad === '' ? null : Number(registro.camaraAntiguedad);
+    if (registro.camaraAntiguedad !== null && isNaN(registro.camaraAntiguedad)) {
+      registro.camaraAntiguedad = null;
+    }
+  }
+  
+  
   try {
     registro.periodo_original = formatter.toFechaValida(
       registro.periodo_original,
@@ -71,8 +87,23 @@ export const crear = async (registro) => {
 };
 
 export const actualizar = async (registro) => {
+  registro.entidad = registro.entidad == '' ? null : registro.entidad;
+  registro.aporte = registro.aporte == '' ? null : registro.aporte;
+  registro.socio = registro.socio === '' ? null : registro.socio;
   registro.camara = registro.camara == '' ? null : registro.camara;
-  registro.categoria = registro.categoria == '' ? null : registro.categoria;
+  registro.camaraCategoria = registro.camaraCategoria == '' ? null : registro.camaraCategoria;
+  registro.calculoTipo = registro.calculoTipo == '' ? null : registro.calculoTipo;
+  registro.calculoBase = registro.calculoBase == '' ? null : registro.calculoBase;
+  registro.calculoValor = registro.calculoValor == '' ? null : registro.calculoValor
+  registro.desde = registro.desde == '' ? null : registro.desde;         
+  registro.hasta = registro.hasta == '' ? null : registro.hasta;
+  if ('camaraAntiguedad' in registro) {
+    registro.camaraAntiguedad = registro.camaraAntiguedad === '' ? null : Number(registro.camaraAntiguedad);
+    if (registro.camaraAntiguedad !== null && isNaN(registro.camaraAntiguedad)) {
+      registro.camaraAntiguedad = null;
+    }
+  }
+
   try {
     console.log(registro);
     console.log(registro.periodo_original);

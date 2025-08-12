@@ -37,13 +37,13 @@ import {
             'aporte': '',
             'socio': '',
             'calculoTipo': '',
-            'calculoValor': '',
+            'calculoValor': 0,
             'calculoBase': '',
             'camara': '',
             'camaraCategoria': '',
             'desde': '',
             'hasta': '',
-            'camaraAntiguedad':''
+            'camaraAntiguedad':0
           };
 
           //const newReg = {
@@ -52,7 +52,7 @@ import {
           //  'entidad': '',
           //  'aporte': '',
           //  'socio': '',
-          //  'calculoTipo': '',
+          //  'calculoTipo': '',ß
           //  'calculoValor': '',
           //  'calculoBase': '',
           //  'camara': '',
