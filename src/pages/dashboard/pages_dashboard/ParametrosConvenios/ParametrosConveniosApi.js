@@ -10,7 +10,7 @@ const HTTP_MSG_MODI_ERROR = import.meta.env.VITE_HTTP_MSG_MODI_ERROR;
 const HTTP_MSG_BAJA_ERROR = import.meta.env.VITE_HTTP_MSG_BAJA_ERROR;
 const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
 
-const URL_ENTITY = '/parametros-convenios';
+const URL_ENTITY = '/convenio-seteo';
 
 export const axiosParametrosConvenios = {
   consultar: async function (UrlApi) {
@@ -77,10 +77,15 @@ export const parametrosMock = [
 
 export const consultar = async () => {
   try {
-    //const data = await axiosCrud.consultar(URL_ENTITY);
-    //return data || [];
-    console.log('axiosParametrosConvenios.consultar - parametrosMock:', parametrosMock);
+    const data = await axiosCrud.consultar(URL_ENTITY);
+    return data || [];
+    /*
+    console.log(
+      'axiosParametrosConvenios.consultar - parametrosMock:',
+      parametrosMock,
+    );
     return parametrosMock || [];
+    */
   } catch (error) {
     swal.showErrorBackEnd(
       HTTP_MSG_CONSUL_ERROR + ` (${URL_ENTITY} - status: ${error.status})`,
@@ -96,7 +101,10 @@ export const crear = async (registro) => {
       registro.periodo_original,
     );
     registro.vigencia = formatter.toFechaValida(registro.vigencia);
-
+    try {
+      delete registro.id;
+      delete registro.isNew;
+    } catch {}
     const data = await axiosCrud.crear(URL_ENTITY, registro);
     if (data && data.id) {
       swal.showSuccess(HTTP_MSG_ALTA);
