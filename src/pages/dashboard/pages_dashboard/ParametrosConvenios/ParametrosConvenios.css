@@ -8,3 +8,26 @@
   margin-bottom: 65px;
   text-align: left !important;
 }
+
+
+  .flex_properties {
+    margin-bottom: 0;
+    display: flex;
+    justify-content: initial;
+  
+    flex-direction: column;
+  }
+
+  .pr2{
+    padding-right: 2em;
+  }
+
+  .pc_container h1 {
+    color: #1a76d2;
+    
+    text-align: left !important;
+  }
+
+  .mt-1em{
+    margin-top: 1em;
+  }
