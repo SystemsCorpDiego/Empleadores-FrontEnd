@@ -19,11 +19,11 @@ import { BoletasEmpleadoGrilla } from './BoletasEmpleadoGrilla';
 
 export const BoletaEmpleadoFiltro = () => {
   const ahora = dayjs().startOf('month');
-  const ahoraMenosUnAnio = ahora.add(-11, 'month');
+  const ahoraMenosRangoFechas = ahora.add(-3, 'month');
   const [empresa, setEmpresa] = useState({ cuit: '', razonSocial: '' });
   const [empresas, setEmpresas] = useState([]);
   const [filtro, setFiltro] = useState({
-    periodoDesde: ahoraMenosUnAnio,
+    periodoDesde: ahoraMenosRangoFechas,
     periodoHasta: ahora,
     cuit: null,
     concepto: null,
@@ -34,7 +34,7 @@ export const BoletaEmpleadoFiltro = () => {
   const [aportes, setAportes] = useState([]);
   const [formasPago, setFormasPago] = useState([]);
   const [entidades, setEntidades] = useState([]);
-  const [showLoading, setShowLoading] = useState(false)
+  const [showLoading, setShowLoading] = useState(false);
 
   const handlerLimpiarFiltro = () => {
     setEmpresa(null);
@@ -50,7 +50,7 @@ export const BoletaEmpleadoFiltro = () => {
 
   const handlerConsultar = async () => {
     try {
-      setShowLoading(true)
+      setShowLoading(true);
       const filtroBack = { ...filtro };
 
       if (filtro.periodoDesde !== null) {
@@ -68,10 +68,10 @@ export const BoletaEmpleadoFiltro = () => {
       const ddjjResponse = await axiosBoletas.getBoletasEmpleado(filtroBack);
       console.log('handlerConsultar - ddjjResponse: ', ddjjResponse);
       setRows(ddjjResponse.con_ddjj);
-      setShowLoading(false)
+      setShowLoading(false);
     } catch (error) {
       console.error('Error al buscar declaraciones juradas:', error);
-      setShowLoading(false)
+      setShowLoading(false);
     }
   };
 
@@ -269,7 +269,7 @@ export const BoletaEmpleadoFiltro = () => {
             }}
             wrapperClass=""
           />
-         {showLoading || <BoletasEmpleadoGrilla rowsGrilla={rows} />} 
+          {showLoading || <BoletasEmpleadoGrilla rowsGrilla={rows} />}
         </Box>
       </Stack>
     </div>
