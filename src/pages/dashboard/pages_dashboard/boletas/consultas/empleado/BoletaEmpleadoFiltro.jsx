@@ -19,7 +19,7 @@ import { BoletasEmpleadoGrilla } from './BoletasEmpleadoGrilla';
 
 export const BoletaEmpleadoFiltro = () => {
   const ahora = dayjs().startOf('month');
-  const ahoraMenosRangoFechas = ahora.add(-3, 'month');
+  const ahoraMenosRangoFechas = ahora.add(-1, 'month');
   const [empresa, setEmpresa] = useState({ cuit: '', razonSocial: '' });
   const [empresas, setEmpresas] = useState([]);
   const [filtro, setFiltro] = useState({
