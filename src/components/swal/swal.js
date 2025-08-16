@@ -163,11 +163,13 @@ const showErrorBackEnd = async (HTTP_MSG, rta) => {
         showSwalErrorBusiness(rta.descripcion);
       } else {
         console.log('* showErrorBackEnd - NOOO ERROR_BUSINESS');
-        showSwalError(`${ERROR_MESSAGE} ${rta.ticket}`); // confirm
+        showSwalError(
+          `${ERROR_MESSAGE} <br> ${rta.descripcion}<br><br> Ticket Reclamo Nro.: <b>${rta.ticket}</b>`,
+        );
       }
     } else {
       console.log('* showErrorBackEnd - NOOO ticket');
-     
+
       if (rta.code && rta.code == 'ECONNABORTED') {
         showSwalError(
           'Error de TimeOut en el Servidor.<br>Por favor realice alguna de las siguientes acciones:<br><br>1)Si intentó registrar información: consulte los datos para verificar el estado y vuelva a intentarlo de ser necesario.<br>2)Si intentó consultar información: por favor filtre la búsqueda.',

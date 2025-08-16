@@ -58,7 +58,6 @@ export const getGestionDeuda = async (empresa_id, entidad) => {
     response.saldosAFavor &&
     response.declaracionesJuradas.length === 0 &&
     response.actas.length === 0
-
   ) {
     Swal.fire({
       icon: 'info',
@@ -78,26 +77,14 @@ export const getGestionEditar = async (empresa_id, convenioId) => {
   } catch (error) {
     console.error('Error capturado en getGestionEditar:', error);
 
-    let text = 'Error consultando datos';
-    
-    if (error?.response?.data?.descripcion) {
-      text = error.response.data.descripcion;
-    } else if (error?.descripcion) {
-      text = error.descripcion;
-    }
-
-    await Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: text,
-      confirmButtonText: 'Aceptar',
-    });
+    const HTTP_MSG =
+      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
+    swal.showErrorBackEnd(HTTP_MSG, error);
 
     return null;
   }
 
   //return emuRespuesta
-
 };
 
 export const getDeclaracionesJuradas = async (empresa_id, entidad) => {
