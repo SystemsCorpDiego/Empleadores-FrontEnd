@@ -84,7 +84,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   const [intereses, setIntereses] = useState(0); //Se usa para guardar los intereses de la deuda
   const [empresas, setEmpresas] = useState([]); //Se usa para guardar las empresas que vienen del backend
   const [loadAllEmpresas, setLoadAllEmpresas] = useState(false); //Se usa para cargar todas las empresas al inicio
-
+  
   useEffect(() => {
     
     setRol(getRol());
@@ -169,7 +169,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     const empresa = empresas.find(e => e.cuit === cuitInput);
     if (empresa) {
       setNombreEmpresa(empresa.razonSocial);
-      setEmpresaId(empresa.id);
+      setEmpresaId(empresa.id);   
     }
   }, [empresas, cuitInput]);
 
@@ -543,11 +543,13 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           </AccordionDetails>
         </Accordion>
         <OpcionesDePago
+          cuitInput={cuitInput}
           cuotas={cuotas}
           intereses={intereses}
           setIntereses = {setIntereses}
           setCuotas={handleChangeCuotas}
           fechaIntencion={fechaIntencion}
+          setMedioPago={setMedioPago}
           setFechaIntencion={handleChangeFecha}
           saldoAFavor={formatter.currencyString(totalSaldosAFavorSelected)}
           noUsar={noUsar}

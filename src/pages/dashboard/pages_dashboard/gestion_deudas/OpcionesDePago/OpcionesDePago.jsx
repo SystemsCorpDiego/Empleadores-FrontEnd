@@ -26,10 +26,12 @@ import { esES } from '@mui/x-date-pickers/locales';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
+import { axiosGestionDeudas } from './../Entidades/GestionApi';
 
 //moment.locale('es');
 
 export const OpcionesDePago = ({
+  cuitInput,
   cuotas,
   setCuotas,
   fechaIntencion,
@@ -48,18 +50,40 @@ export const OpcionesDePago = ({
   isVer,
   showLoading
 }) => {
-const [locale, setLocale] = useState('esES');
+  const [locale, setLocale] = useState('esES');
+  const [parametrosConvenios, setParametrosConvenios] = useState(null);
+  const [inabilitar, setInabilitar] = useState(false);
 
-useEffect(() => {
-  moment.locale('es');
-  console.log(window.location.hash)
-  if (window.location.hash === '#/dashboard/gestiondeuda'){
-    console.log('entre al reset')
-    setFechaIntencion(null)
-    setIntereses(0)
-    setImporteDeDeuda(0)
-  }
-}, []);
+  useEffect(() => {
+    moment.locale('es');
+    console.log(window.location.hash)
+    if (window.location.hash === '#/dashboard/gestiondeuda') {
+      console.log('entre al reset')
+      setFechaIntencion(null)
+      setIntereses(0)
+      setImporteDeDeuda(0)
+    }
+    const fetchParametrosConvenios = async () => {
+      const parametros = await axiosGestionDeudas.getParametrosConvenio(cuitInput);
+      //Este if se utiliza para setear los valores que vienen del convenio para que se puedan mostrar
+      //pero inabilita la opcion de guardar ya que no tiene parametros en los cuales basarse
+      if (!parametros) {
+        setInabilitar(true);
+        if (isEditar || isVer) {
+          const parametrosVista = {
+            cuotas: cuotas,
+            diasIntencion: 60,
+            mediosDePago: [medioPago]
+          }
+          setParametrosConvenios(parametrosVista);
+        }  
+        return;
+      }
+      setParametrosConvenios(parametros);
+    };
+    fetchParametrosConvenios();
+    console.log('Parametros de convenios:', parametrosConvenios);
+  }, []);
 
   const theme = useTheme();
   const themeWithLocale = useMemo(
@@ -85,11 +109,13 @@ useEffect(() => {
                     onChange={(e) => setCuotas(e.target.value)}
                     disabled={isVer}
                   >
-                    {[1, 2, 3, 4, 5, 6].map((number) => (
-                      <MenuItem key={number} value={number}>
-                        {number}
-                      </MenuItem>
-                    ))}
+                    {parametrosConvenios && parametrosConvenios.cuotas > 0 &&
+                      Array.from({ length: parametrosConvenios.cuotas }, (_, i) => i + 1).map((number) => (
+                        <MenuItem key={number} value={number}>
+                          {number}
+                        </MenuItem>
+                      ))
+                    }
                   </Select>
                 </FormControl>
               </Grid>
@@ -112,6 +138,7 @@ useEffect(() => {
                       }}
                       disabled={isVer}
                       minDate={dayjs()}
+                      maxDate={parametrosConvenios ? dayjs().add(parametrosConvenios.diasIntencion, 'day') : undefined}
                       slotProps={{
                         textField: {
                           inputProps: {
@@ -131,7 +158,17 @@ useEffect(() => {
                     value={medioPago}
                     onChange={(e) => setMedioPago(e.target.value)}
                   >
-                    <FormControlLabel value="CHEQUE" control={<Radio />} label="CHEQUE" />
+                    <Grid container>
+                      {parametrosConvenios?.mediosDePago?.map((medio) => (
+                        <Grid item xs={6} key={medio}>
+                          <FormControlLabel
+                            value={medio}
+                            control={<Radio />}
+                            label={medio}
+                          />
+                        </Grid>
+                      ))}
+                    </Grid>
                   </RadioGroup>
                 </FormControl>
               </Grid>
@@ -161,12 +198,12 @@ useEffect(() => {
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
                   <Typography variant="body2"><strong>Intereses de financiación:</strong></Typography>
-                  <Typography variant="body1">{detalleConvenio.length > 0 ? formatter.currencyString(detalleConvenio.reduce((acumulador, e) => acumulador + e.interes, 0)) : intereses }</Typography>
+                  <Typography variant="body1">{detalleConvenio.length > 0 ? formatter.currencyString(detalleConvenio.reduce((acumulador, e) => acumulador + e.interes, 0)) : intereses}</Typography>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
                   <Typography variant="body2"><strong>Total a pagar:</strong></Typography>
                   <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                    { formatter.currencyString(importeDeDeuda - saldoAFavorUtilizado + (detalleConvenio.length > 0 ? detalleConvenio.reduce((acumulador, e) => acumulador + e.interes, 0) : intereses)) }
+                    {formatter.currencyString(importeDeDeuda - saldoAFavorUtilizado + (detalleConvenio.length > 0 ? detalleConvenio.reduce((acumulador, e) => acumulador + e.interes, 0) : intereses))}
                   </Typography>
                 </Grid>
               </Grid>
@@ -197,7 +234,7 @@ useEffect(() => {
 
               <Grid item xs={12}>
                 {!showLoading && (
-                  <Button variant="contained"  disabled={isVer} color="primary" fullWidth onClick={isEditar ? handleActualizarConvenio : handleGenerarConvenio}>
+                  <Button variant="contained" disabled={isVer || inabilitar} color="primary" fullWidth onClick={isEditar ? handleActualizarConvenio : handleGenerarConvenio}>
                     GUARDAR CONVENIO
                   </Button>
                 )}

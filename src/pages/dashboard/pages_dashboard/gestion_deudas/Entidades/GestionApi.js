@@ -411,6 +411,44 @@ const downloadExcel = async () => {
   }
 };
 
+export const getParametrosConvenio = async (CUIT_EMPRESA) => {
+  const mockParametros = {
+    cuotas: 6,
+    diasIntencion: 30,
+    mediosDePago: [
+      'CHEQUE'
+    ],
+  }
+  try {
+    if (CUIT_EMPRESA) {
+      const response = await axiosCrud.consultar(`/convenio-seteo/cuit/${CUIT_EMPRESA}`);
+      
+      console.log('Parametros de convenio:', response);
+
+      if (response === null || Object.keys(response).length === 0) {
+        // Esta condicion la utilizo por si salió un mensaje antes de este error
+        // Para que no se solapen
+        if(Swal.isVisible()) {
+          return null;
+        }
+        swal.showErrorBusiness(
+          'El cuit no tiene parámetros de convenio configurados.',
+        );
+        return null
+      }
+      return response;
+    }
+
+  } catch (error) {
+    console.error('Error capturado en getParametrosConvenio:', error);
+    const HTTP_MSG =
+      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
+    swal.showErrorBackEnd(HTTP_MSG, error);
+
+    return null;
+  }
+};
+
 export const axiosGestionDeudas = {
   getDeclaracionesJuradas,
   getDetalleConvenio,
@@ -422,4 +460,5 @@ export const axiosGestionDeudas = {
   generarConvenio,
   downloadDeuda,
   downloadExcel,
+  getParametrosConvenio
 };
