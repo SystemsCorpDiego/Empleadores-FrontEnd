@@ -132,6 +132,7 @@ export const getDetalleConvenio = async (empresa_id, body) => {
 export const generarConvenio = async (idEmpresa, bodyConvenio) => {
   try {
     const URL = `/empresa/${idEmpresa}/convenios`;
+    console.log('bodyConvenio', bodyConvenio);
     const response = await axiosCrud.crear(URL, bodyConvenio);
     console.log('response', response);
     if (response && response.id) {

@@ -23,6 +23,7 @@ export const fetchEmpresaData = async (
   setSelectedSaldosAFavor,
   setTotalDeuda,
   setLoadAllEmpresas,
+  setMedioPago,
   rol
 ) => {
   setLoadAllEmpresas(true);
@@ -121,6 +122,7 @@ export const fetchEmpresaData = async (
       const idSelectedSaldosAFavor = response['saldosAFavor'].map((objeto) => objeto.id);
       setSelectedSaldosAFavor(idSelectedSaldosAFavor);
     }
+    setMedioPago(response.medioPago || null); 
 
     const totalDeudaCalculada =
       response['declaracionesJuradas'].reduce((acc, dj) => acc + (dj.importeTotal || 0), 0) +

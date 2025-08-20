@@ -137,6 +137,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           setSelectedSaldosAFavor,
           setTotalDeuda,
           setLoadAllEmpresas,
+          setMedioPago,
           rol
         );
       }
@@ -251,6 +252,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       selectedActas,
       selectedDeclaracionesJuradas,
       selectedSaldosAFavor,
+      medioPago,
     });
     //const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA; //TODO cambiar y probar con rol y no con 833
     const empresa = empresa_id; //TODO cambiar y probar con rol y no con 833

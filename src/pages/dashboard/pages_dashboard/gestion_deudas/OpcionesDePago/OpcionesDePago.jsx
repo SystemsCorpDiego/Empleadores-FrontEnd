@@ -63,6 +63,7 @@ export const OpcionesDePago = ({
       setIntereses(0)
       setImporteDeDeuda(0)
     }
+    console.log(medioPago)
     const fetchParametrosConvenios = async () => {
       const parametros = await axiosGestionDeudas.getParametrosConvenio(cuitInput);
       //Este if se utiliza para setear los valores que vienen del convenio para que se puedan mostrar
