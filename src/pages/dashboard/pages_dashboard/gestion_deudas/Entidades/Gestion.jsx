@@ -271,6 +271,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       selectedActas,
       selectedDeclaracionesJuradas,
       selectedSaldosAFavor,
+      medioPago
     });
     console.log(empresa_id)
     const empresa = empresa_id; //TODO cambiar y probar con rol y no con 833
