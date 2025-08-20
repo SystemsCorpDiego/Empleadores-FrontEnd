@@ -78,8 +78,8 @@ const normalizeIn = (registro) => {
     return Number.isNaN(d.getTime()) ? null : d;
   };
 
-  r.vigDesde = toDateOrNull(r.vigDesde);
-  r.vigHasta = toDateOrNull(r.vigHasta);
+  //r.vigDesde = toDateOrNull(r.vigDesde);
+  //r.vigHasta = toDateOrNull(r.vigHasta);
 
   // Booleans por si vinieran null
   r.ventanilla = !!r.ventanilla;

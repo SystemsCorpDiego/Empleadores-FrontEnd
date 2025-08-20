@@ -22,6 +22,7 @@ import './ParametrosConvenios.css';
 import { axiosParametrosConvenios } from './ParametrosConveniosApi';
 import StripedDataGrid from '@/common/dataGridStyle';
 import EditarNuevaFilaParametros from './EditarNuevaFilaParametros';
+import formatter from '@/common/formatter';
 
 export const ParametrosConvenios = () => {
     const [rows, setRows] = useState([]);
@@ -178,27 +179,10 @@ export const ParametrosConvenios = () => {
             type: 'date',
             flex: 1,
             editable: true,
-            // Usamos Date en rows (ver normalizeIn); el editor usa yyyy-MM-dd
-            renderEditCell: (params) => {
-                const value = params.value instanceof Date
-                    ? params.value.toISOString().slice(0, 10)
-                    : (params.value ? String(params.value).slice(0, 10) : '');
-                return (
-                    <TextField
-                        type="date"
-                        value={value}
-                        onChange={(e) => {
-                            const v = e.target.value;
-                            params.api.setEditCellValue({
-                                id: params.id,
-                                field: 'vigDesde',
-                                value: v ? new Date(v) : null,
-                            });
-                        }}
-                    />
-                );
-            },
-            valueFormatter: ({ value }) => (value instanceof Date ? value.toLocaleDateString() : ''),
+   
+            valueGetter: ({ value }) => (value ? formatter.dateObject(value) : null),
+            valueFormatter: ({ value }) =>
+                value ? formatter.dateString(value) : '',
         },
 
         {
@@ -207,26 +191,9 @@ export const ParametrosConvenios = () => {
             type: 'date',
             flex: 1,
             editable: true,
-            renderEditCell: (params) => {
-                const value = params.value instanceof Date
-                    ? params.value.toISOString().slice(0, 10)
-                    : (params.value ? String(params.value).slice(0, 10) : '');
-                return (
-                    <TextField
-                        type="date"
-                        value={value}
-                        onChange={(e) => {
-                            const v = e.target.value;
-                            params.api.setEditCellValue({
-                                id: params.id,
-                                field: 'vigHasta',
-                                value: v ? new Date(v) : null,
-                            });
-                        }}
-                    />
-                );
-            },
-            valueFormatter: ({ value }) => (value instanceof Date ? value.toLocaleDateString() : ''),
+            valueGetter: ({ value }) => (value ? formatter.dateObject(value) : null),
+            valueFormatter: ({ value }) =>
+                value ? formatter.dateString(value) : '',
         },
 
         {
@@ -323,7 +290,7 @@ export const ParametrosConvenios = () => {
                             },
                             '& .MuiDataGrid-columnHeaderTitle': {
                                 color: '#fff', // Texto blanco
-                                
+
                             },
                             '& .MuiDataGrid-iconButtonContainer, & .MuiDataGrid-sortIcon': {
                                 color: '#fff', // Iconos blancos
