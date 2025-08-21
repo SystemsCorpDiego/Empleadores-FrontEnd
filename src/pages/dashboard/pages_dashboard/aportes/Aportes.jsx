@@ -270,7 +270,7 @@ export const Aportes = () => {
       },
       valueGetter: (params) => params.row.aporte ?? '',
       renderCell: (params) => {
-        
+
         const found = aportes.find(
           a => a.codigo === params.value && a.entidad === params.row.entidad
         );
@@ -316,7 +316,7 @@ export const Aportes = () => {
         const value = params.row.calculoTipo;
         return value === undefined || value === null || value === '' ? 'PO' : value;
       },
-       flex: 1,
+      flex: 1,
       headerAlign: 'left',
       align: 'left',
       headerClassName: 'header--cell',
@@ -364,30 +364,30 @@ export const Aportes = () => {
       align: 'left',
       headerClassName: 'header--cell',
     },
-{
-  field: 'camaraCategoria',
-  headerName: 'Categoría',
-  flex: 1,
-  editable: true,
-  type: 'singleSelect',
-  valueOptions: (params) => {
-    if (categorias) {
-      const filtered = categorias
-        .filter(item => item?.camara === params.row?.camara)
-        .map(item => item.categoria);
+    {
+      field: 'camaraCategoria',
+      headerName: 'Categoría',
+      flex: 1,
+      editable: true,
+      type: 'singleSelect',
+      valueOptions: (params) => {
+        if (categorias) {
+          const filtered = categorias
+            .filter(item => item?.camara === params.row?.camara)
+            .map(item => item.categoria);
 
-      return [...new Set(filtered)];
-    }
-    return [null];
-  },
-  valueGetter: (params) => {
-    const value = params.row.camaraCategoria;
-    return value === null ? '' : value;
-  },
-  headerAlign: 'left',
-  align: 'left',
-  headerClassName: 'header--cell',
-},
+          return [...new Set(filtered)];
+        }
+        return [null];
+      },
+      valueGetter: (params) => {
+        const value = params.row.camaraCategoria;
+        return value === null ? '' : value;
+      },
+      headerAlign: 'left',
+      align: 'left',
+      headerClassName: 'header--cell',
+    },
     {
       field: 'camaraAntiguedad',
       headerName: 'Antigüedad',
@@ -409,11 +409,14 @@ export const Aportes = () => {
       flex: 1,
       editable: true,
       type: 'date',
-      valueGetter: (params) => params.row.desde ?? '',
+      //valueGetter: (params) => params.row.desde ?? '',
       headerAlign: 'left',
       align: 'left',
       headerClassName: 'header--cell',
-      valueFormatter: (params) => formatter.dateString(params.value),
+      valueGetter: ({ value }) => (value ? formatter.dateObject(value) : null),
+      valueFormatter: ({ value }) =>
+        value ? formatter.dateString(value) : '',
+      //valueFormatter: (params) => formatter.dateString(params.value),
     },
     {
       field: 'hasta',
@@ -421,14 +424,17 @@ export const Aportes = () => {
       editable: true,
       flex: 1,
       type: 'date',
-      valueGetter: (params) => {
-        const value = params.row.hasta;
-        return value === "" || value === undefined ? null : value;
-      },
+     // valueGetter: (params) => {
+     //   const value = params.row.hasta;
+     //   return value === "" || value === undefined ? null : value;
+     // },
       headerAlign: 'left',
       align: 'left',
       headerClassName: 'header--cell',
-      valueFormatter: (params) => formatter.dateString(params.value),
+      //valueFormatter: (params) => formatter.dateString(params.value),
+      valueGetter: ({ value }) => (value ? formatter.dateObject(value) : null),
+      valueFormatter: ({ value }) =>
+        value ? formatter.dateString(value) : '',
     },
     {
       field: 'actions',
