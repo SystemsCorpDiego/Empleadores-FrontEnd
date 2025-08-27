@@ -36,6 +36,7 @@ export const Aportes = () => {
   const [entidades, setEntidades] = useState(['UOMA', 'AMTIMA', 'OSPIM', '']);
   const [rowModesModel, setRowModesModel] = useState({});
   const [edit, setEdit] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
 
@@ -127,6 +128,7 @@ export const Aportes = () => {
   };
 
   const handleEditClick = (row) => () => {
+    setIsEditing(true);
     const today = dayjs().format('YYYY-MM-DD');
     const desdeFormatted = row.desde ? dayjs(row.desde).format('YYYY-MM-DD') : null;
     console.log('today', today, 'desdeFormatted', desdeFormatted)
@@ -145,6 +147,7 @@ export const Aportes = () => {
       ...rowModesModel,
       [row.id]: { mode: GridRowModes.View },
     });
+    setIsEditing(false);
   };
 
   const handleCancelClick = (row) => () => {
@@ -161,6 +164,7 @@ export const Aportes = () => {
       setRows(rows.filter((reg) => reg.id !== row.id));
     }
     setEdit(true);
+    setIsEditing(false);
   };
 
   function sanitizeRows(rows) {
@@ -436,7 +440,7 @@ export const Aportes = () => {
         const isInEditMode = rowModesModel[row.id]?.mode === GridRowModes.Edit;
         const today = dayjs().format('YYYY-MM-DD');
         const desdeFormatted = row.desde ? dayjs(row.desde).format('YYYY-MM-DD') : null;
-        const allowDelete = desdeFormatted === today;
+        const allowDelete = desdeFormatted >= today;
 
         if (isInEditMode) {
           return [
@@ -525,7 +529,8 @@ export const Aportes = () => {
                 showQuickFilter: true,
                 showColumnMenu: true,
                 themeWithLocale,
-                gridApiRef
+                gridApiRef,
+                isEditing
               },
             }}
             sx={{
