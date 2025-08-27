@@ -531,7 +531,8 @@ export const Aportes = () => {
                 showColumnMenu: true,
                 themeWithLocale,
                 gridApiRef,
-                isEditing
+                isEditing,
+                setIsEditing : setIsEditing
               },
             }}
             sx={{

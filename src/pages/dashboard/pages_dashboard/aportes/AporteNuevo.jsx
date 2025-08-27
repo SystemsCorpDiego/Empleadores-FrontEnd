@@ -17,7 +17,8 @@ export const EditarNuevaFila = (props) => {
     showColumnMenu,
     themeWithLocale,
     gridApiRef,
-    isEditing
+    isEditing,
+    setIsEditing
   } = props;
   console.log(gridApiRef)
 
@@ -57,6 +58,7 @@ export const EditarNuevaFila = (props) => {
           ...oldModel,
           [tempId]: { mode: GridRowModes.Edit, fieldToFocus: 'entidad' },
         }));
+        setIsEditing(true);
       } else {
         console.warn('Ya hay un registro en edición. Guarda o cancela antes de crear uno nuevo.')
       }
