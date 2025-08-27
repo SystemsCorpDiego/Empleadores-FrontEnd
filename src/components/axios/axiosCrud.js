@@ -31,6 +31,9 @@ export const axiosCrud = {
   patch: async function (UrlApi, oEntidad) {
     return axiosPatch(UrlApi, oEntidad);
   },
+  getOAxios: function () {
+    return getOAxios();
+  },
 };
 
 export const axiosConsultar = async (UrlApi) => {
@@ -143,17 +146,15 @@ export const axiosCrearN = async (UrlApi, oEntidad) => {
   }
 };
 
-
-
 export const axiosActualizar = async (UrlApi, oEntidad, ID) => {
   let pkId = oEntidad.id;
   let URL = `${UrlApi}/${pkId}`;
-  
+
   if (ID !== undefined && ID !== null) {
     pkId = ID;
     URL = `${UrlApi}/${ID}`;
   }
-  
+
   //console.log(URL);
   try {
     delete oEntidad.id;
@@ -241,4 +242,8 @@ export const axiosEliminar = async (UrlApi, id) => {
     }
     return false;
   }
+};
+
+export const getOAxios = () => {
+  return oAxios;
 };

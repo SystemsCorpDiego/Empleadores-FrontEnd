@@ -1,4 +1,3 @@
-import oAxios from '@components/axios/axiosInstace';
 import { axiosCrud } from '@components/axios/axiosCrud';
 import swal from '@/components/swal/swal';
 
@@ -100,6 +99,7 @@ export const duplicarFeriados = async (anio) => {
   const URL = `${URL_ENTITY}/duplicar/${anio}`;
 
   try {
+    const oAxios = axiosCrud.getOAxios();
     const response = await oAxios.post(URL);
     if (response && response.status && response.status == 201) {
       swal.showSuccess(VITE_HTTP_MSG_PROCESO);
