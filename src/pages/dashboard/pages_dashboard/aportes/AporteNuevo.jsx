@@ -29,9 +29,11 @@ import {
       if (rows) {
         const editRow = rows.find((row) => !row.id);
         console.log(editRow)
+         const tempId = `temp-${Date.now()}`;
+         console.log(tempId)
         if (typeof editRow === 'undefined' || editRow.id) {
           const newReg = {
-            //'id':0,
+            'id': tempId,
             //'id': rows.length + 1,
             'entidad': '',
             'aporte': '',
@@ -46,28 +48,13 @@ import {
             'camaraAntiguedad':0
           };
 
-          //const newReg = {
-          //  //id:Date.now(),
-          //  'id': Date.now(),
-          //  'entidad': '',
-          //  'aporte': '',
-          //  'socio': '',
-          //  'calculoTipo': '',ß
-          //  'calculoValor': '',
-          //  'calculoBase': '',
-          //  'camara': '',
-          //  'camaraCategoria': '',
-          //  'desde': '',
-          //  'hasta': '',
-          //  'camaraAntiguedad':''
-          //};
-  
+          console.log(newReg)
           volverPrimerPagina();
           setRows((oldRows) => [newReg, ...oldRows]);
           setRowModesModel((oldModel) => ({
-            [0]: { mode: GridRowModes.Edit },
-            ...oldModel,
-          }));
+  ...oldModel,
+  [tempId]: { mode: GridRowModes.Edit, fieldToFocus: 'entidad' },
+}));
         }
       }
     };

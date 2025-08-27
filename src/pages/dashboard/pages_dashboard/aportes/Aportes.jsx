@@ -22,6 +22,9 @@ import dayjs from 'dayjs';
 import formatter from '@/common/formatter';
 
 import { UserContext } from '@/context/userContext';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+
+dayjs.extend(isSameOrAfter);
 
 export const Aportes = () => {
   const [locale, setLocale] = useState('esES');
@@ -32,6 +35,7 @@ export const Aportes = () => {
   const [aportes, setAportes] = useState([])
   const [entidades, setEntidades] = useState(['UOMA', 'AMTIMA', 'OSPIM', '']);
   const [rowModesModel, setRowModesModel] = useState({});
+  const [edit, setEdit] = useState(true);
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
 
@@ -123,32 +127,40 @@ export const Aportes = () => {
   };
 
   const handleEditClick = (row) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [rows.indexOf(row)]: { mode: GridRowModes.Edit },
-    });
+    const today = dayjs().format('YYYY-MM-DD');
+    const desdeFormatted = row.desde ? dayjs(row.desde).format('YYYY-MM-DD') : null;
+    console.log('today', today, 'desdeFormatted', desdeFormatted)
+
+    const esMenor = dayjs(desdeFormatted).isBefore(dayjs(today), 'day');
+    setEdit(!esMenor);
+
+    setRowModesModel(prev => ({
+      ...prev,
+      [row.id]: { mode: GridRowModes.Edit, fieldToFocus: 'hasta' }
+    }));
   };
 
   const handleSaveClick = (row) => () => {
     setRowModesModel({
       ...rowModesModel,
-      [rows.indexOf(row)]: { mode: GridRowModes.View },
+      [row.id]: { mode: GridRowModes.View },
     });
   };
 
   const handleCancelClick = (row) => () => {
     setRowModesModel({
       ...rowModesModel,
-      [rows.indexOf(row)]: {
+      [row.id]: {
         mode: GridRowModes.View,
         ignoreModifications: true,
       },
     });
 
     const editedRow = rows.find((reg) => reg.id === row.id);
-    if (!editedRow.id) {
+    if (!editedRow?.id || String(editedRow.id).startsWith('temp-')) {
       setRows(rows.filter((reg) => reg.id !== row.id));
     }
+    setEdit(true);
   };
 
   function sanitizeRows(rows) {
@@ -169,65 +181,48 @@ export const Aportes = () => {
   }
 
   const processRowUpdate = async (newRow, oldRow) => {
+    const fechaDesde = dayjs(newRow.desde);
+    const fechaHasta = dayjs(newRow.hasta);
+
+    if (fechaHasta.isBefore(fechaDesde)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Fechas inválidas',
+        text: 'La fecha "Hasta" no puede ser anterior a la fecha "Desde".',
+      });
+      return oldRow;
+    }
+
     let bOk = false;
-    console.log(`estoy entrando`);
-    if (!newRow.id) {
+    if (!newRow.id || String(newRow.id).startsWith('temp-')) {
       try {
         const data = await axiosAportes.crear(newRow);
         if (data && data.id) {
           newRow.id = data.id;
-        }
-        bOk = true;
-        const newRows = rows.map((row) => (!row.id ? newRow : row));
-        setRows(newRows);
-
-        if (!(data && data.id)) {
-          setTimeout(() => {
-            setRowModesModel((oldModel) => ({
-              [0]: { mode: GridRowModes.Edit, fieldToFocus: 'fecha' },
-              ...oldModel,
-            }));
-          }, 100);
+          const newRows = rows.map((row) =>
+            String(row.id).startsWith('temp-') ? newRow : row
+          );
+          setRows(newRows);
+          bOk = true;
         }
       } catch (error) {
-        console.log(
-          'X - processRowUpdate - MODI - ERROR: ' + JSON.stringify(error),
-        );
+        console.error('Error al crear:', error);
       }
     } else {
       try {
         bOk = await axiosAportes.actualizar(newRow);
         if (bOk) {
-          const rowsNew = rows.map((row) =>
-            row.id === newRow.id ? newRow : row,
+          const newRows = rows.map((row) =>
+            row.id === newRow.id ? newRow : row
           );
-          setRows(rowsNew);
+          setRows(newRows);
         }
-
-        if (!bOk) {
-          const indice = rows.indexOf(oldRow);
-          console.log('rows.indexOf(oldRow) => indice: ', indice);
-          setTimeout(() => {
-            setRowModesModel((oldModel) => ({
-              [indice]: { mode: GridRowModes.Edit, fieldToFocus: 'titulo' },
-              ...oldModel,
-            }));
-          }, 100);
-          return null;
-        }
-        bOk = true;
       } catch (error) {
-        console.log(
-          'X - processRowUpdate - MODI - ERROR: ' + JSON.stringify(error),
-        );
+        console.error('Error al actualizar:', error);
       }
     }
 
-    if (bOk) {
-      return newRow;
-    } else {
-      return oldRow;
-    }
+    return bOk ? newRow : oldRow;
   };
 
   const handleProcessRowUpdateError = (error) => {
@@ -247,7 +242,7 @@ export const Aportes = () => {
       },
       flex: 1,
       headerAlign: 'left',
-      editable: true,
+      editable: edit,
       align: 'left',
       headerClassName: 'header--cell',
       valueGetter: (params) => params.row.entidad ?? 'TODAS',
@@ -276,7 +271,7 @@ export const Aportes = () => {
         );
         return found ? found.descripcion : '';
       },
-      editable: true,
+      editable: edit,
       flex: 1,
       headerAlign: 'left',
       align: 'left',
@@ -292,7 +287,7 @@ export const Aportes = () => {
         { value: 'Todos', label: 'Todos' },
       ],
       valueGetter: (params) => params.row.socio ?? null,
-      editable: true,
+      editable: edit,
       flex: 1,
       headerAlign: 'left',
       headerClassName: 'header--cell',
@@ -306,7 +301,7 @@ export const Aportes = () => {
     {
       field: 'calculoTipo',
       headerName: 'Cálculo Tipo',
-      editable: true,
+      editable: edit,
       type: 'singleSelect',
       valueOptions: [
         { value: 'PO', label: 'Porcentaje' },
@@ -324,7 +319,7 @@ export const Aportes = () => {
     {
       field: 'calculoValor',
       headerName: 'Cálculo Valor',
-      editable: true,
+      editable: edit,
       flex: 1,
       headerAlign: 'right',
       align: 'right',
@@ -332,14 +327,15 @@ export const Aportes = () => {
       valueGetter: (params) => params.row.calculoValor ?? null,
       valueFormatter: ({ value }) => {
         if (value === '' || value === null) return '';
-        return formatter.currency.format(value || 0);
+        //return formatter.currency.format(value || 0);
+        return value ? value : 0
       },
     },
     {
       field: 'calculoBase',
       headerName: 'Cálculo Base',
       flex: 1,
-      editable: true,
+      editable: edit,
       type: 'singleSelect',
       headerAlign: 'left',
       align: 'left',
@@ -358,7 +354,7 @@ export const Aportes = () => {
       flex: 1,
       type: 'singleSelect',
       valueOptions: camaras,
-      editable: true,
+      editable: edit,
       headerAlign: 'left',
       valueGetter: (params) => params.row.camara ?? null,
       align: 'left',
@@ -368,7 +364,7 @@ export const Aportes = () => {
       field: 'camaraCategoria',
       headerName: 'Categoría',
       flex: 1,
-      editable: true,
+      editable: edit,
       type: 'singleSelect',
       valueOptions: (params) => {
         if (categorias) {
@@ -392,7 +388,7 @@ export const Aportes = () => {
       field: 'camaraAntiguedad',
       headerName: 'Antigüedad',
       flex: 1,
-      editable: true,
+      editable: edit,
       valueGetter: (params) => {
         const value = params.row.camaraAntiguedad;
         return value === "" || value === undefined || value === null || isNaN(value)
@@ -407,16 +403,13 @@ export const Aportes = () => {
       field: 'desde',
       headerName: 'Desde',
       flex: 1,
-      editable: true,
       type: 'date',
-      //valueGetter: (params) => params.row.desde ?? '',
       headerAlign: 'left',
+      editable: edit,
       align: 'left',
       headerClassName: 'header--cell',
       valueGetter: ({ value }) => (value ? formatter.dateObject(value) : null),
-      valueFormatter: ({ value }) =>
-        value ? formatter.dateString(value) : '',
-      //valueFormatter: (params) => formatter.dateString(params.value),
+      valueFormatter: ({ value }) => (value ? formatter.dateString(value) : ''),
     },
     {
       field: 'hasta',
@@ -424,17 +417,11 @@ export const Aportes = () => {
       editable: true,
       flex: 1,
       type: 'date',
-     // valueGetter: (params) => {
-     //   const value = params.row.hasta;
-     //   return value === "" || value === undefined ? null : value;
-     // },
       headerAlign: 'left',
       align: 'left',
       headerClassName: 'header--cell',
-      //valueFormatter: (params) => formatter.dateString(params.value),
       valueGetter: ({ value }) => (value ? formatter.dateObject(value) : null),
-      valueFormatter: ({ value }) =>
-        value ? formatter.dateString(value) : '',
+      valueFormatter: ({ value }) => (value ? formatter.dateString(value) : ''),
     },
     {
       field: 'actions',
@@ -446,17 +433,17 @@ export const Aportes = () => {
       align: 'center',
       headerClassName: 'header--cell',
       getActions: ({ row }) => {
-        const isInEditMode =
-          rowModesModel[rows.indexOf(row)]?.mode === GridRowModes.Edit;
+        const isInEditMode = rowModesModel[row.id]?.mode === GridRowModes.Edit;
+        const today = dayjs().format('YYYY-MM-DD');
+        const desdeFormatted = row.desde ? dayjs(row.desde).format('YYYY-MM-DD') : null;
+        const allowDelete = desdeFormatted === today;
 
         if (isInEditMode) {
           return [
             <GridActionsCellItem
               icon={<SaveIcon />}
               label="Save"
-              sx={{
-                color: 'primary.main',
-              }}
+              sx={{ color: 'primary.main' }}
               onClick={handleSaveClick(row)}
             />,
             <GridActionsCellItem
@@ -468,6 +455,7 @@ export const Aportes = () => {
             />,
           ];
         }
+
         return [
           <GridActionsCellItem
             icon={<EditIcon />}
@@ -476,15 +464,17 @@ export const Aportes = () => {
             onClick={handleEditClick(row)}
             color="inherit"
           />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(row)}
-            color="inherit"
-          />,
-        ];
+          allowDelete && (
+            <GridActionsCellItem
+              icon={<DeleteIcon />}
+              label="Delete"
+              onClick={handleDeleteClick(row)}
+              color="inherit"
+            />
+          ),
+        ].filter(Boolean);
       },
-    },
+    }
   ];
 
   return (
@@ -508,8 +498,8 @@ export const Aportes = () => {
             rows={rows}
             columns={columns}
             editMode="row"
-            //getRowId={(row) => row.id}
-            getRowId={(row) => rows.indexOf(row)}
+            getRowId={(row) => row.id}
+            //getRowId={(row) => rows.indexOf(row)}
             getRowClassName={(params) =>
               rows.indexOf(params.row) % 2 === 0 ? 'even' : 'odd'
             }

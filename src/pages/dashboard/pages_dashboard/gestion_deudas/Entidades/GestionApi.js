@@ -110,6 +110,11 @@ export const getDetalleConvenio = async (empresa_id, body) => {
     ) {
       console.log('body', body);
       const response = await axiosCrud.crear(URL, body);
+      if (response && response.ticket) { //Pregunto por ticket porque no tiene id la respuesta
+        console.log('response', response);
+        swal.showErrorBackEnd(  response.descripcion )
+        
+      }
       return response;
     }
     return {
@@ -119,12 +124,12 @@ export const getDetalleConvenio = async (empresa_id, body) => {
       importeCuota: 0,
       importeInteresTotal: 0,
     };
-    //const URL = `/empresa/${empresa_id}/gestion-deuda/${entidad}/detalle-convenio`;
-    //const reponse = axiosCrud.crear(URL,body)
-    //return response;
   } catch (error) {
-    const HTTP_MSG =
-      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
+    
+          swal.showErrorBackEnd(
+            HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.descripcion})`,
+            error,
+          );
     throw error;
   }
 };

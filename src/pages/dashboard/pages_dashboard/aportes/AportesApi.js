@@ -72,7 +72,8 @@ export const crear = async (registro) => {
       registro.periodo_original,
     );
     registro.vigencia = formatter.toFechaValida(registro.vigencia);
-
+    
+    delete registro.id;
     const data = await axiosCrud.crear(`${URL_ENTITY}/seteos`, registro);
     if (data && data.id) {
       swal.showSuccess(HTTP_MSG_ALTA);
