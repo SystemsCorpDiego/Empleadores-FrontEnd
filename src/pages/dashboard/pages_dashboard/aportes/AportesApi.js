@@ -49,6 +49,7 @@ export const consultar = async () => {
 };
 
 export const crear = async (registro) => {
+  console.log('AportesApi - crear - registro: ', registro.camaraAntiguedad);
   registro.entidad = registro.entidad == '' ? null : registro.entidad;
   registro.aporte = registro.aporte == '' ? null : registro.aporte;
   registro.socio = registro.socio === '' ? null : registro.socio;
@@ -57,22 +58,22 @@ export const crear = async (registro) => {
   registro.calculoTipo = registro.calculoTipo == '' ? null : registro.calculoTipo;
   registro.calculoBase = registro.calculoBase == '' ? null : registro.calculoBase;
   registro.calculoValor = registro.calculoValor == '' ? null : registro.calculoValor
-  registro.desde = registro.desde == '' ? null : registro.desde;         
+  registro.desde = registro.desde == '' ? null : registro.desde;
   registro.hasta = registro.hasta == '' ? null : registro.hasta;
-  if ('camaraAntiguedad' in registro) {
-    registro.camaraAntiguedad = registro.camaraAntiguedad === '' ? null : Number(registro.camaraAntiguedad);
-    if (registro.camaraAntiguedad !== null && isNaN(registro.camaraAntiguedad)) {
-      registro.camaraAntiguedad = null;
-    }
+
+  if (registro.camaraAntiguedad === '' || registro.camaraAntiguedad === null || registro.camaraAntiguedad === undefined || isNaN(Number(registro.camaraAntiguedad))) {
+    registro.camaraAntiguedad = null;
+  } else {
+    registro.camaraAntiguedad = Number(registro.camaraAntiguedad);
   }
-  
-  
+
+
   try {
     registro.periodo_original = formatter.toFechaValida(
       registro.periodo_original,
     );
     registro.vigencia = formatter.toFechaValida(registro.vigencia);
-    
+
     delete registro.id;
     const data = await axiosCrud.crear(`${URL_ENTITY}/seteos`, registro);
     if (data && data.id) {
@@ -96,7 +97,7 @@ export const actualizar = async (registro) => {
   registro.calculoTipo = registro.calculoTipo == '' ? null : registro.calculoTipo;
   registro.calculoBase = registro.calculoBase == '' ? null : registro.calculoBase;
   registro.calculoValor = registro.calculoValor == '' ? null : registro.calculoValor
-  registro.desde = registro.desde == '' ? null : registro.desde;         
+  registro.desde = registro.desde == '' ? null : registro.desde;
   registro.hasta = registro.hasta == '' ? null : registro.hasta;
   if ('camaraAntiguedad' in registro) {
     registro.camaraAntiguedad = registro.camaraAntiguedad === '' ? null : Number(registro.camaraAntiguedad);
@@ -141,7 +142,7 @@ export const eliminar = async (id) => {
 
 export const consultaCategoria = async () => {
   const URL = '/camara/categoria/'
-  try{
+  try {
     const response = await axiosCrud.consultar(URL);
     if (response) {
       return response
@@ -156,7 +157,7 @@ export const consultaCategoria = async () => {
 
 export const consultaEntidades = async () => {
   const URL = '/aportes/'
-  try{
+  try {
     const response = await axiosCrud.consultar(URL);
     if (response) {
       return response

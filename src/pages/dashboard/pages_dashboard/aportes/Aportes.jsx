@@ -396,7 +396,7 @@ export const Aportes = () => {
       valueGetter: (params) => {
         const value = params.row.camaraAntiguedad;
         return value === "" || value === undefined || value === null || isNaN(value)
-          ? 0
+          ? null
           : Number(value);
       },
       headerAlign: 'left',

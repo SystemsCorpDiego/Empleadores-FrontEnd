@@ -48,7 +48,7 @@ export const EditarNuevaFila = (props) => {
           'camaraCategoria': '',
           'desde': '',
           'hasta': '',
-          'camaraAntiguedad': 0
+          'camaraAntiguedad': null
         };
 
         console.log(newReg)
