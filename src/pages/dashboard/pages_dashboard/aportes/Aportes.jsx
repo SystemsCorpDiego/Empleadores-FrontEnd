@@ -461,13 +461,14 @@ export const Aportes = () => {
         }
 
         return [
-          <GridActionsCellItem
+          !isEditing && (<GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
             onClick={handleEditClick(row)}
             color="inherit"
-          />,
+          />)
+          ,
           allowDelete && (
             <GridActionsCellItem
               icon={<DeleteIcon />}
