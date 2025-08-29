@@ -13,7 +13,7 @@ import { esES } from '@mui/x-data-grid';
 
 import './Grilla.css';
 
-export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [], setSelectedSaldosAFavor, isVer }) => {
+export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [], setSelectedSaldosAFavor, isVer, cuit }) => {
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
 
@@ -105,7 +105,11 @@ export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [],
             <GridToolbarContainer>
               <GridToolbarColumnsButton />
               <GridToolbarFilterButton />
-              <GridToolbarExport />
+              <GridToolbarExport
+                csvOptions={{
+                  fileName: `${cuit}_saldos_a_favor`,
+                  utf8WithBom: true
+                }} />
             </GridToolbarContainer>
           ),
         }}

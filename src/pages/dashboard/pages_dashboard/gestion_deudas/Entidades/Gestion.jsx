@@ -370,7 +370,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
 
   useEffect(() => {
     if (!shouldCalculate) return;
-
+   //console.log(isVer, 'isVer')
     calcularDetalle();
   }, [selectedActas, selectedDeclaracionesJuradas, selectedSaldosAFavor, cuotas, fechaIntencion]);
 
@@ -396,6 +396,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   };
 
   const calcularDetalle = async () => {
+    const isVer = window.location.hash.includes('/ver')
+    if (!isVer){
     const resultado = await calcularDetalleConvenio({
       declaracionesJuradas,
       selectedDeclaracionesJuradas,
@@ -411,6 +413,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
 
     setImporteDeDeuda(resultado.importeDeuda);
     setDetalleConvenio(resultado.detalle);
+    }
+
   };
 
 
@@ -483,6 +487,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
               selectedActas={selectedActas}
               setSelectedActas={handleChangeActas}
               isVer={window.location.hash.includes('/ver')}
+              cuit = {cuitInput }
             />
           </AccordionDetails>
         </Accordion>
@@ -513,6 +518,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
               selectedDeclaracionesJuradas={selectedDeclaracionesJuradas}
               setSelectedDeclaracionesJuradas={handleChangeDDJJ}
               isVer={window.location.hash.includes('/ver')}
+              cuit = {cuitInput }
             />
           </AccordionDetails>
         </Accordion>
@@ -542,6 +548,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
               saldoAFavor={saldosAFavor}
               selectedSaldosAFavor={selectedSaldosAFavor}
               setSelectedSaldosAFavor={handleChangeSaldo}
+              cuit={cuitInput}
             />
           </AccordionDetails>
         </Accordion>

@@ -16,7 +16,7 @@ export const GrillaPeriodo = ({
   declaracionesJuradas,
   selectedDeclaracionesJuradas,
   setSelectedDeclaracionesJuradas,
-  isVer
+  isVer, cuit
 }) => {
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
@@ -153,7 +153,11 @@ export const GrillaPeriodo = ({
             <GridToolbarContainer>
               <GridToolbarColumnsButton />
               <GridToolbarFilterButton />
-              <GridToolbarExport />
+              <GridToolbarExport
+                csvOptions={{
+                  fileName: `${cuit}_periodos`,
+                  utf8WithBom: true
+                }} />
             </GridToolbarContainer>
           ),
         }}

@@ -199,6 +199,7 @@ const processRowUpdate = async (updatedRow, originalRow) => {
       const convenioInfo = {
         cuit: row.cuit,
         razonSocial: response.razonSocial,
+        entidad: row.entidad,
         convenioId: row.id,
         fecha: row.fecha,
         numero: row.numero,
@@ -224,6 +225,7 @@ const processRowUpdate = async (updatedRow, originalRow) => {
         cuit: 'CUIT',
         razonSocial: 'Razon Social',
         convenioId: 'ID Convenio',
+        entidad: 'Entidad',
         fecha: 'Fecha',
         numero: 'Numero',
         capital: 'Deuda Original',
@@ -273,6 +275,7 @@ const processRowUpdate = async (updatedRow, originalRow) => {
       hide: !useContext(UserContext).isAdmin, // Esconde la columna si el usuario no es admin
     },
     { field: 'razonSocial', headerName: 'Razón Social', flex: 1, visible: rol == 'OSPIM_EMPLEADO' ? true : false },
+    { field: 'entidad', headerName: 'Entidad', flex: 1 },
     {
       field: 'fecha', headerName: 'Fecha', flex: 1, valueFormatter: (params) =>
         params.value ? formatter.dateString(params.value) : '',
@@ -436,7 +439,7 @@ const processRowUpdate = async (updatedRow, originalRow) => {
   ];
 
   const columnas_empleador = [
-
+    { field: 'entidad', headerName: 'Entidad', flex: 1 },
     {
       field: 'fecha', headerName: 'Fecha', flex: .8, valueFormatter: (params) =>
         params.value ? formatter.dateString(params.value) : '',

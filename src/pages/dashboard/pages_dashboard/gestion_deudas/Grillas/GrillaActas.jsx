@@ -12,7 +12,7 @@ import {
 } from '@mui/x-data-grid';
 import './Grilla.css';
 
-export const GrillaActas = ({ actas, selectedActas, setSelectedActas, isVer }) => {
+export const GrillaActas = ({ actas, selectedActas, setSelectedActas, isVer, cuit }) => {
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
 
@@ -131,7 +131,11 @@ export const GrillaActas = ({ actas, selectedActas, setSelectedActas, isVer }) =
             <GridToolbarContainer>
               <GridToolbarColumnsButton />
               <GridToolbarFilterButton />
-              <GridToolbarExport />
+              <GridToolbarExport
+                csvOptions={{
+                  fileName: `${cuit}_actas`, 
+                  utf8WithBom: true
+                }} />
             </GridToolbarContainer>
           ),
         }}
