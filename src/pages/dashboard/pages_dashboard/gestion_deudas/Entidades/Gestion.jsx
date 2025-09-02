@@ -203,6 +203,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           setSelectedSaldosAFavor,
           setTotalDeuda,
           setLoadAllEmpresas,
+          setMedioPago,
           rol
         ),
     });

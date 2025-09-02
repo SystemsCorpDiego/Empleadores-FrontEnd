@@ -44,6 +44,7 @@ export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [],
   return (
     <Box
       style={{ height: 400 }}
+
       sx={{
         width: '100%',
         '& .MuiDataGrid-columnHeaders': {
@@ -54,8 +55,16 @@ export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [],
     >
       <DataGrid
         rows={saldoAFavor ? saldoAFavor : []}
+        checkboxSelection
+        disableSelectionOnClick
+        rowSelectionModel={selectedSaldosAFavor}
+        onRowSelectionModelChange={(newSelection) => {
+          console.log("IDs seleccionados:", newSelection);
+          setSelectedSaldosAFavor(newSelection);
+
+        }}
         columns={[
-          {
+          /*{
             field: 'selection',
             headerName: '',
             renderCell: (params) => (
@@ -69,7 +78,7 @@ export const GrillaSaldoAFavor = ({ saldoAFavor = [], selectedSaldosAFavor = [],
             headerCheckboxSelection: true,
             checkboxSelection: true,
             flex: 0.25,
-          },
+          },*/
           {
             field: 'vigencia',
             headerName: 'Fecha',

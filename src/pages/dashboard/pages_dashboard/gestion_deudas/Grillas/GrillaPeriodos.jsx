@@ -21,29 +21,7 @@ export const GrillaPeriodo = ({
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
 
-  const handleSelectionChange = (id) => {
-    setSelectedDeclaracionesJuradas((prevSelected) =>
-      prevSelected.includes(id)
-        ? prevSelected.filter((selectedId) => selectedId !== id)
-        : [...prevSelected, id],
-    );
-  };
-
   const COLUMNAS_FIJAS = [
-    {
-      field: 'selection',
-      headerName: '',
-      renderCell: (params) => (
-        <Checkbox
-          checked={selectedDeclaracionesJuradas.includes(params.id)}
-          onChange={() => handleSelectionChange(params.id)}
-          disabled={isVer}
-        />
-      ),
-      headerCheckboxSelection: true,
-      checkboxSelection: true,
-      flex: 0.25,
-    },
     {
       field: 'periodo',
       headerName: 'Periodo',
@@ -136,7 +114,15 @@ export const GrillaPeriodo = ({
     >
       <DataGrid
         rows={declaracionesJuradas || []}
+        checkboxSelection
+        disableSelectionOnClick
         columns={generarColumnasDinamicas(declaracionesJuradas || [])}
+        rowSelectionModel={selectedDeclaracionesJuradas}
+        onRowSelectionModelChange={(newSelection) => {
+          console.log("IDs seleccionados:", newSelection);
+          setSelectedDeclaracionesJuradas(newSelection);
+
+        }}
         getRowClassName={(params) =>
           declaracionesJuradas.indexOf(params.row) % 2 === 0 ? 'even' : ''
         }
@@ -173,6 +159,17 @@ export const GrillaPeriodo = ({
           toolbarColumns: 'Columnas',
           toolbarFilters: 'Filtros',
           toolbarExport: 'Exportar',
+        }}
+        sx={{
+          '& .MuiDataGrid-columnHeaderCheckbox .MuiCheckbox-root': {
+            '&.Mui-checked': {
+              height: '20px',
+              width: '20px',
+              border: '1px solid rgba(0, 0, 0, 0.6)',
+              borderRadius: '4px',
+              backgroundColor: 'rgba(255, 255, 255, 1)',
+            },
+          },
         }}
       />
     </Box>

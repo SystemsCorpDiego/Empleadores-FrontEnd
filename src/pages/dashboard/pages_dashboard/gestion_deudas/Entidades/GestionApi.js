@@ -211,6 +211,7 @@ const getEmpresaByCuit = async (cuit, empresas) => {
       const empresaEncontrada = response.find((e) => e.cuit == cuit);
       console.log('empresaEncontrada', empresaEncontrada);
       if (!empresaEncontrada) {
+        swal.showErrorBusiness('No se encontró la empresa con el CUIT proporcionado.');
         throw new Error('No se encontró la empresa con el CUIT proporcionado.');
       }
       return empresaEncontrada.id ? empresaEncontrada.id : null;
@@ -234,6 +235,7 @@ const getEmpresaByNombre = async (nombreEmpresa, empresas) => {
       );
       console.log('empresaEncontrada', empresaEncontrada);
       if (!empresaEncontrada) {
+        swal.showErrorBusiness('No se encontró la empresa con el CUIT proporcionado.');
         throw new Error('No se encontró la empresa con el CUIT proporcionado.');
       }
       return empresaEncontrada.id ? empresaEncontrada.id : null;

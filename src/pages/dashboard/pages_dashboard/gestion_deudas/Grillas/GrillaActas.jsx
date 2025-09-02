@@ -16,29 +16,6 @@ export const GrillaActas = ({ actas, selectedActas, setSelectedActas, isVer, cui
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
 
-  useEffect(() => {
-    const preselected = actas
-      .filter((item) => item.convenioActaId !== null && item.convenioActaId !== undefined)
-      .map((item) => item.id);
-
-    if (preselected.length > 0 && preselected.some(id => !selectedActas.includes(id))) {
-      setSelectedActas((prev) => Array.from(new Set([...prev, ...preselected])));
-    }
-
-  }, []);
-
-  const handleSelectionChange = (id) => {
-    setSelectedActas((prevSelected) => {
-      console.log(prevSelected);
-      if (prevSelected.includes(id)) {
-        return prevSelected.filter((selectedId) => selectedId !== id);
-      } else {
-        return [...prevSelected, id];
-      }
-    });
-
-  };
-
   return (
     <Box
       style={{ height: 400 }}
@@ -52,25 +29,18 @@ export const GrillaActas = ({ actas, selectedActas, setSelectedActas, isVer, cui
     >
       <DataGrid
         rows={actas ? actas : []}
+        checkboxSelection
+        disableSelectionOnClick
+        isRowSelectable={(params) => params.row.estadoDeuda !== 'JUDICIALIZADO'}
+        rowSelectionModel={selectedActas}
+        onRowSelectionModelChange={(newSelection) => {
+          console.log("IDs seleccionados:", newSelection);
+          setSelectedActas(newSelection);
+
+        }
+
+        }
         columns={[
-          {
-            field: 'selection',
-            headerName: '',
-            renderCell: (params) => {
-              const isJudicializado =
-                params.row && params.row.estadoDeuda === 'JUDICIALIZADO';
-              return (
-                <Checkbox
-                  checked={selectedActas.includes(params.id)}
-                  onChange={() => handleSelectionChange(params.id)}
-                  disabled={isJudicializado}
-                />
-              );
-            },
-            headerCheckboxSelection: true,
-            checkboxSelection: true,
-            flex: 0.25,
-          },
           { field: 'estadoDeuda', headerName: 'Estado', flex: 0.5 },
           {
             field: 'nroActa',
@@ -133,7 +103,7 @@ export const GrillaActas = ({ actas, selectedActas, setSelectedActas, isVer, cui
               <GridToolbarFilterButton />
               <GridToolbarExport
                 csvOptions={{
-                  fileName: `${cuit}_actas`, 
+                  fileName: `${cuit}_actas`,
                   utf8WithBom: true
                 }} />
             </GridToolbarContainer>
@@ -151,6 +121,19 @@ export const GrillaActas = ({ actas, selectedActas, setSelectedActas, isVer, cui
           toolbarColumns: 'Columnas',
           toolbarFilters: 'Filtros',
           toolbarExport: 'Exportar',
+        }}
+        sx={{
+
+
+          '& .MuiDataGrid-columnHeaderCheckbox .MuiCheckbox-root': {
+            '&.Mui-checked': {
+              height: '20px',
+              width: '20px',
+              border: '1px solid rgba(0, 0, 0, 0.6)',
+              borderRadius: '4px',
+              backgroundColor: 'rgba(255, 255, 255, 1)',
+            },
+          },
         }}
       />
     </Box>

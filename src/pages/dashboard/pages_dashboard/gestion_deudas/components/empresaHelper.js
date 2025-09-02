@@ -88,12 +88,9 @@ export const fetchEmpresaData = async (
     setSelectedActas(idsActas);
     if (editar) {
       const preselectedActas = response['actas']
-        .filter((item) => item.convenioActaId !== null && item.convenioActaId !== undefined)
+        .filter((item) => item.convenioActaId !== null)
         .map((item) => item.id);
-
-      if (preselectedActas.length > 0 && preselectedActas.some(id => !idsActas.includes(id))) {
-        setSelectedActas((prev) => Array.from(new Set([...prev, ...preselectedActas])));
-      }
+      setSelectedActas(preselectedActas);
 
       const preselected = response['declaracionesJuradas']
         .filter((item) => item.convenioDdjjId !== null && item.convenioDdjjId !== undefined)
@@ -122,7 +119,7 @@ export const fetchEmpresaData = async (
       const idSelectedSaldosAFavor = response['saldosAFavor'].map((objeto) => objeto.id);
       setSelectedSaldosAFavor(idSelectedSaldosAFavor);
     }
-    setMedioPago(response.medioPago || null); 
+    setMedioPago(response.medioPago || null);
 
     const totalDeudaCalculada =
       response['declaracionesJuradas'].reduce((acc, dj) => acc + (dj.importeTotal || 0), 0) +
@@ -188,7 +185,7 @@ export const buscarEmpresaPorNombre = async ({
 // Crear convenio
 export const generarConvenio = async (ID_EMPRESA, bodyConvenio, axiosGestionDeudas, swal, setShowLoading) => {
   try {
-    
+
     console.log('Generando convenio con los siguientes datos:', bodyConvenio);
     console.log('ID_EMPRESA:', ID_EMPRESA);
     const response = await axiosGestionDeudas.generarConvenio(ID_EMPRESA, bodyConvenio);
