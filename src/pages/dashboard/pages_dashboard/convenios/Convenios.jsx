@@ -135,26 +135,26 @@ export const Convenios = () => {
     console.log(terminosYCondiciones);
   }
 
-const processRowUpdate = async (updatedRow, originalRow) => {
-  if (updatedRow.estado !== originalRow.estado) {
-    console.log('Estado:', updatedRow.estado, 'ID:', updatedRow.id);
-  }
-
-  try {
-    const respuesta = await ConveniosService.updateConvenio(updatedRow);
-    console.log('Convenio actualizado:', respuesta);
-
-    if (respuesta === false) {
-      // Volver al valor original
-      return originalRow;
+  const processRowUpdate = async (updatedRow, originalRow) => {
+    if (updatedRow.estado !== originalRow.estado) {
+      console.log('Estado:', updatedRow.estado, 'ID:', updatedRow.id);
     }
-  } catch (error) {
-    console.error('Error al actualizar el convenio:', error);
-    return originalRow; // En caso de error, restaurar estado original
-  }
 
-  return updatedRow; // Si todo salió bien
-};
+    try {
+      const respuesta = await ConveniosService.updateConvenio(updatedRow);
+      console.log('Convenio actualizado:', respuesta);
+
+      if (respuesta === false) {
+        // Volver al valor original
+        return originalRow;
+      }
+    } catch (error) {
+      console.error('Error al actualizar el convenio:', error);
+      return originalRow; // En caso de error, restaurar estado original
+    }
+
+    return updatedRow; // Si todo salió bien
+  };
 
   const handleCancelClick = (id) => () => {
     setRowModesModel((prevRowModesModel) => ({
@@ -191,7 +191,12 @@ const processRowUpdate = async (updatedRow, originalRow) => {
       const declaracionesJuradas = response.declaracionesJuradas;
 
 
-      const periodosStr = Array.isArray(declaracionesJuradas) && declaracionesJuradas.length > 0 ? declaracionesJuradas.map(a => a.periodo).join('/ ') : '';
+      const periodosStr = Array.isArray(declaracionesJuradas) && declaracionesJuradas.length > 0
+        ? declaracionesJuradas
+          .filter(a => a.convenioDdjjId !== null)
+          .map(a => a.periodo)
+          .join('/ ')
+        : '';
 
 
       console.log('Datos de la empresa:', response);
@@ -353,7 +358,7 @@ const processRowUpdate = async (updatedRow, originalRow) => {
       flex: 1.5,
       getActions: ({ id, row }) => {
         //const { id, row } = params;
-        
+
         const isInEditMode = rowModesModel[id]?.mode === 'edit';
         if (isInEditMode) {
           return [
@@ -399,7 +404,7 @@ const processRowUpdate = async (updatedRow, originalRow) => {
                 color="inherit"
               />,
             ]
-            : [  
+            : [
               <GridActionsCellItem
                 icon={<VisibilityIcon />}
                 label="Ver"
@@ -419,7 +424,7 @@ const processRowUpdate = async (updatedRow, originalRow) => {
           ...(
 
             rol !== 'OSPIM_EMPLEADO' || row.cuit == '11111111111'
-            && row.estado !== 'PRES' && row.estado !== 'Presentado' 
+              && row.estado !== 'PRES' && row.estado !== 'Presentado'
               ? [
                 <GridActionsCellItem
                   icon={<CheckIcon />}
@@ -557,7 +562,7 @@ const processRowUpdate = async (updatedRow, originalRow) => {
                 color="inherit"
               />,
             ]
-            : [  
+            : [
               <GridActionsCellItem
                 icon={<VisibilityIcon />}
                 label="Ver"
@@ -574,9 +579,9 @@ const processRowUpdate = async (updatedRow, originalRow) => {
             onClick={() => navigate(`/dashboard/convenio/${row.id}/cuotas`)}
             color="inherit"
           />,
-          ...((rol !== 'OSPIM_EMPLEADO' || 
-              (rol !== 'OSPIM_EMPLEADO' && row.cuit != '11111111111' )) 
-              && row.estado !== 'PRES' && row.estado !== 'Presentado' 
+          ...((rol !== 'OSPIM_EMPLEADO' ||
+            (rol !== 'OSPIM_EMPLEADO' && row.cuit != '11111111111'))
+            && row.estado !== 'PRES' && row.estado !== 'Presentado'
             ? [
               <GridActionsCellItem
                 icon={<CheckIcon />}
