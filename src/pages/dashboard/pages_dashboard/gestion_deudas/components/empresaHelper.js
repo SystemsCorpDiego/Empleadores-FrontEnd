@@ -2,6 +2,46 @@
 import moment from 'moment';
 import Swal from 'sweetalert2';
 
+import _ from 'lodash';
+
+export const agruparDdjjsPorPeriodo = (ddjjs) => {
+  const agrupados = _.groupBy(ddjjs, (item) =>
+    `${item.periodo}_${item.rectificativa}`
+  );
+
+  return Object.entries(agrupados).map(([key, grupo], index) => {
+    const valores = {
+      id: index, // ID fake solo para el DataGrid
+      periodo: grupo[0].periodo,
+      rectificativa: grupo[0].rectificativa,
+      ids: grupo.map((item) => item.id), // 👈 Guarda todos los ids
+      intereses: grupo.reduce((acc, i) => acc + (i.intereses || 0), 0),
+      importeTotal: grupo.reduce((acc, i) => acc + (i.importeTotal || 0), 0),
+    };
+
+    // Sumamos artículos dinámicamente
+    grupo.forEach((item) => {
+      Object.entries(item).forEach(([key, value]) => {
+        if (
+          ![
+            'id',
+            'convenioDdjjId',
+            'periodo',
+            'rectificativa',
+            'importeTotal',
+            'intereses',
+          ].includes(key)
+        ) {
+          if (!valores[key]) valores[key] = 0;
+          valores[key] += value;
+        }
+      });
+    });
+
+    return valores;
+  });
+};
+
 export const fetchEmpresaData = async (
   editar,
   isVer,
@@ -80,6 +120,7 @@ export const fetchEmpresaData = async (
       setCuotas(1);
     }
 
+    console.log('Response declaracionesJuradas:', response['declaracionesJuradas']);
     setDeclaracionesJuradas(response['declaracionesJuradas']);
     setActas(response['actas']);
     setConvenios(response['convenios']);

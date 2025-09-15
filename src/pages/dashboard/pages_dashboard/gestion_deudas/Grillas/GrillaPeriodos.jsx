@@ -11,6 +11,7 @@ import {
   GridToolbarExport,
 } from '@mui/x-data-grid';
 import './Grilla.css';
+import { agruparDdjjsPorPeriodo } from '../components/empresaHelper';
 
 export const GrillaPeriodo = ({
   declaracionesJuradas,
@@ -20,7 +21,8 @@ export const GrillaPeriodo = ({
 }) => {
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
-
+  // Al principio del componente
+  const agrupados = agruparDdjjsPorPeriodo(declaracionesJuradas || []);
   const COLUMNAS_FIJAS = [
     {
       field: 'periodo',
@@ -113,15 +115,26 @@ export const GrillaPeriodo = ({
       }}
     >
       <DataGrid
-        rows={declaracionesJuradas || []}
+        rows={agrupados}
+        columns={generarColumnasDinamicas(declaracionesJuradas || [])}
+
         checkboxSelection
         disableSelectionOnClick
-        columns={generarColumnasDinamicas(declaracionesJuradas || [])}
-        rowSelectionModel={selectedDeclaracionesJuradas}
-        onRowSelectionModelChange={(newSelection) => {
-          console.log("IDs seleccionados:", newSelection);
-          setSelectedDeclaracionesJuradas(newSelection);
 
+        rowSelectionModel={agrupados
+          .filter((item) => item.ids.every((id) => selectedDeclaracionesJuradas.includes(id)))
+          .map((item) => item.id)
+        }
+        onRowSelectionModelChange={(newSelectedGroupIds) => {
+          // 🔁 Mapear IDs agrupados a todos los IDs reales
+          const nuevosIds = newSelectedGroupIds.flatMap((idAgrupado) => {
+            const match = agrupados.find((item) => item.id === idAgrupado);
+            return match?.ids || [];
+          });
+
+          // Eliminamos duplicados y actualizamos el estado
+          const idsUnicos = Array.from(new Set(nuevosIds));
+          setSelectedDeclaracionesJuradas(idsUnicos);
         }}
         getRowClassName={(params) =>
           declaracionesJuradas.indexOf(params.row) % 2 === 0 ? 'even' : ''
