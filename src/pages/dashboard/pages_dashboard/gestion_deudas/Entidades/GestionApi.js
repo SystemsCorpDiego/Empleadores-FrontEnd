@@ -112,8 +112,8 @@ export const getDetalleConvenio = async (empresa_id, body) => {
       const response = await axiosCrud.crear(URL, body);
       if (response && response.ticket) { //Pregunto por ticket porque no tiene id la respuesta
         console.log('response', response);
-        swal.showErrorBackEnd(  response.descripcion )
-        
+        swal.showErrorBackEnd(response.descripcion)
+
       }
       return response;
     }
@@ -125,11 +125,11 @@ export const getDetalleConvenio = async (empresa_id, body) => {
       importeInteresTotal: 0,
     };
   } catch (error) {
-    
-          swal.showErrorBackEnd(
-            HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.descripcion})`,
-            error,
-          );
+
+    swal.showErrorBackEnd(
+      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.descripcion})`,
+      error,
+    );
     throw error;
   }
 };
@@ -355,11 +355,10 @@ const downloadDeuda = async () => {
 
     return response;
   } catch (error) {
-    //const HTTP_MSG =
-    //  HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
-    //throw error;
     console.error('Error generando CSV:', error);
-    alert('Ocurrió un error al descargar las cuotas del convenio.');
+    const HTTP_MSG =
+      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
+    swal.showErrorBackEnd(HTTP_MSG, error);
   }
 };
 
@@ -415,7 +414,9 @@ const downloadExcel = async () => {
     document.body.removeChild(a);
   } catch (error) {
     console.error('Error generando Excel:', error);
-    alert('Ocurrió un error al descargar el archivo Excel.');
+    const HTTP_MSG =
+      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`;
+    swal.showErrorBackEnd(HTTP_MSG, error);
   }
 };
 
@@ -430,13 +431,13 @@ export const getParametrosConvenio = async (CUIT_EMPRESA) => {
   try {
     if (CUIT_EMPRESA) {
       const response = await axiosCrud.consultar(`/convenio-seteo/cuit/${CUIT_EMPRESA}`);
-      
+
       console.log('Parametros de convenio:', response);
 
       if (response === null || Object.keys(response).length === 0) {
         // Esta condicion la utilizo por si salió un mensaje antes de este error
         // Para que no se solapen
-        if(Swal.isVisible()) {
+        if (Swal.isVisible()) {
           return null;
         }
         swal.showErrorBusiness(
