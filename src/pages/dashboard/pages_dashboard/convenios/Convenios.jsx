@@ -280,6 +280,7 @@ export const Convenios = () => {
       hide: !useContext(UserContext).isAdmin, // Esconde la columna si el usuario no es admin
     },
     { field: 'razonSocial', headerName: 'Razón Social', flex: 1, visible: rol == 'OSPIM_EMPLEADO' ? true : false },
+    { field: 'usuario', headerName: 'Usuario', flex: 1 },
     { field: 'entidad', headerName: 'Entidad', flex: 1 },
     {
       field: 'fecha', headerName: 'Fecha', flex: 1, valueFormatter: (params) =>
@@ -444,6 +445,7 @@ export const Convenios = () => {
   ];
 
   const columnas_empleador = [
+    { field: 'usuario', headerName: 'Usuario', flex: 1 },
     { field: 'entidad', headerName: 'Entidad', flex: 1 },
     {
       field: 'fecha', headerName: 'Fecha', flex: .8, valueFormatter: (params) =>
