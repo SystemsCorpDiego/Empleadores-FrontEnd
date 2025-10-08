@@ -12,7 +12,13 @@ import {
 } from '@mui/x-data-grid';
 import './Grilla.css';
 
-export const GrillaActas = ({ actas, selectedActas, setSelectedActas, isVer, cuit }) => {
+export const GrillaActas = ({
+  actas,
+  selectedActas,
+  setSelectedActas,
+  isVer,
+  cuit,
+}) => {
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
 
@@ -34,12 +40,9 @@ export const GrillaActas = ({ actas, selectedActas, setSelectedActas, isVer, cui
         isRowSelectable={(params) => params.row.estadoDeuda !== 'JUDICIALIZADO'}
         rowSelectionModel={selectedActas}
         onRowSelectionModelChange={(newSelection) => {
-          console.log("IDs seleccionados:", newSelection);
+          console.log('IDs seleccionados:', newSelection);
           setSelectedActas(newSelection);
-
-        }
-
-        }
+        }}
         columns={[
           { field: 'estadoDeuda', headerName: 'Estado', flex: 0.5 },
           {
@@ -84,6 +87,12 @@ export const GrillaActas = ({ actas, selectedActas, setSelectedActas, isVer, cui
                 ? ''
                 : formatter.currencyString(params.value),
           },
+          {
+            field: 'periodos',
+            headerName: 'Periodos',
+            align: 'right',
+            flex: 1,
+          },
         ]}
         getRowClassName={(params) =>
           actas.indexOf(params.row) % 2 === 0 ? 'even' : ''
@@ -104,8 +113,9 @@ export const GrillaActas = ({ actas, selectedActas, setSelectedActas, isVer, cui
               <GridToolbarExport
                 csvOptions={{
                   fileName: `${cuit}_actas`,
-                  utf8WithBom: true
-                }} />
+                  utf8WithBom: true,
+                }}
+              />
             </GridToolbarContainer>
           ),
         }}
@@ -123,8 +133,6 @@ export const GrillaActas = ({ actas, selectedActas, setSelectedActas, isVer, cui
           toolbarExport: 'Exportar',
         }}
         sx={{
-
-
           '& .MuiDataGrid-columnHeaderCheckbox .MuiCheckbox-root': {
             '&.Mui-checked': {
               height: '20px',
