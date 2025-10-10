@@ -1,21 +1,12 @@
 import * as locales from '@mui/material/locale';
 import React, { useContext, useMemo, useState, useEffect } from 'react';
-import {
-  Box,
-
-  TextField,
-  MenuItem,
-  Button,
-
-  createTheme,
-} from '@mui/material';
+import { Box, TextField, MenuItem, Button, createTheme } from '@mui/material';
 import { StripedDataGrid, dataGridStyle } from '@/common/dataGridStyle';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import EditIcon from '@mui/icons-material/Edit';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import {
-
   GridToolbarContainer,
   GridActionsCellItem,
   GridRowEditStopReasons,
@@ -30,7 +21,6 @@ import { useNavigate } from 'react-router-dom';
 //import Cheques from './cheques/cheques';
 import formatter from '@/common/formatter';
 import ConveniosService from './ConveniosApi';
-import { getRol } from '@/components/localStorage/localStorageService';
 import CheckIcon from '@mui/icons-material/Check';
 import TerminosYCondiciones from './TerminosYCondiciones/TerminosYCondiciones';
 import localStorageService from '@/components/localStorage/localStorageService';
@@ -43,11 +33,7 @@ import * as XLSX from 'xlsx';
 // Columnas del DataGrid
 
 const crearNuevoRegistro = (props) => {
-  const {
-
-    showQuickFilter,
-    themeWithLocale,
-  } = props;
+  const { showQuickFilter, themeWithLocale } = props;
 
   return (
     <GridToolbarContainer
@@ -60,13 +46,12 @@ const crearNuevoRegistro = (props) => {
 };
 
 export const Convenios = () => {
-
   const locale = 'esES';
   const navigate = useNavigate();
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   const [open, setOpen] = useState(false);
-  const [rol, setRol] = useState('');
+  //const [rol, setRol] = useState('');
   const [terminosYCondiciones, setTerminosYCondiciones] = useState(false);
   const empresaId = localStorageService.getEmpresaId(); // Cambia esto según tu lógica
   const [rowTyC, setRowTyC] = useState(null);
@@ -78,12 +63,12 @@ export const Convenios = () => {
   });
 
   const KVESTADOS = {
-    "PRCH": "Pendiente en recepción de cheque",
-    "PRES": "Presentado",
-    "APROB": "Aprobado",
-    "RECH": "Rechazado",
-    "OBSR": "Observado",
-    "CAIDO": "Caido"
+    PRCH: 'Pendiente en recepción de cheque',
+    PRES: 'Presentado',
+    APROB: 'Aprobado',
+    RECH: 'Rechazado',
+    OBSR: 'Observado',
+    CAIDO: 'Caido',
   };
 
   //const handleClose = () => setOpen(false);
@@ -98,8 +83,8 @@ export const Convenios = () => {
 
   const fetchData = async () => {
     try {
-      setRol(getRol());
-      console.log('Rol:', rol);
+      //setRol(localStorageService.getRol());
+      console.log('Rol:', localStorageService.getRol());
     } catch (error) {
       console.error('Error fetching rol:', error);
     }
@@ -112,9 +97,8 @@ export const Convenios = () => {
   };
 
   useEffect(() => {
-
     fetchData();
-    console.log('Este es el rol', rol)
+    console.log('Este es el rol', localStorageService.getRol());
     console.log(rows);
   }, []);
 
@@ -131,9 +115,8 @@ export const Convenios = () => {
     console.log('Row para Terminos y Condiciones:', rowTyC);
     setTerminosYCondiciones(true);
 
-
     console.log(terminosYCondiciones);
-  }
+  };
 
   const processRowUpdate = async (updatedRow, originalRow) => {
     if (updatedRow.estado !== originalRow.estado) {
@@ -170,7 +153,6 @@ export const Convenios = () => {
     }));
 
     console.log('Guardando cambios para el convenio:', rows[id]);
-
   };
   const handleImprimir = async (row) => {
     await ConveniosService.imprimirConvenio(row.cuit, row.id);
@@ -179,25 +161,31 @@ export const Convenios = () => {
   const handleDownload = (row) => async () => {
     console.log('Descargando cuotas para el convenio:', row.id);
     try {
-      const empresaID = await axiosGestionDeudas.getEmpresaByCuit(row.cuit)
-      const cuotas = await consultarCuotas(row.id, empresaID)
-      if (!Array.isArray(cuotas)) throw new Error('Formato de cuotas inesperado');
+      const empresaID = await axiosGestionDeudas.getEmpresaByCuit(row.cuit);
+      const cuotas = await consultarCuotas(row.id, empresaID);
+      if (!Array.isArray(cuotas))
+        throw new Error('Formato de cuotas inesperado');
 
-      const response = await axiosGestionDeudas.getDeclaracionesJuradasEditar(empresaID, row.id);
+      const response = await axiosGestionDeudas.getDeclaracionesJuradasEditar(
+        empresaID,
+        row.id,
+      );
       const actas = response.actas;
 
-      const nroActasStr = Array.isArray(actas) && actas.length > 0 ? actas.map(a => a.nroActa).join('/ ') : '';
+      const nroActasStr =
+        Array.isArray(actas) && actas.length > 0
+          ? actas.map((a) => a.nroActa).join('/ ')
+          : '';
 
       const declaracionesJuradas = response.declaracionesJuradas;
 
-
-      const periodosStr = Array.isArray(declaracionesJuradas) && declaracionesJuradas.length > 0
-        ? declaracionesJuradas
-          .filter(a => a.convenioDdjjId !== null)
-          .map(a => a.periodo)
-          .join('/ ')
-        : '';
-
+      const periodosStr =
+        Array.isArray(declaracionesJuradas) && declaracionesJuradas.length > 0
+          ? declaracionesJuradas
+              .filter((a) => a.convenioDdjjId !== null)
+              .map((a) => a.periodo)
+              .join('/ ')
+          : '';
 
       console.log('Datos de la empresa:', response);
 
@@ -214,7 +202,7 @@ export const Convenios = () => {
         medioPago: row.medioPago,
         estado: row.estado,
         periodos: periodosStr,
-        actas: nroActasStr
+        actas: nroActasStr,
       };
 
       const allRows = cuotas.map((cuota) => ({
@@ -223,7 +211,7 @@ export const Convenios = () => {
         importeCuota: cuota.importe,
         cheques: cuota.chequesNro,
         totalCheques: cuota.chequesTotal,
-        vencimiento: cuota.vencimiento
+        vencimiento: cuota.vencimiento,
       }));
 
       const headerMap = {
@@ -249,14 +237,18 @@ export const Convenios = () => {
 
       const headers = Object.keys(headerMap);
 
-
       const worksheet = XLSX.utils.json_to_sheet(allRows, { header: headers });
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Deuda');
 
-      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array',
+      });
 
-      const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+      const blob = new Blob([excelBuffer], {
+        type: 'application/octet-stream',
+      });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -264,7 +256,6 @@ export const Convenios = () => {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-
     } catch (error) {
       console.error('Error generando xlsx:', error);
       alert('Ocurrió un error al descargar las cuotas del convenio.');
@@ -275,20 +266,31 @@ export const Convenios = () => {
     {
       field: 'cuit',
       headerName: 'CUIT',
-      visible: rol == 'OSPIM_EMPLEADO' ? true : false,
+      visible: !localStorageService.isRolEmpleador(),
       flex: 1.2,
       hide: !useContext(UserContext).isAdmin, // Esconde la columna si el usuario no es admin
     },
-    { field: 'razonSocial', headerName: 'Razón Social', flex: 1, visible: rol == 'OSPIM_EMPLEADO' ? true : false },
+    {
+      field: 'razonSocial',
+      headerName: 'Razón Social',
+      flex: 1,
+      visible: !localStorageService.isRolEmpleador(),
+    },
     { field: 'usuario', headerName: 'Usuario', flex: 1 },
     { field: 'entidad', headerName: 'Entidad', flex: 1 },
     {
-      field: 'fecha', headerName: 'Fecha', flex: 1, valueFormatter: (params) =>
+      field: 'fecha',
+      headerName: 'Fecha',
+      flex: 1,
+      valueFormatter: (params) =>
         params.value ? formatter.dateString(params.value) : '',
-
-
     },
-    { field: 'numero', headerName: 'Numero Convenio', flex: 0.1, align: 'right' },
+    {
+      field: 'numero',
+      headerName: 'Numero Convenio',
+      flex: 0.1,
+      align: 'right',
+    },
     {
       field: 'capital',
       headerName: 'Deuda Original',
@@ -343,7 +345,7 @@ export const Convenios = () => {
       field: 'estado',
       headerName: 'Estado',
       flex: 1,
-      editable: rol === 'OSPIM_EMPLEADO' ? true : false,
+      editable: !localStorageService.isRolEmpleador(),
       type: 'singleSelect',
       valueOptions: Object.entries(KVESTADOS).map(([key, value]) => ({
         value: key,
@@ -394,26 +396,37 @@ export const Convenios = () => {
             sx={{ color: 'primary.main' }}
             onClick={() => handleImprimir(row)}
           />,
-          ...(row.estado !== 'PRES' && row.estado !== 'Presentado' && row.estado !== 'PRESENTADO'
+          ...(row.estado !== 'PRES' &&
+          row.estado !== 'Presentado' &&
+          row.estado !== 'PRESENTADO'
             ? [
-              <GridActionsCellItem
-                icon={<EditIcon />}
-                label="Editar"
-                title="Editar"
-                sx={{ color: 'primary.main' }}
-                onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/editar/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`)}
-                color="inherit"
-              />,
-            ]
+                <GridActionsCellItem
+                  icon={<EditIcon />}
+                  label="Editar"
+                  title="Editar"
+                  sx={{ color: 'primary.main' }}
+                  onClick={() =>
+                    navigate(
+                      `/dashboard/gestiondeuda/${row.id}/editar/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`,
+                    )
+                  }
+                  color="inherit"
+                />,
+              ]
             : [
-              <GridActionsCellItem
-                icon={<VisibilityIcon />}
-                label="Ver"
-                title="Ver"
-                sx={{ color: 'primary.main' }}
-                onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/ver/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`)}
-                color="inherit"
-              />,]),
+                <GridActionsCellItem
+                  icon={<VisibilityIcon />}
+                  label="Ver"
+                  title="Ver"
+                  sx={{ color: 'primary.main' }}
+                  onClick={() =>
+                    navigate(
+                      `/dashboard/gestiondeuda/${row.id}/ver/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`,
+                    )
+                  }
+                  color="inherit"
+                />,
+              ]),
           <GridActionsCellItem
             icon={<AccountBalanceWalletIcon />}
             label="Cheques"
@@ -422,22 +435,21 @@ export const Convenios = () => {
             onClick={() => navigate(`/dashboard/convenio/${row.id}/cuotas`)}
             color="inherit"
           />,
-          ...(
-
-            rol !== 'OSPIM_EMPLEADO' || row.cuit == '11111111111'
-              && row.estado !== 'PRES' && row.estado !== 'Presentado'
-              ? [
+          ...((localStorageService.isRolEmpleador() ||
+            row.cuit === '11111111111') &&
+          row.estado !== 'PRES' &&
+          row.estado !== 'Presentado'
+            ? [
                 <GridActionsCellItem
                   icon={<CheckIcon />}
                   label="Aceptar Terminos y condiciones"
                   title="Aceptar Terminos y condiciones"
                   sx={{ color: 'primary.main' }}
                   color="inherit"
-
                   onClick={() => handleOpen(row)}
                 />,
               ]
-              : []),
+            : []),
         ];
       },
       sortable: false,
@@ -448,7 +460,10 @@ export const Convenios = () => {
     { field: 'usuario', headerName: 'Usuario', flex: 1 },
     { field: 'entidad', headerName: 'Entidad', flex: 1 },
     {
-      field: 'fecha', headerName: 'Fecha', flex: .8, valueFormatter: (params) =>
+      field: 'fecha',
+      headerName: 'Fecha',
+      flex: 0.8,
+      valueFormatter: (params) =>
         params.value ? formatter.dateString(params.value) : '',
     },
     { field: 'numero', headerName: 'Nro Convenio', flex: 1, align: 'right' },
@@ -553,26 +568,37 @@ export const Convenios = () => {
             sx={{ color: 'primary.main' }}
             onClick={() => handleImprimir(row)}
           />,
-          ...(row.estado !== 'PRES' && row.estado !== 'Presentado' && row.estado !== 'PRESENTADO'
+          ...(row.estado !== 'PRES' &&
+          row.estado !== 'Presentado' &&
+          row.estado !== 'PRESENTADO'
             ? [
-              <GridActionsCellItem
-                icon={<EditIcon />}
-                label="Editar"
-                title="Editar"
-                sx={{ color: 'primary.main' }}
-                onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/editar/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`)}
-                color="inherit"
-              />,
-            ]
+                <GridActionsCellItem
+                  icon={<EditIcon />}
+                  label="Editar"
+                  title="Editar"
+                  sx={{ color: 'primary.main' }}
+                  onClick={() =>
+                    navigate(
+                      `/dashboard/gestiondeuda/${row.id}/editar/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`,
+                    )
+                  }
+                  color="inherit"
+                />,
+              ]
             : [
-              <GridActionsCellItem
-                icon={<VisibilityIcon />}
-                label="Ver"
-                title="Ver"
-                sx={{ color: 'primary.main' }}
-                onClick={() => navigate(`/dashboard/gestiondeuda/${row.id}/ver/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`)}
-                color="inherit"
-              />,]),
+                <GridActionsCellItem
+                  icon={<VisibilityIcon />}
+                  label="Ver"
+                  title="Ver"
+                  sx={{ color: 'primary.main' }}
+                  onClick={() =>
+                    navigate(
+                      `/dashboard/gestiondeuda/${row.id}/ver/${row.entidad}/convenio/${row.id}/cuit/${row.cuit}`,
+                    )
+                  }
+                  color="inherit"
+                />,
+              ]),
           <GridActionsCellItem
             icon={<AccountBalanceWalletIcon />}
             label="Cheques"
@@ -582,19 +608,19 @@ export const Convenios = () => {
             color="inherit"
           />,
           ...((localStorageService.isRolEmpleador() ||
-            row.cuit != '11111111111') &&
+            row.cuit === '11111111111') &&
           row.estado !== 'PRES' &&
           row.estado !== 'Presentado'
             ? [
-              <GridActionsCellItem
-                icon={<CheckIcon />}
-                label="Aceptar Terminos y condiciones"
-                title="Aceptar Terminos y condiciones"
-                sx={{ color: 'primary.main' }}
-                color="inherit"
-                onClick={() => handleOpen(row)}
-              />,
-            ]
+                <GridActionsCellItem
+                  icon={<CheckIcon />}
+                  label="Aceptar Terminos y condiciones"
+                  title="Aceptar Terminos y condiciones"
+                  sx={{ color: 'primary.main' }}
+                  color="inherit"
+                  onClick={() => handleOpen(row)}
+                />,
+              ]
             : []),
         ];
       },
@@ -643,16 +669,26 @@ export const Convenios = () => {
     }
     */
     setRows(filteredRows);
-  }
-
+  };
 
   return (
     <Box>
-
-      {(rowTyC !== undefined && rowTyC !== null) && (<TerminosYCondiciones open={terminosYCondiciones} setOpen={setTerminosYCondiciones} rowTyC={rowTyC} setRowTyC={setRowTyC} fetchData={fetchData} />)}
+      {rowTyC !== undefined && rowTyC !== null && (
+        <TerminosYCondiciones
+          open={terminosYCondiciones}
+          setOpen={setTerminosYCondiciones}
+          rowTyC={rowTyC}
+          setRowTyC={setRowTyC}
+          fetchData={fetchData}
+        />
+      )}
 
       <div className="convenios_container">
-        <h1 className="mt-1em">{rol == 'OSPIM_EMPLEADO' ? 'Consulta Convenios' : 'Mis convenios'}</h1>
+        <h1 className="mt-1em">
+          {localStorageService.isRolEmpleador()
+            ? 'Mis convenios'
+            : 'Consulta Convenios'}
+        </h1>
 
         {/* Filtros */}
         <Box sx={{ display: 'flex', gap: 2, mb: 3 }} className="mt-1em">
@@ -677,7 +713,9 @@ export const Convenios = () => {
             type="date"
             InputLabelProps={{ shrink: true }}
             value={filtros.fechaDesde}
-            onChange={(e) => setFiltros({ ...filtros, fechaDesde: e.target.value })}
+            onChange={(e) =>
+              setFiltros({ ...filtros, fechaDesde: e.target.value })
+            }
             sx={{ width: 180 }}
           />
 
@@ -686,21 +724,30 @@ export const Convenios = () => {
             type="date"
             InputLabelProps={{ shrink: true }}
             value={filtros.fechaHasta}
-            onChange={(e) => setFiltros({ ...filtros, fechaHasta: e.target.value })}
+            onChange={(e) =>
+              setFiltros({ ...filtros, fechaHasta: e.target.value })
+            }
             sx={{ width: 180 }}
           />
 
-          <Button variant="contained" color="primary" onClick={() => handleBuscar(filtros)}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleBuscar(filtros)}
+          >
             Buscar
           </Button>
-
         </Box>
         {/* DataGrid */}
         <Box sx={{ height: 450, width: '100%' }}>
           <ThemeProvider theme={themeWithLocale}>
             <StripedDataGrid
               rows={rows}
-              columns={rol == 'OSPIM_EMPLEADO' ? columnas : columnas_empleador}
+              columns={
+                localStorageService.isRolEmpleador()
+                  ? columnas_empleador
+                  : columnas
+              }
               //Revisar como hacer para poner los colores de manera correcta
 
               //getRowClassName={(params) =>
