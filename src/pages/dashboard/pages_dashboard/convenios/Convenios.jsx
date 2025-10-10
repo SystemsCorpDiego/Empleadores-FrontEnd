@@ -581,9 +581,10 @@ export const Convenios = () => {
             onClick={() => navigate(`/dashboard/convenio/${row.id}/cuotas`)}
             color="inherit"
           />,
-          ...((rol !== 'OSPIM_EMPLEADO' ||
-            (rol !== 'OSPIM_EMPLEADO' && row.cuit != '11111111111'))
-            && row.estado !== 'PRES' && row.estado !== 'Presentado'
+          ...((localStorageService.isRolEmpleador() ||
+            row.cuit != '11111111111') &&
+          row.estado !== 'PRES' &&
+          row.estado !== 'Presentado'
             ? [
               <GridActionsCellItem
                 icon={<CheckIcon />}
