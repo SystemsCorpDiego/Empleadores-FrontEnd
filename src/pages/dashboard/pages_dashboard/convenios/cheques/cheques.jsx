@@ -14,17 +14,25 @@ import { axiosCheques } from './chequesApi';
 import formatter from '@/common/formatter';
 import localStorageService from '@/components/localStorage/localStorageService';
 import Swal from 'sweetalert2';
-import './cheques.css'
+import './cheques.css';
 import { esES } from '@mui/x-data-grid';
 
-const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas }) => {
+const Cheques = ({
+  open,
+  handleClose,
+  convenio,
+  cuota,
+  cuotaId,
+  total,
+  getCuotas,
+}) => {
   const ID_EMPRESA = localStorageService.getEmpresaId();
 
   const [cheques, setCheques] = useState([]);
   const [openChequeDialog, setOpenChequeDialog] = useState(false);
   const [resta, setResta] = useState(total);
   const [editing, setEditing] = useState(false);
-  const [rol, setRol] = useState(localStorageService.getRol());
+
   const [newCheque, setNewCheque] = useState({
     fecha: '',
     id: 0,
@@ -35,16 +43,31 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
 
   // Cargar cheques al abrir
   useEffect(() => {
-    console.log('Rol actual:', rol);
-    console.log('OSPIM_EMPLEADO' === rol);
-    console.log('Cargando cheques para convenio:', convenio, 'cuota:', cuotaId, 'ID Empresa:', ID_EMPRESA);
+    console.log('Rol actual:', localStorageService.getRol());
+    console.log(!localStorageService.isRolEmpleador());
+    console.log(
+      'Cargando cheques para convenio:',
+      convenio,
+      'cuota:',
+      cuotaId,
+      'ID Empresa:',
+      ID_EMPRESA,
+    );
     if (!convenio || !cuotaId || !ID_EMPRESA) {
-      console.warn('Valores insuficientes para consultar cheques', { convenio, cuotaId, ID_EMPRESA });
+      console.warn('Valores insuficientes para consultar cheques', {
+        convenio,
+        cuotaId,
+        ID_EMPRESA,
+      });
       return;
     }
 
     const fetchCheques = async () => {
-      const response = await axiosCheques.consultar(convenio, cuotaId, ID_EMPRESA);
+      const response = await axiosCheques.consultar(
+        convenio,
+        cuotaId,
+        ID_EMPRESA,
+      );
       setCheques(response);
     };
 
@@ -53,7 +76,10 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
 
   // Calcular resta automáticamente
   useEffect(() => {
-    const totalCheques = cheques.reduce((sum, item) => sum + Number(item.importe || 0), 0);
+    const totalCheques = cheques.reduce(
+      (sum, item) => sum + Number(item.importe || 0),
+      0,
+    );
     setResta(total - totalCheques);
   }, [cheques, total]);
 
@@ -114,37 +140,42 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
 
     try {
       if (editing) {
-        await axiosCheques.actualizar({
-          numero: newCheque.numero,
-          fecha: newCheque.fecha,
-          importe: parseFloat(newCheque.importe.replace(",", ".")),
-          estado: newCheque.estado || 'CARGADO', // Asegurarse de que estado tenga un valor por defecto
-        },
+        await axiosCheques.actualizar(
+          {
+            numero: newCheque.numero,
+            fecha: newCheque.fecha,
+            importe: parseFloat(newCheque.importe.replace(',', '.')),
+            estado: newCheque.estado || 'CARGADO', // Asegurarse de que estado tenga un valor por defecto
+          },
           ID_EMPRESA,
           convenio,
           cuotaId,
-          newCheque.id
+          newCheque.id,
         );
       } else {
         await axiosCheques.crear(
           {
             numero: newCheque.numero,
             fecha: newCheque.fecha,
-            importe: parseFloat(newCheque.importe.replace(",", ".")), // Asegurarse de que importe sea un número con dos decimales
+            importe: parseFloat(newCheque.importe.replace(',', '.')), // Asegurarse de que importe sea un número con dos decimales
             estado: 'CARGADO',
           },
           cuotaId,
           convenio,
-          ID_EMPRESA
+          ID_EMPRESA,
         );
       }
 
       resetChequeForm();
 
       // Refrescar cheques
-      const updated = await axiosCheques.consultar(convenio, cuotaId, ID_EMPRESA);      
+      const updated = await axiosCheques.consultar(
+        convenio,
+        cuotaId,
+        ID_EMPRESA,
+      );
       setCheques(updated);
-      getCuotas()
+      getCuotas();
     } catch (error) {
       console.error('Error al guardar el cheque', error);
     }
@@ -164,9 +195,20 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
   const handleDeleteCheque = async (row) => {
     try {
       console.log('Eliminando cheque:', row);
-      console.log('Convenio:', convenio, 'Cuota:', cuotaId, 'ID Empresa:', ID_EMPRESA);
+      console.log(
+        'Convenio:',
+        convenio,
+        'Cuota:',
+        cuotaId,
+        'ID Empresa:',
+        ID_EMPRESA,
+      );
       await axiosCheques.eliminar(ID_EMPRESA, convenio, cuotaId, row.id);
-      const updated = await axiosCheques.consultar(convenio, cuotaId, ID_EMPRESA);
+      const updated = await axiosCheques.consultar(
+        convenio,
+        cuotaId,
+        ID_EMPRESA,
+      );
       setCheques(updated);
     } catch (error) {
       console.error('Error al eliminar el cheque', error);
@@ -190,7 +232,11 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
       flex: 1,
       renderCell: (params) => (
         <>
-          <Button variant="contained" color="primary" onClick={() => handleEditCheque(params.row.id)}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleEditCheque(params.row.id)}
+          >
             Editar
           </Button>
           <Button
@@ -232,7 +278,9 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
           borderRadius: 2,
         }}
       >
-        <h2>Cheques convenio Nro {convenio} / Cuota {cuota}</h2>
+        <h2>
+          Cheques convenio Nro {convenio} / Cuota {cuota}
+        </h2>
 
         <Button
           variant="contained"
@@ -265,23 +313,25 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
               },
             }}
             localeText={{
-                      ...esES.components.MuiDataGrid.defaultProps.localeText,
-                      toolbarDensity: 'Densidad',
-                      toolbarDensityLabel: 'Densidad',
-                      toolbarDensityCompact: 'Compacto',
-                      toolbarDensityStandard: 'Estándar',
-                      toolbarDensityComfortable: 'Cómodo',
-                      footerRowsPerPage: 'Filas por página',
-                      noRowsLabel: 'Sin filas',
-                      toolbarColumns: 'Columnas',
-                      toolbarFilters: 'Filtros',
-                      toolbarExport: 'Exportar',
-                    }}
+              ...esES.components.MuiDataGrid.defaultProps.localeText,
+              toolbarDensity: 'Densidad',
+              toolbarDensityLabel: 'Densidad',
+              toolbarDensityCompact: 'Compacto',
+              toolbarDensityStandard: 'Estándar',
+              toolbarDensityComfortable: 'Cómodo',
+              footerRowsPerPage: 'Filas por página',
+              noRowsLabel: 'Sin filas',
+              toolbarColumns: 'Columnas',
+              toolbarFilters: 'Filtros',
+              toolbarExport: 'Exportar',
+            }}
           />
         </div>
 
         <Dialog open={openChequeDialog} onClose={resetChequeForm}>
-          <DialogTitle>{editing ? 'Editar Cheque' : 'Nuevo Cheque'}</DialogTitle>
+          <DialogTitle>
+            {editing ? 'Editar Cheque' : 'Nuevo Cheque'}
+          </DialogTitle>
           <DialogContent>
             <TextField
               margin="dense"
@@ -294,7 +344,9 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
               InputLabelProps={{ shrink: true }}
               inputProps={{ min: todayStr, lang: 'es' }}
               error={isFechaInvalida}
-              helperText={isFechaInvalida ? 'La fecha no puede ser menor a hoy' : ''}
+              helperText={
+                isFechaInvalida ? 'La fecha no puede ser menor a hoy' : ''
+              }
             />
             <TextField
               margin="dense"
@@ -314,7 +366,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
               onChange={handleInputChange}
             />
 
-            {rol === 'OSPIM_EMPLEADO' && editing && (
+            {!localStorageService.isRolEmpleador() && editing && (
               <TextField
                 margin="dense"
                 name="estado"
@@ -323,7 +375,7 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
                 fullWidth
                 value={newCheque.estado || ''}
                 onChange={handleInputChange}
-                disabled={localStorageService.isRolEmpleador()}
+                //disabled={localStorageService.isRolEmpleador()}
                 SelectProps={{
                   native: true,
                 }}
@@ -334,7 +386,6 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
                 <option value="RECHAZADO">RECHAZADO</option>
               </TextField>
             )}
-            
           </DialogContent>
           <DialogActions>
             <Button onClick={resetChequeForm} color="secondary">
@@ -352,7 +403,9 @@ const Cheques = ({ open, handleClose, convenio, cuota, cuotaId, total, getCuotas
 
         <div style={{ marginTop: 30 }}>
           <h3>Total restante: {formatter.currency.format(resta)}</h3>
-          <Button variant="outlined" onClick={handleClose}>Cerrar</Button>
+          <Button variant="outlined" onClick={handleClose}>
+            Cerrar
+          </Button>
         </div>
       </Box>
     </Modal>
