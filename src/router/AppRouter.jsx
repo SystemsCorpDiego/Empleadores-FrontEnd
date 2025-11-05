@@ -59,6 +59,11 @@ const AppRouter = () => {
       if (nuevoRol === rol) return;
       setRol(nuevoRol);
       if (nuevoRol !== null && nuevoRol !== undefined) {
+        console.log(
+          'useEffect de AppRouter - getFuncionalidadesByRol() - nuevoRol:' +
+            nuevoRol +
+            ' - INIT',
+        );
         const { funcionalidades } = await getFuncionalidadesByRol(nuevoRol);
         const roles = {};
         funcionalidades.forEach((f) => {
