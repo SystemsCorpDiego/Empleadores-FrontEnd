@@ -1,4 +1,10 @@
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  Navigate,
+  useLocation,
+} from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import { getRol } from '@/components/localStorage/localStorageService';
 import { getFuncionalidadesByRol } from '@/pages/dashboard/DashboardPageApi';
@@ -52,10 +58,32 @@ const AppRouter = () => {
 
   const [rolFuncionalidades, setRolFuncionalidades] = useState({});
   const { sessionVersion } = useContext(UserContext);
+  const location = useLocation();
+
   useEffect(() => {
     console.log('Se dispara el useEffect de AppRouter');
+
+    console.log('useEffect de AppRouter - location: ', location);
+    console.log(
+      'useEffect de AppRouter - location.pathname: ',
+      location.pathname,
+    );
+
     const fetchData = async () => {
       const nuevoRol = localStorageService.getRol();
+
+      const aux = '/usuario/recuperar-clave';
+      if (location && location != null && location.pathname) {
+        console.log(
+          'location.pathname.indexOf(aux): ',
+          location.pathname.indexOf(aux),
+        );
+        if (location.pathname.indexOf(aux) > -1) {
+          console.log('useEffect de AppRouter - SALIDA !');
+          return;
+        }
+      }
+
       if (nuevoRol === rol) return;
       setRol(nuevoRol);
       if (nuevoRol !== null && nuevoRol !== undefined) {
