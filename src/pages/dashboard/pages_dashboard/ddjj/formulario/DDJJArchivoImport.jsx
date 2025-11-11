@@ -165,7 +165,15 @@ export const DDJJArchivoImport = ({
       }
     });
 
-    console.log('**rowsClean:', rowsClean);
+    //Elimino guiomes del cuil
+    rowsClean.forEach(function (row, index) {
+      if (rowsClean[index].length > 0) {
+        if (rowsClean[index][0]) {
+          rowsClean[index][0] = rowsClean[index][0].replaceAll('-', '');
+        }
+      }
+    });
+    console.log('**X**rowsClean:', rowsClean);
 
     return rowsClean;
   };
