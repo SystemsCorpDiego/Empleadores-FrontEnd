@@ -169,7 +169,9 @@ export const DDJJArchivoImport = ({
     rowsClean.forEach(function (row, index) {
       if (rowsClean[index].length > 0) {
         if (rowsClean[index][0]) {
-          rowsClean[index][0] = rowsClean[index][0].replaceAll('-', '');
+          if (typeof rowsClean[index][0] === 'string') {
+            rowsClean[index][0] = rowsClean[index][0].replaceAll('-', '');
+          }
         }
       }
     });
