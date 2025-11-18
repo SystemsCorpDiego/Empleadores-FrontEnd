@@ -58,6 +58,7 @@ const isNotNull = (value) => (value !== null && value !== '' ? value : '');
 const MOTIVOS = [
   { codigo: 'DI', descripcion: 'Devolución de Intereses' },
   { codigo: 'DPD', descripcion: 'Devolución por pago duplicado' },
+  { codigo: 'REP', descripcion: 'Reimputación de Pago' },
   { codigo: 'O', descripcion: 'Otros' },
 ];
 
