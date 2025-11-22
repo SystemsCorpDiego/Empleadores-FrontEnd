@@ -94,8 +94,9 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   const [loadAllEmpresas, setLoadAllEmpresas] = useState(false); //Se usa para cargar todas las empresas al inicio
 
   useEffect(() => {
-    setRol(localStorageService.getRol());
     console.log('Volvió a ejecutarse el useEffect');
+
+    setRol(localStorageService.getRol());
     const isEditar = window.location.hash.includes('/editar');
     const isVer = window.location.hash.includes('/ver');
     if (isEditar || isVer) {
@@ -103,8 +104,13 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
       setConvenioId(parts[parts.indexOf('convenio') + 1]);
       setCuitInput(parts[parts.indexOf('cuit') + 1]);
     }
-    console.log(empresas);
+    console.log('Gestion - useEffect() - empresas: ', empresas);
     setFechaDelDia(new Date());
+
+    console.log(
+      'Gestion - useEffect() - window.location.hash: ',
+      window.location.hash,
+    );
 
     if (empresas.length > 0) {
       let auxIdEmpresa = null;
@@ -120,9 +126,18 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         );
         //Esto se hace para que cuando se vuelva a tocar Gestion deuda cuando se estuvo editando reinicie el cuit
         //al valor de la empresa que esta consultando.
-        setNombreEmpresa(emp.razonSocial);
-        setCuitInput(emp.cuit);
+        if (emp && emp.razonSocial) {
+          setNombreEmpresa(emp.razonSocial);
+        } else {
+          setNombreEmpresa(null);
+        }
+        if (emp && emp.cuit) {
+          setCuitInput(emp.cuit);
+        } else {
+          setCuitInput(null);
+        }
       }
+
       setEmpresaId(auxIdEmpresa);
       console.log(cuitInput);
       console.log(auxIdEmpresa);

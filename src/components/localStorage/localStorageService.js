@@ -60,6 +60,22 @@ export const getEmpresaId = () => {
       }
     }
   }
+};
+
+export const getEmpresaCuit = () => {
+  let auxStateLogin = localStorage.getItem('stateLogin');
+  if (auxStateLogin != null) {
+    auxStateLogin = JSON.parse(localStorage.getItem('stateLogin'));
+    if (auxStateLogin.hasOwnProperty('usuarioLogueado')) {
+      auxStateLogin = auxStateLogin.usuarioLogueado;
+      if (auxStateLogin?.hasOwnProperty('empresa')) {
+        auxStateLogin = auxStateLogin.empresa;
+        if (auxStateLogin?.hasOwnProperty('cuit')) {
+          return auxStateLogin.cuit;
+        }
+      }
+    }
+  }
 
   if (funcionHabilitada('ID_EMPRESA_TEST')) {
     return VITE_BACKEND_ID_EMPRESA_TEST;
@@ -156,6 +172,7 @@ export const getMail = () => {
 export const isRolEmpleador = () => {
   let ROL = getRol();
   if (ROL == 'EMPLEADOR') return true;
+  if (ROL == 'EMPLEADOR_TEST') return true;
   return false;
 };
 
@@ -211,6 +228,9 @@ const localStorageService = {
   },
   getEmpresaId: function () {
     return getEmpresaId();
+  },
+  getEmpresaCuit: function () {
+    return getEmpresaCuit();
   },
   getRol: function () {
     return getRol();
