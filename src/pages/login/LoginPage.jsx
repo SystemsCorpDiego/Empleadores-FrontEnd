@@ -27,10 +27,11 @@ import { ThreeCircles } from 'react-loader-spinner';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import NavBar from '@/components/navbar/NavBar.jsx';
 
-
 const VITE_WELCOME_PORTAL = import.meta.env.VITE_WELCOME_PORTAL;
 
 export const LoginPage = () => {
+  console.log('LoginPage - INIT ');
+
   const navigate = useNavigate();
   const [showSpinner, setShowSpinner] = useState(true);
   const [showInternalUserForm, setShowInternalUserForm] = useState(true);
@@ -130,7 +131,6 @@ export const LoginPage = () => {
         const usuarioLogueado = await consultarUsuarioLogueado(loginDto.token);
         console.log('usuarioLogueado: ');
         console.log(usuarioLogueado);
-        
 
         getUsuarioLogueadoInfo(
           usuarioLogueado,

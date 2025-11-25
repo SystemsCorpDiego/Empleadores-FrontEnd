@@ -65,7 +65,7 @@ const ConveniosService = {
     try {
       //const response = await axiosCrud.consultar(`${API_BASE_URL}`);
       let URL = '';
-      if (!localStorageService.isRolEmpleador()) {
+      if (!localStorageService.isRolEmpleador() && empresaId) {
         URL = `/empresa/${empresaId}/convenios`;
       } else {
         URL = `/convenios`;
@@ -104,6 +104,7 @@ const ConveniosService = {
 
   getConveniosByDateAndState: async (filtro, empresaId, rol) => {
     const { fechaDesde, fechaHasta, estado } = filtro;
+    console.log('getConveniosByDateAndState -  empresaId = ', empresaId);
     console.log('empresaId = ', empresaId);
     console.log('fechaDesde:', fechaDesde);
     console.log('fechaHasta:', fechaHasta);
