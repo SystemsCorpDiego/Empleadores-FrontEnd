@@ -133,22 +133,21 @@ export const Cuotas = () => {
             },
           }}
           localeText={{
-                    ...esES.components.MuiDataGrid.defaultProps.localeText,
-                    toolbarDensity: 'Densidad',
-                    toolbarDensityLabel: 'Densidad',
-                    toolbarDensityCompact: 'Compacto',
-                    toolbarDensityStandard: 'Estándar',
-                    toolbarDensityComfortable: 'Cómodo',
-                    footerRowsPerPage: 'Filas por página',
-                    noRowsLabel: 'Sin filas',
-                    toolbarColumns: 'Columnas',
-                    toolbarFilters: 'Filtros',
-                    toolbarExport: 'Exportar',
-                  }}
+            ...esES.components.MuiDataGrid.defaultProps.localeText,
+            toolbarDensity: 'Densidad',
+            toolbarDensityLabel: 'Densidad',
+            toolbarDensityCompact: 'Compacto',
+            toolbarDensityStandard: 'Estándar',
+            toolbarDensityComfortable: 'Cómodo',
+            footerRowsPerPage: 'Filas por página',
+            noRowsLabel: 'Sin filas',
+            toolbarColumns: 'Columnas',
+            toolbarFilters: 'Filtros',
+            toolbarExport: 'Exportar',
+          }}
           pageSize={5}
           rowsPerPageOptions={[5]}
           disableSelectionOnClick
-          
         />
       </Box>
       <Button
