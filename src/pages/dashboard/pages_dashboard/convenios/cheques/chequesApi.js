@@ -12,10 +12,10 @@ const HTTP_MSG_BAJA_ERROR = import.meta.env.VITE_HTTP_MSG_BAJA_ERROR;
 const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
 
 let arregloCheques = [
-    { convenioId: 1, id: 1, numero: '123', monto: 5000.0, cuota: 2 },
-    { convenioId: 1, id: 2, numero: '123', monto: 5000.0, cuota: 2 },
-    { convenioId: 1, id: 3, numero: '123', monto: 5000.0, cuota: 2 },
-  ];
+  { convenioId: 1, id: 1, numero: '123', monto: 5000.0, cuota: 2 },
+  { convenioId: 1, id: 2, numero: '123', monto: 5000.0, cuota: 2 },
+  { convenioId: 1, id: 3, numero: '123', monto: 5000.0, cuota: 2 },
+];
 
 export const axiosCheques = {
   consultar: async function (convenioId, cuotaId, empresaId) {
@@ -26,19 +26,27 @@ export const axiosCheques = {
     return crear(chequeBody, cuota, idConvenio, empresaId);
   },
 
-  actualizar: async function (chequeBody, empresaId, convenioId, cuotaId, chequeId) {
+  actualizar: async function (
+    chequeBody,
+    empresaId,
+    convenioId,
+    cuotaId,
+    chequeId,
+  ) {
     return actualizar(chequeBody, empresaId, convenioId, cuotaId, chequeId);
   },
 
-  eliminar: async function (empresaId,convenioId,cuotaId,chequeId) {
-    return eliminar(empresaId,convenioId,cuotaId,chequeId);
+  eliminar: async function (empresaId, convenioId, cuotaId, chequeId) {
+    return eliminar(empresaId, convenioId, cuotaId, chequeId);
   },
 };
 export const consultar = async (convenioId, cuotaId, empresaId) => {
   try {
-    
-    const URL_API = `${URL_ENTITY}/${empresaId}/convenios/${convenioId}/cuotas/${cuotaId}/cheques`;
-    
+    var empreID = '0';
+    if (empresaId && empresaId != null) empreID = empresaId;
+
+    const URL_API = `${URL_ENTITY}/${empreID}/convenios/${convenioId}/cuotas/${cuotaId}/cheques`;
+
     const data = await axiosCrud.consultar(URL_API);
     console.log(data);
     return data || [];
@@ -51,20 +59,21 @@ export const consultar = async (convenioId, cuotaId, empresaId) => {
   }
 };
 export const crear = async (chequeBody, cuota, idConvenio, empresaId) => {
-  const URL_API = `/empresa/${empresaId}/convenios/${idConvenio}/cuotas/${cuota}/cheques`
+  var empreID = '0';
+  if (empresaId && empresaId != null) empreID = empresaId;
+  const URL_API = `/empresa/${empreID}/convenios/${idConvenio}/cuotas/${cuota}/cheques`;
   try {
-    
     const body = {
-      'numero' : chequeBody.numero,
-      'fecha' : chequeBody.fecha,
-      'importe': parseFloat(chequeBody.importe).toFixed(2),
-      'estado': chequeBody.estado, // Asegúrate de que el estado esté definido en chequeBody
-    }
-     //'importe' :parseInt(chequeBody.importe, 10)}
-    
-      console.log(body)
-      const data = await axiosCrud.crear(URL_API, chequeBody);
-    
+      numero: chequeBody.numero,
+      fecha: chequeBody.fecha,
+      importe: parseFloat(chequeBody.importe).toFixed(2),
+      estado: chequeBody.estado, // Asegúrate de que el estado esté definido en chequeBody
+    };
+    //'importe' :parseInt(chequeBody.importe, 10)}
+
+    console.log(body);
+    const data = await axiosCrud.crear(URL_API, chequeBody);
+
     if (data && data.id) {
       await consultar(idConvenio, cuota, empresaId);
       swal.showSuccess(HTTP_MSG_ALTA);
@@ -80,35 +89,37 @@ export const crear = async (chequeBody, cuota, idConvenio, empresaId) => {
     );
   }
 };
-export const actualizar = async (chequeBody, empresaId, convenioId, cuotaId, chequeId) => {
-  const URL_API = `/empresa/${empresaId}/convenios/${convenioId}/cuotas/${cuotaId}/cheques`
+export const actualizar = async (
+  chequeBody,
+  empresaId,
+  convenioId,
+  cuotaId,
+  chequeId,
+) => {
+  var empreID = '0';
+  if (empresaId && empresaId != null) empreID = empresaId;
+
+  const URL_API = `/empresa/${empreID}/convenios/${convenioId}/cuotas/${cuotaId}/cheques`;
   try {
-    
-    console.log(chequeBody)
-    console.log(chequeId)
-    console.log(chequeBody.importe)
+    console.log(chequeBody);
+    console.log(chequeId);
+    console.log(chequeBody.importe);
     const body = {
-      'numero' : chequeBody.numero,
-      'fecha' : chequeBody.fecha,
-      'importe': chequeBody.importe,//parseFloat(chequeBody.importe),
-      'estado': chequeBody.estado, // Asegúrate de que el estado esté definido en chequeBody
-      'id' : chequeId
-    }
+      numero: chequeBody.numero,
+      fecha: chequeBody.fecha,
+      importe: chequeBody.importe, //parseFloat(chequeBody.importe),
+      estado: chequeBody.estado, // Asegúrate de que el estado esté definido en chequeBody
+      id: chequeId,
+    };
 
     const data = await axiosCrud.actualizar(URL_API, body);
-    if (data === true){
-      swal.showSuccess("Cheque actualizado correctamente");
+    if (data === true) {
+      swal.showSuccess('Cheque actualizado correctamente');
       return data;
     } else {
       //console.log(data)
-      swal.showErrorBackEnd(data.descripcion)
+      swal.showErrorBackEnd(data.descripcion);
     }
-
-
-
-
-    
-    
   } catch (error) {
     swal.showErrorBackEnd(
       HTTP_MSG_MODI_ERROR + ` (${URL_API} - status: ${error.status})`,
@@ -116,9 +127,9 @@ export const actualizar = async (chequeBody, empresaId, convenioId, cuotaId, che
     );
   }
 };
-export const eliminar = async (empresaId,convenioId,cuotaId,chequeId) => {
-  const URL_API = `/empresa/${empresaId}/convenios/${convenioId}/cuotas/${cuotaId}/cheques`
-  await axiosCrud.eliminar(URL_API,chequeId);
-  
-  
+export const eliminar = async (empresaId, convenioId, cuotaId, chequeId) => {
+  var empreID = '0';
+  if (empresaId && empresaId != null) empreID = empresaId;
+  const URL_API = `/empresa/${empreID}/convenios/${convenioId}/cuotas/${cuotaId}/cheques`;
+  await axiosCrud.eliminar(URL_API, chequeId);
 };
