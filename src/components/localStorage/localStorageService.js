@@ -60,6 +60,7 @@ export const getEmpresaId = () => {
       }
     }
   }
+  return null;
 };
 
 export const getEmpresaCuit = () => {
@@ -81,6 +82,23 @@ export const getEmpresaCuit = () => {
     return VITE_BACKEND_ID_EMPRESA_TEST;
   }
 
+  return null;
+};
+
+export const getEmpresaRazonSocial = () => {
+  let auxStateLogin = localStorage.getItem('stateLogin');
+  if (auxStateLogin != null) {
+    auxStateLogin = JSON.parse(localStorage.getItem('stateLogin'));
+    if (auxStateLogin.hasOwnProperty('usuarioLogueado')) {
+      auxStateLogin = auxStateLogin.usuarioLogueado;
+      if (auxStateLogin?.hasOwnProperty('empresa')) {
+        auxStateLogin = auxStateLogin.empresa;
+        if (auxStateLogin?.hasOwnProperty('razonSocial')) {
+          return auxStateLogin.razonSocial;
+        }
+      }
+    }
+  }
   return null;
 };
 
@@ -231,6 +249,9 @@ const localStorageService = {
   },
   getEmpresaCuit: function () {
     return getEmpresaCuit();
+  },
+  getEmpresaRazonSocial: function () {
+    return getEmpresaRazonSocial();
   },
   getRol: function () {
     return getRol();
