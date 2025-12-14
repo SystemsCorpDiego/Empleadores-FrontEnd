@@ -26,7 +26,8 @@ const Cheques = ({
   total,
   getCuotas,
 }) => {
-  const ID_EMPRESA = localStorageService.getEmpresaId();
+  var ID_EMPRESA = localStorageService.getEmpresaId();
+  if (!ID_EMPRESA || ID_EMPRESA == null) ID_EMPRESA = '0';
 
   const [cheques, setCheques] = useState([]);
   const [openChequeDialog, setOpenChequeDialog] = useState(false);

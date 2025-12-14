@@ -12,21 +12,23 @@ export const Cuotas = () => {
   const navigate = useNavigate();
   const [cuotas, setCuotas] = useState([]);
   const [cuota, setCuota] = useState(null);
-  const [numeroConvenio, setNumeroConvenio] = useState(null);
+  const [convenioId, setConvenioId] = useState(null);
 
   const [open, setOpen] = useState(false);
-  const ID_EMPRESA = localStorageService.getEmpresaId();
+  var ID_EMPRESA = localStorageService.getEmpresaId();
+  if (!ID_EMPRESA || ID_EMPRESA == null) ID_EMPRESA = '0';
 
   useEffect(() => {
     const pathParts = window.location.href.split('/');
     const convenioFromPath = pathParts[pathParts.length - 2];
 
-    setNumeroConvenio(convenioFromPath);
+    console.log('Cuotas - useEffect() - convenioFromPath:', convenioFromPath);
+    setConvenioId(convenioFromPath);
   }, []);
 
   const getCuotas = async () => {
-    console.log(numeroConvenio, ID_EMPRESA);
-    await consultar(numeroConvenio, ID_EMPRESA)
+    console.log(convenioId, ID_EMPRESA);
+    await consultar(convenioId, ID_EMPRESA)
       .then((response) => {
         console.log('Cuotas response:', response);
         setCuotas(response);
@@ -37,10 +39,9 @@ export const Cuotas = () => {
   };
 
   useEffect(() => {
-    if (!numeroConvenio) return;
-    if (ID_EMPRESA === null) return;
+    if (!convenioId || convenioId == null) return;
     getCuotas();
-  }, [numeroConvenio]);
+  }, [convenioId]);
 
   const handleOpen = (row) => {
     console.log(row);
@@ -98,13 +99,13 @@ export const Cuotas = () => {
 
   return (
     <div className="convenios_container">
-      <h1 className="mt-1em">Cuotas convenio Nro {numeroConvenio}</h1>
+      <h1 className="mt-1em">Cuotas convenio Nro {convenioId}</h1>
       <Box sx={{ height: 450, width: '100%' }}>
         {cuota && (
           <Cheques
             open={open}
             handleClose={handleClose}
-            convenio={numeroConvenio}
+            convenio={convenioId}
             cuota={cuota.numero}
             cuotaId={cuota.id}
             getCuotas={getCuotas}

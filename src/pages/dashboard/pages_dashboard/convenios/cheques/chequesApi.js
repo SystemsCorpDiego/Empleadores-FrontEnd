@@ -48,7 +48,7 @@ export const consultar = async (convenioId, cuotaId, empresaId) => {
     const URL_API = `${URL_ENTITY}/${empreID}/convenios/${convenioId}/cuotas/${cuotaId}/cheques`;
 
     const data = await axiosCrud.consultar(URL_API);
-    console.log(data);
+    console.log('ChequesApi - consultar - data: ', data);
     return data || [];
   } catch (error) {
     swal.showErrorBackEnd(
