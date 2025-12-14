@@ -4,6 +4,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { axiosGestionDeudas } from '../Entidades/GestionApi';
 import React, { useState } from 'react';
 import { ThreeCircles } from 'react-loader-spinner';
+import Swal from 'sweetalert2';
 
 const EmpresaAutocomplete = ({
   empresas,
@@ -12,18 +13,17 @@ const EmpresaAutocomplete = ({
   setCuitInput,
   setNombreEmpresa,
   buscarPorCuit,
-  buscarPorNombre
+  buscarPorNombre,
 }) => {
-
   const [isDownloading, setIsDownloading] = useState(false);
   const isEditar = window.location.hash.includes('/editar');
-  const isVer = window.location.hash.includes('/ver')
+  const isVer = window.location.hash.includes('/ver');
 
   const handleBuscar = () => {
     if (cuitInput) {
       buscarPorCuit(cuitInput);
     } else if (nombreEmpresa) {
-      const empresa = empresas.find(e => e.razonSocial === nombreEmpresa);
+      const empresa = empresas.find((e) => e.razonSocial === nombreEmpresa);
       if (empresa) {
         setCuitInput(empresa.cuit);
         buscarPorNombre(nombreEmpresa);
@@ -57,52 +57,59 @@ const EmpresaAutocomplete = ({
   return (
     <Box display="flex" alignItems="center" gap={2} mb={2}>
       <Autocomplete
-        options={empresas.map(e => e.cuit)}
+        options={empresas.map((e) => e.cuit)}
         value={cuitInput || ''}
         onInputChange={(event, newInputValue) => {
           setCuitInput(newInputValue);
-          const empresa = empresas.find(e => e.cuit === newInputValue);
+          const empresa = empresas.find((e) => e.cuit === newInputValue);
           if (empresa) {
             setNombreEmpresa(empresa.razonSocial);
           }
         }}
         disabled={isVer || isEditar}
-        renderInput={(params) => <TextField {...params} label="CUIT" variant="outlined" />}
+        renderInput={(params) => (
+          <TextField {...params} label="CUIT" variant="outlined" />
+        )}
         freeSolo
         style={{ width: 200 }}
       />
       <Autocomplete
-        options={empresas.map(e => e.razonSocial)}
+        options={empresas.map((e) => e.razonSocial)}
         value={nombreEmpresa || ''}
         onInputChange={(event, newInputValue) => {
           setNombreEmpresa(newInputValue);
-          const empresa = empresas.find(e => e.razonSocial === newInputValue);
+          const empresa = empresas.find((e) => e.razonSocial === newInputValue);
           if (empresa) {
             setCuitInput(empresa.cuit);
           }
         }}
         disabled={isVer || isEditar}
-        renderInput={(params) => <TextField {...params} label="Razón Social" variant="outlined" />}
+        renderInput={(params) => (
+          <TextField {...params} label="Razón Social" variant="outlined" />
+        )}
         freeSolo
         style={{ width: 300 }}
       />
-      {isVer || isEditar ? '' :
-       <button
-        onClick={handleBuscar}
-        disabled={isVer || isEditar}
-        style={{
-          padding: '8px 20px',
-          fontSize: '16px',
-          borderRadius: '4px',
-          background: '#1976d2',
-          color: '#fff',
-          border: 'none',
-          cursor: 'pointer',
-          height: '56px',
-        }}
-      >
-        Buscar
-      </button>}
+      {isVer || isEditar ? (
+        ''
+      ) : (
+        <button
+          onClick={handleBuscar}
+          disabled={isVer || isEditar}
+          style={{
+            padding: '8px 20px',
+            fontSize: '16px',
+            borderRadius: '4px',
+            background: '#1976d2',
+            color: '#fff',
+            border: 'none',
+            cursor: 'pointer',
+            height: '56px',
+          }}
+        >
+          Buscar
+        </button>
+      )}
 
       {isDownloading ? (
         <Box display="flex" alignItems="center" gap={1}>
@@ -117,41 +124,43 @@ const EmpresaAutocomplete = ({
         </Box>
       ) : (
         <>
-        { isVer || isEditar ? '' : 
-        <>
-          <button
-            onClick={handleDescarga}
-            style={{
-              padding: '8px 20px',
-              fontSize: '16px',
-              borderRadius: '4px',
-              background: '#1976d2',
-              color: '#fff',
-              border: 'none',
-              cursor: 'pointer',
-              height: '56px',
-            }}
-          >
-            Descargar Total Deudas CSV
-          </button>
-          <button
-            onClick={handleDescargaExcel}
-            style={{
-              padding: '8px 20px',
-              fontSize: '16px',
-              borderRadius: '4px',
-              background: '#1976d2',
-              color: '#fff',
-              border: 'none',
-              cursor: 'pointer',
-              height: '56px',
-            }}
-          >
-            Descargar Total Deudas XLSX
-          </button>
-          </>
-        }</>
-
+          {isVer || isEditar ? (
+            ''
+          ) : (
+            <>
+              <button
+                onClick={handleDescarga}
+                style={{
+                  padding: '8px 20px',
+                  fontSize: '16px',
+                  borderRadius: '4px',
+                  background: '#1976d2',
+                  color: '#fff',
+                  border: 'none',
+                  cursor: 'pointer',
+                  height: '56px',
+                }}
+              >
+                Descargar Total Deudas CSV
+              </button>
+              <button
+                onClick={handleDescargaExcel}
+                style={{
+                  padding: '8px 20px',
+                  fontSize: '16px',
+                  borderRadius: '4px',
+                  background: '#1976d2',
+                  color: '#fff',
+                  border: 'none',
+                  cursor: 'pointer',
+                  height: '56px',
+                }}
+              >
+                Descargar Total Deudas XLSX
+              </button>
+            </>
+          )}
+        </>
       )}
     </Box>
   );

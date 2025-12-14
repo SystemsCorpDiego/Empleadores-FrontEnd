@@ -13,19 +13,12 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import formatter from '@/common/formatter';
 import { GrillaSaldoAFavor } from '../Grillas/GrillaSaldoAFavor';
-import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import localStorageService from '@/components/localStorage/localStorageService';
 import EmpresaAutocomplete from '../components/EmpresaAutocomplete';
-import { calcularDetalleConvenio } from '../components/detalleHelper';
-import {
-  buscarEmpresaPorCuit,
-  buscarEmpresaPorNombre,
-  fetchEmpresaData,
-  generarConvenio,
-  actualizarConvenio,
-} from '../components/empresaHelper';
-import { crearBodyConvenio } from '../components/convenioHelper';
+import detalleHelper from '../components/detalleHelper';
+import empresaHelper from '../components/empresaHelper';
+import conveniosHelper from '@/pages/dashboard/pages_dashboard/gestion_deudas/components/convenioHelper';
 import { ThreeCircles } from 'react-loader-spinner';
 
 function CustomTabPanel(props) {
@@ -54,16 +47,23 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
+export const Gestion = ({ ENTIDAD }) => {
   useContext(UserContext);
   const navigate = useNavigate();
+
+  const [empresas, setEmpresas] = useState([]); //Tabla Empresas del backend
+  const [cargandoTablaEmpresas, setCargandoTablaEmpresas] = useState(false); //Se usa para cargar todas las empresas al inicio
+
+  const [empresaId, setEmpresaId] = useState(null); //Se usa para guardar el id de la empresa
+  const [empresaNombre, setEmpresaNombre] = useState(null); //Se usa para guardar el nombre de la empresa
+  const [cuitInput, setCuitInput] = useState(null); //Rol UsuarioInterno: CUIT del Filtro/URL
+
   const [actas, setActas] = useState([]); //Se usa para guardar las actas que vienen del backend
   const [selectedActas, setSelectedActas] = useState([]); //Se usa para guardar los ids de las actas seleccionadas
   const [totalActas, setTotalActas] = useState(0); //Se usa para mostrar en la cabecera del acordion
   const [declaracionesJuradas, setDeclaracionesJuradas] = useState([]); //Se usa para guardar las declaracionesJuradas que vienen del backend
-  const [selectedDeclaracionesJuradas, setSelectedDeclaracionesJuradas] =
-    useState([]); //Se usa para guardar los ids de las declaracionesJuradas seleccionadas
-  const [totalDeclaracionesJuradas, setTotalDeclaracionesJuradas] = useState(0); //Se usa para mostrar en la cabecera del acordion
+  const [selectedDDJJ, setSelectedDDJJ] = useState([]); //Se usa para guardar los ids de las declaracionesJuradas seleccionadas
+  const [totalDDJJ, setTotalDDJJ] = useState(0); //Se usa para mostrar en la cabecera del acordion
   const [convenios, setConvenios] = useState([]); //Se usa para guardar los convenios que vienen del backend
   const [totalConvenios, setTotalConvenios] = useState(0); //Se usa para mostrar en la cabecera del acordion
   const [isCheckedEstadoDeDeduda, setIsCheckedEstadoDeDeduda] = useState(true); //Se utiliza para tildar o destildar todas las rows
@@ -80,100 +80,15 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   const [medioPago, setMedioPago] = useState('CHEQUE'); //Queda por si en algun momento se agrega otro medio de pago
   const [totalDeuda, setTotalDeuda] = useState(0); //Se usa para mostrar el total de la deuda en el estado de deuda
   const [importeDeDeuda, setImporteDeDeuda] = useState(0); //Se usa para mostrar el importe de la deuda en el estado de deuda
-  const [fechaDelDia, setFechaDelDia] = useState(null); //Se usa para guardar la fecha del dia actual
   const [convenio_id, setConvenioId] = useState(null); //Se usa para guardar el id del convenio si se esta editando
-  const [cuitInput, setCuitInput] = useState(null); //Se usa para guardar el cuit de la empresa
-  const [nombreEmpresa, setNombreEmpresa] = useState(null); //Se usa para guardar el nombre de la empresa
-  const [rol, setRol] = useState(null); //Se usa para guardar el rol del usuario
-  const [empresa_id, setEmpresaId] = useState(null); //Se usa para guardar el id de la empresa
   const [shouldCalculate, setShouldCalculate] = useState(
     !window.location.hash.includes('/editar'),
   );
   const [intereses, setIntereses] = useState(0); //Se usa para guardar los intereses de la deuda
-  const [empresas, setEmpresas] = useState([]); //Se usa para guardar las empresas que vienen del backend
-  const [loadAllEmpresas, setLoadAllEmpresas] = useState(false); //Se usa para cargar todas las empresas al inicio
 
-  useEffect(() => {
-    console.log('Volvió a ejecutarse el useEffect');
+  const fechaDelDia = new Date();
 
-    setRol(localStorageService.getRol());
-    const isEditar = window.location.hash.includes('/editar');
-    const isVer = window.location.hash.includes('/ver');
-    if (isEditar || isVer) {
-      const parts = window.location.hash.split('/');
-      setConvenioId(parts[parts.indexOf('convenio') + 1]);
-      setCuitInput(parts[parts.indexOf('cuit') + 1]);
-    }
-    console.log('Gestion - useEffect() - empresas: ', empresas);
-    setFechaDelDia(new Date());
-
-    console.log(
-      'Gestion - useEffect() - window.location.hash: ',
-      window.location.hash,
-    );
-
-    if (empresas.length > 0) {
-      let auxIdEmpresa = null;
-      if (
-        cuitInput !== null &&
-        window.location.hash !== '#/dashboard/gestiondeuda'
-      ) {
-        auxIdEmpresa = empresas.find((e) => e.cuit === cuitInput)?.id || null;
-      } else {
-        auxIdEmpresa = localStorageService.getEmpresaId();
-        const emp = empresas.find(
-          (e) => e.id == localStorageService.getEmpresaId(),
-        );
-        //Esto se hace para que cuando se vuelva a tocar Gestion deuda cuando se estuvo editando reinicie el cuit
-        //al valor de la empresa que esta consultando.
-        if (emp && emp.razonSocial) {
-          setNombreEmpresa(emp.razonSocial);
-        } else {
-          setNombreEmpresa(null);
-        }
-        if (emp && emp.cuit) {
-          setCuitInput(emp.cuit);
-        } else {
-          setCuitInput(null);
-        }
-      }
-
-      setEmpresaId(auxIdEmpresa);
-      console.log(cuitInput);
-      console.log(auxIdEmpresa);
-      if (auxIdEmpresa) {
-        fetchEmpresaData(
-          isEditar,
-          isVer,
-          auxIdEmpresa,
-          ID_EMPRESA,
-          ENTIDAD,
-          axiosGestionDeudas,
-          setDetalleConvenio,
-          setFechaIntencion,
-          setIntereses,
-          setImporteDeDeuda,
-          setSaldosAFavor,
-          setCuotas,
-          setDeclaracionesJuradas,
-          setActas,
-          setConvenios,
-          setSelectedActas,
-          setSelectedDeclaracionesJuradas,
-          setSelectedSaldosAFavor,
-          setTotalDeuda,
-          setLoadAllEmpresas,
-          setMedioPago,
-          rol,
-        );
-      }
-    }
-
-    if (isEditar || isVer) {
-      setIsCheckedEstadoDeDeduda(false);
-    }
-  }, [empresas, window.location.hash]);
-
+  //Carga todas las EMPRESAS del back
   useEffect(() => {
     const fetchEmpresas = async () => {
       try {
@@ -187,153 +102,109 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     fetchEmpresas();
   }, []);
 
+  //Evento onLoad, o bien si cambia la URL (Consulta Empleado Interno)
   useEffect(() => {
-    const isEditar = window.location.hash.includes('/editar');
-    const isVer = window.location.hash.includes('/ver');
-    if (!(isVer || isEditar) || !cuitInput || empresas.length === 0) return;
+    console.log('Gestion - useEffect() - INIT');
+    console.log('Gestion - useEffect() - empresas: ', empresas);
+    console.log(
+      'Gestion - useEffect() - window.location.hash: ',
+      window.location.hash,
+    );
 
-    const empresa = empresas.find((e) => e.cuit === cuitInput);
-    if (empresa) {
-      setNombreEmpresa(empresa.razonSocial);
-      setEmpresaId(empresa.id);
+    var auxCuitInput = null;
+    var auxEmpresaNombre = null;
+    var auxEmpresaId = null;
+    var auxConvenioId = null;
+
+    if (conveniosHelper.isEditarVer()) {
+      const parts = window.location.hash.split('/');
+      auxConvenioId = parts[parts.indexOf('convenio') + 1];
+      auxCuitInput = parts[parts.indexOf('cuit') + 1];
+    }
+
+    if (empresas && empresas.length > 0) {
+      if (localStorageService.isRolEmpleador()) {
+        auxCuitInput = localStorageService.getEmpresaCuit();
+      }
+
+      if (auxCuitInput && auxCuitInput != null) {
+        const auxEmpresa = buscarVecEmpresaPorCuit(auxCuitInput);
+        if (auxEmpresa && auxEmpresa != null) {
+          auxEmpresaId = auxEmpresa.id;
+          auxEmpresaNombre = auxEmpresa.razonSocial;
+        }
+      }
+
+      console.log('Gestion - useEffect() - auxConvenioId: ', auxConvenioId);
+      console.log('Gestion - useEffect() - auxCuitInput: ', auxCuitInput);
+      console.log('Gestion - useEffect() - auxEmpresaId: ', auxEmpresaId);
+      console.log(
+        'Gestion - useEffect() - auxEmpresaNombre: ',
+        auxEmpresaNombre,
+      );
+
+      if (auxEmpresaId) {
+        empresaHelper.fetchEmpresaData(
+          conveniosHelper.isEditar(),
+          conveniosHelper.isVer(),
+          auxEmpresaId,
+          ENTIDAD,
+          setDetalleConvenio,
+          setFechaIntencion,
+          setIntereses,
+          setImporteDeDeuda,
+          setSaldosAFavor,
+          setCuotas,
+          setDeclaracionesJuradas,
+          setActas,
+          setConvenios,
+          setSelectedActas,
+          setSelectedDDJJ,
+          setSelectedSaldosAFavor,
+          setTotalDeuda,
+          setCargandoTablaEmpresas,
+          setMedioPago,
+        );
+      }
+    }
+
+    if (conveniosHelper.isEditarVer()) {
+      setIsCheckedEstadoDeDeduda(false);
+    }
+
+    setEmpresaId(auxEmpresaId);
+    setEmpresaNombre(auxEmpresaNombre);
+    setCuitInput(auxCuitInput);
+    setConvenioId(auxConvenioId);
+  }, [empresas, window.location.hash]);
+
+  //onload o Change de CUIT en Filtro
+  useEffect(() => {
+    if (!conveniosHelper.isEditarVer()) return;
+
+    const auxEmpresa = buscarVecEmpresaPorCuit(cuitInput);
+    if (auxEmpresa) {
+      setEmpresaNombre(auxEmpresa.razonSocial);
+      setEmpresaId(auxEmpresa.id);
     }
   }, [empresas, cuitInput]);
-
-  const buscarPorCuit = (valor) => {
-    buscarEmpresaPorCuit({
-      valor,
-      empresas,
-      axiosGestionDeudas,
-      setEmpresaId,
-      setNombreEmpresa,
-      fetchData: (editar, empresa) =>
-        fetchEmpresaData(
-          editar,
-          null,
-          empresa,
-          ID_EMPRESA,
-          ENTIDAD,
-          axiosGestionDeudas,
-          setDetalleConvenio,
-          setFechaIntencion,
-          setIntereses,
-          setImporteDeDeuda,
-          setSaldosAFavor,
-          setCuotas,
-          setDeclaracionesJuradas,
-          setActas,
-          setConvenios,
-          setSelectedActas,
-          setSelectedDeclaracionesJuradas,
-          setSelectedSaldosAFavor,
-          setTotalDeuda,
-          setLoadAllEmpresas,
-          setMedioPago,
-          rol,
-        ),
-    });
-  };
-
-  const buscarPorNombre = (valor) => {
-    buscarEmpresaPorNombre({
-      valor,
-      empresas,
-      axiosGestionDeudas,
-      setEmpresaId,
-      setCuitInput,
-      fetchData: (editar, empresa) =>
-        fetchEmpresaData(
-          editar,
-          null,
-          empresa,
-          ID_EMPRESA,
-          ENTIDAD,
-          axiosGestionDeudas,
-          setDetalleConvenio,
-          setFechaIntencion,
-          setIntereses,
-          setImporteDeDeuda,
-          setSaldosAFavor,
-          setCuotas,
-          setDeclaracionesJuradas,
-          setActas,
-          setConvenios,
-          setSelectedActas,
-          setSelectedDeclaracionesJuradas,
-          setSelectedSaldosAFavor,
-          setTotalDeuda,
-          setLoadAllEmpresas,
-          rol,
-        ),
-    });
-  };
-
-  const handleGenerarConvenio = async () => {
-    setShowLoading(true);
-    const bodyConvenio = crearBodyConvenio({
-      ENTIDAD,
-      cuotas,
-      fechaIntencion,
-      selectedActas,
-      selectedDeclaracionesJuradas,
-      selectedSaldosAFavor,
-      medioPago,
-    });
-    //const empresa = ID_EMPRESA === "833" || ID_EMPRESA === null ? empresa_id : ID_EMPRESA; //TODO cambiar y probar con rol y no con 833
-    const empresa = empresa_id; //TODO cambiar y probar con rol y no con 833
-    const ok = await generarConvenio(
-      empresa,
-      bodyConvenio,
-      axiosGestionDeudas,
-      Swal,
-      setShowLoading,
-    );
-    if (ok) {
-      navigate('/dashboard/convenios');
-    }
-  };
-
-  const handleActualizarConvenio = async () => {
-    setShowLoading(true);
-    const bodyConvenio = crearBodyConvenio({
-      ENTIDAD,
-      cuotas,
-      fechaIntencion,
-      selectedActas,
-      selectedDeclaracionesJuradas,
-      selectedSaldosAFavor,
-      medioPago,
-    });
-    console.log(empresa_id);
-    const empresa = empresa_id; //TODO cambiar y probar con rol y no con 833
-    const ok = await actualizarConvenio(
-      empresa,
-      convenio_id,
-      bodyConvenio,
-      axiosGestionDeudas,
-      Swal,
-    );
-    setShowLoading(false);
-    if (ok) {
-      navigate('/dashboard/convenios');
-    }
-  };
 
   useEffect(() => {
     setShowLoadingDetalle(true);
     if (isCheckedEstadoDeDeduda) {
-      const idsActas = actas.map((objeto) => objeto.id);
-      setSelectedActas(idsActas);
-      const idsdeclaracionesJuradas = declaracionesJuradas.map(
-        (objeto) => objeto.id,
-      );
-      setSelectedDeclaracionesJuradas(idsdeclaracionesJuradas);
-      const idsSaldosAFavor = saldosAFavor.map((objeto) => objeto.id);
-      setSelectedSaldosAFavor(idsSaldosAFavor);
-      console.log('Estoy en el if de isCheckedEstadoDeDeduda');
+      const auxVecIdActa = actas.map((objeto) => objeto.id);
+      setSelectedActas(auxVecIdActa);
+
+      const auxVecIdDDJJ = declaracionesJuradas.map((objeto) => objeto.id);
+      setSelectedDDJJ(auxVecIdDDJJ);
+
+      const auxVecIdSaldosAFavor = saldosAFavor.map((objeto) => objeto.id);
+      setSelectedSaldosAFavor(auxVecIdSaldosAFavor);
+
+      console.log('useEffect() - isCheckedEstadoDeDeduda - Estoy en el if');
     } else {
       setSelectedActas([]);
-      setSelectedDeclaracionesJuradas([]);
+      setSelectedDDJJ([]);
       setSelectedSaldosAFavor([]);
     }
     setShowLoadingDetalle(false);
@@ -357,12 +228,12 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   useEffect(() => {
     setShowLoadingDetalle(true);
     const BTotal = declaracionesJuradas
-      .filter((item) => selectedDeclaracionesJuradas.includes(item.id))
+      .filter((item) => selectedDDJJ.includes(item.id))
       .reduce((acc, item) => (acc += item.importeTotal), 0);
 
-    setTotalDeclaracionesJuradas(BTotal);
+    setTotalDDJJ(BTotal);
     setShowLoadingDetalle(false);
-  }, [selectedDeclaracionesJuradas, ENTIDAD]);
+  }, [selectedDDJJ, ENTIDAD]);
 
   useEffect(() => {
     setShowLoadingDetalle(true);
@@ -406,22 +277,126 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
 
   useEffect(() => {
     if (!shouldCalculate) return;
-    //console.log(isVer, 'isVer')
     calcularDetalle();
   }, [
     selectedActas,
-    selectedDeclaracionesJuradas,
+    selectedDDJJ,
     selectedSaldosAFavor,
     cuotas,
     fechaIntencion,
   ]);
+
+  const buscarPorCuit = (valor) => {
+    empresaHelper.buscarEmpresaPorCuit({
+      valor,
+      empresas,
+      setEmpresaId,
+      setNombreEmpresa: setEmpresaNombre,
+      fetchData: (editar, empresaId) =>
+        empresaHelper.fetchEmpresaData(
+          editar,
+          null,
+          empresaId,
+          ENTIDAD,
+          setDetalleConvenio,
+          setFechaIntencion,
+          setIntereses,
+          setImporteDeDeuda,
+          setSaldosAFavor,
+          setCuotas,
+          setDeclaracionesJuradas,
+          setActas,
+          setConvenios,
+          setSelectedActas,
+          setSelectedDDJJ,
+          setSelectedSaldosAFavor,
+          setTotalDeuda,
+          setCargandoTablaEmpresas,
+          setMedioPago,
+        ),
+    });
+  };
+
+  const buscarPorNombre = (valor) => {
+    empresaHelper.buscarEmpresaPorNombre({
+      valor,
+      empresas,
+      setEmpresaId,
+      setCuitInput,
+      fetchData: (editar, empresaId) =>
+        empresaHelper.fetchEmpresaData(
+          editar,
+          null,
+          empresaId,
+          ENTIDAD,
+          setDetalleConvenio,
+          setFechaIntencion,
+          setIntereses,
+          setImporteDeDeuda,
+          setSaldosAFavor,
+          setCuotas,
+          setDeclaracionesJuradas,
+          setActas,
+          setConvenios,
+          setSelectedActas,
+          setSelectedDDJJ,
+          setSelectedSaldosAFavor,
+          setTotalDeuda,
+          setCargandoTablaEmpresas,
+        ),
+    });
+  };
+
+  const handleGenerarConvenio = async () => {
+    setShowLoading(true);
+    const bodyConvenio = conveniosHelper.crearBodyConvenio({
+      ENTIDAD,
+      cuotas,
+      fechaIntencion,
+      selectedActas,
+      selectedDeclaracionesJuradas: selectedDDJJ,
+      selectedSaldosAFavor,
+      medioPago,
+    });
+    const ok = await empresaHelper.generarConvenio(
+      empresaId,
+      bodyConvenio,
+      setShowLoading,
+    );
+    if (ok) {
+      navigate('/dashboard/convenios');
+    }
+  };
+
+  const handleActualizarConvenio = async () => {
+    setShowLoading(true);
+    const bodyConvenio = conveniosHelper.crearBodyConvenio({
+      ENTIDAD,
+      cuotas,
+      fechaIntencion,
+      selectedActas,
+      selectedDeclaracionesJuradas: selectedDDJJ,
+      selectedSaldosAFavor,
+      medioPago,
+    });
+    console.log(empresaId);
+    const ok = await empresaHelper.actualizarConvenio(
+      empresaId,
+      convenio_id,
+      bodyConvenio,
+    );
+    setShowLoading(false);
+    if (ok) {
+      navigate('/dashboard/convenios');
+    }
+  };
 
   const handleChangeActas = (value) => {
     setSelectedActas(value);
     if (!shouldCalculate) setShouldCalculate(true);
   };
   const handleChangeDDJJ = (value) => {
-    setSelectedDeclaracionesJuradas(value);
+    setSelectedDDJJ(value);
     if (!shouldCalculate) setShouldCalculate(true);
   };
   const handleChangeSaldo = (value) => {
@@ -438,19 +413,17 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
   };
 
   const calcularDetalle = async () => {
-    const isVer = window.location.hash.includes('/ver');
-    if (!isVer) {
-      const resultado = await calcularDetalleConvenio({
+    if (!conveniosHelper.isVer()) {
+      const resultado = await detalleHelper.calcularDetalleConvenio({
         declaracionesJuradas,
-        selectedDeclaracionesJuradas,
+        selectedDeclaracionesJuradas: selectedDDJJ,
         actas,
         selectedActas,
         saldosAFavor,
         selectedSaldosAFavor,
         cuotas,
         fechaIntencion,
-        ID_EMPRESA,
-        axiosGestionDeudas,
+        empresaId,
       });
 
       setImporteDeDeuda(resultado.importeDeuda);
@@ -458,7 +431,13 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     }
   };
 
-  return loadAllEmpresas ? (
+  const buscarVecEmpresaPorCuit = (value) => {
+    if (!value || value == null) return null;
+    if (!empresas || empresas == null) return null;
+    return empresas.find((e) => e.cuit === value);
+  };
+
+  return cargandoTablaEmpresas ? (
     <div
       className="container_grilla"
       style={{
@@ -472,7 +451,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
     >
       <p style={{ marginBottom: '1em' }}>Cargando empresas...</p>
       <ThreeCircles
-        visible={loadAllEmpresas}
+        visible={cargandoTablaEmpresas}
         height="100"
         width="100"
         color="#1A76D2"
@@ -485,9 +464,9 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
         <EmpresaAutocomplete
           empresas={empresas}
           cuitInput={cuitInput}
-          nombreEmpresa={nombreEmpresa}
+          nombreEmpresa={empresaNombre}
           setCuitInput={setCuitInput}
-          setNombreEmpresa={setNombreEmpresa}
+          setNombreEmpresa={setEmpresaNombre}
           buscarPorCuit={buscarPorCuit}
           buscarPorNombre={buscarPorNombre}
         />
@@ -526,7 +505,7 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
               actas={actas}
               selectedActas={selectedActas}
               setSelectedActas={handleChangeActas}
-              isVer={window.location.hash.includes('/ver')}
+              isVer={conveniosHelper.isVer()}
               cuit={cuitInput}
             />
           </AccordionDetails>
@@ -548,16 +527,16 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
                 Periodos
               </Typography>
               <Typography variant="h6" color="primary">
-                TOTAL: {formatter.currencyString(totalDeclaracionesJuradas)}
+                TOTAL: {formatter.currencyString(totalDDJJ)}
               </Typography>
             </Box>
           </AccordionSummary>
           <AccordionDetails>
             <GrillaPeriodo
               declaracionesJuradas={declaracionesJuradas}
-              selectedDeclaracionesJuradas={selectedDeclaracionesJuradas}
+              selectedDeclaracionesJuradas={selectedDDJJ}
               setSelectedDeclaracionesJuradas={handleChangeDDJJ}
-              isVer={window.location.hash.includes('/ver')}
+              isVer={conveniosHelper.isVer()}
               cuit={cuitInput}
             />
           </AccordionDetails>
@@ -611,8 +590,8 @@ export const Gestion = ({ ID_EMPRESA, ENTIDAD }) => {
           saldoAFavorUtilizado={totalSaldosAFavorSelected}
           handleGenerarConvenio={handleGenerarConvenio}
           handleActualizarConvenio={handleActualizarConvenio}
-          isEditar={window.location.hash.includes('/editar')}
-          isVer={window.location.hash.includes('/ver')}
+          isEditar={conveniosHelper.isEditar()}
+          isVer={conveniosHelper.isVer()}
           showLoading={showLoading}
         ></OpcionesDePago>
       </div>

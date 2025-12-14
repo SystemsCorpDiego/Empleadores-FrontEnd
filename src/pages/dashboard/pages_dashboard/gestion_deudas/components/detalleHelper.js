@@ -1,3 +1,5 @@
+import { axiosGestionDeudas } from '@/pages/dashboard/pages_dashboard/gestion_deudas/Entidades/GestionApi';
+
 export const calcularDetalleConvenio = async ({
   declaracionesJuradas,
   selectedDeclaracionesJuradas,
@@ -7,8 +9,7 @@ export const calcularDetalleConvenio = async ({
   selectedSaldosAFavor,
   cuotas,
   fechaIntencion,
-  ID_EMPRESA,
-  axiosGestionDeudas
+  empresaId,
 }) => {
   try {
     const sumaDeclaracionesJuradas = declaracionesJuradas
@@ -29,11 +30,14 @@ export const calcularDetalleConvenio = async ({
       importeDeuda: importeDeuda - sumaSaldosAFavor,
       cantidadCuota: cuotas,
       fechaIntencionPago: fechaIntencion
-        ? fechaIntencion.format("YYYY-MM-DD")
+        ? fechaIntencion.format('YYYY-MM-DD')
         : null,
     };
 
-    const detalle = await axiosGestionDeudas.getDetalleConvenio(ID_EMPRESA, body);
+    const detalle = await axiosGestionDeudas.getDetalleConvenio(
+      empresaId,
+      body,
+    );
 
     return { importeDeuda, detalle };
   } catch (error) {
@@ -41,3 +45,9 @@ export const calcularDetalleConvenio = async ({
     return { importeDeuda: 0, detalle: {} };
   }
 };
+
+export const detalleHelper = {
+  calcularDetalleConvenio: calcularDetalleConvenio,
+};
+
+export default detalleHelper;

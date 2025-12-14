@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Box } from '@mui/material';
-import localStorageService from '@/components/localStorage/localStorageService';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -8,6 +7,7 @@ import * as locales from '@mui/material/locale';
 import PropTypes from 'prop-types';
 import { Gestion } from './Entidades/Gestion';
 import { useParams } from 'react-router-dom';
+import conveniosHelper from '@/pages/dashboard/pages_dashboard/gestion_deudas/components/convenioHelper';
 
 import './GestionDeudas.css';
 
@@ -46,7 +46,6 @@ function a11yProps(index) {
 
 export const GestionDeudas = () => {
   const { id } = useParams();
-  const ID_EMPRESA = localStorageService.getEmpresaId();
   const [tabState, setTabState] = useState(0);
   const theme = useTheme();
   const locale = 'esES';
@@ -54,26 +53,33 @@ export const GestionDeudas = () => {
     () => createTheme(theme, locales[locale]),
     [locale, theme],
   );
-  const handleChangeTabState = (event, value) =>  window.location.hash.includes('/editar') || setTabState(value);
+
+  const handleChangeTabState = (event, value) => {
+    console.log('GestionDeudas - handleChangeTabState - value:', value);
+    if (conveniosHelper.isEditarVer()) {
+      return null;
+    }
+    setTabState(value);
+  };
 
   useEffect(() => {
-      // Usar window.location.hash para rutas basadas en hash
-      if (window.location.hash.includes('/editar')) {
-        const hash = window.location.hash; // Ejemplo: #/dashboard/gestiondeuda/3/editar/UOMA
-        const pathParts = hash.replace(/^#\/?/, '').split('/');
-        const editarIndex = pathParts.indexOf('editar');
-        console.log('Editar index:', editarIndex);
-        console.log(editarIndex, pathParts);
-        if (editarIndex > 0 && pathParts.length > editarIndex + 1) {
-          const entidad = pathParts[editarIndex + 1];
-          // Puedes usar la variable 'entidad' según lo necesites
-          console.log('Entidad encontrada en la URL:', entidad);
-          setTabState(entidad === 'OSPIM' ? 1 : entidad === 'AMTIMA' ? 2 : 0);
-        }
+    // Usar window.location.hash para rutas basadas en hash
+    if (conveniosHelper.isEditar()) {
+      const hash = window.location.hash; // Ejemplo: #/dashboard/gestiondeuda/3/editar/UOMA
+      const pathParts = hash.replace(/^#\/?/, '').split('/');
+      const editarIndex = pathParts.indexOf('editar');
+      console.log('Editar index:', editarIndex);
+      console.log(editarIndex, pathParts);
+      if (editarIndex > 0 && pathParts.length > editarIndex + 1) {
+        const entidad = pathParts[editarIndex + 1];
+        // Puedes usar la variable 'entidad' según lo necesites
+        console.log('Entidad encontrada en la URL:', entidad);
+        setTabState(entidad === 'OSPIM' ? 1 : entidad === 'AMTIMA' ? 2 : 0);
       }
-      
-      console.log(id);
-    }, []);
+    }
+
+    console.log(id);
+  }, []);
 
   return (
     <div className="gestion_deudas_container">
@@ -95,12 +101,7 @@ export const GestionDeudas = () => {
                 marginTop: '20px',
               }}
             >
-              <Tabs
-                value={tabState}
-                onChange={handleChangeTabState}
-                
-                
-              >
+              <Tabs value={tabState} onChange={handleChangeTabState}>
                 <Tab
                   label="UOMA"
                   {...a11yProps(0)}
@@ -119,13 +120,13 @@ export const GestionDeudas = () => {
               </Tabs>
             </Box>
             <CustomTabPanel value={tabState} index={0}>
-              <Gestion ID_EMPRESA={ID_EMPRESA} ENTIDAD={'UOMA'}></Gestion>
+              <Gestion ENTIDAD={'UOMA'}></Gestion>
             </CustomTabPanel>
             <CustomTabPanel value={tabState} index={1}>
-              <Gestion ID_EMPRESA={ID_EMPRESA} ENTIDAD={'OSPIM'}></Gestion>
+              <Gestion ENTIDAD={'OSPIM'}></Gestion>
             </CustomTabPanel>
             <CustomTabPanel value={tabState} index={2}>
-              <Gestion ID_EMPRESA={ID_EMPRESA} ENTIDAD={'AMTIMA'}></Gestion>
+              <Gestion ENTIDAD={'AMTIMA'}></Gestion>
             </CustomTabPanel>
           </Box>
         </ThemeProvider>

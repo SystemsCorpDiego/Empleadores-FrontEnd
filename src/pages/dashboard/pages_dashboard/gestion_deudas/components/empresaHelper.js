@@ -1,12 +1,13 @@
-
 import moment from 'moment';
 import Swal from 'sweetalert2';
+import { axiosGestionDeudas } from '@/pages/dashboard/pages_dashboard/gestion_deudas/Entidades/GestionApi';
 
 import _ from 'lodash';
 
 export const agruparDdjjsPorPeriodo = (ddjjs) => {
-  const agrupados = _.groupBy(ddjjs, (item) =>
-    `${item.periodo}_${item.rectificativa}`
+  const agrupados = _.groupBy(
+    ddjjs,
+    (item) => `${item.periodo}_${item.rectificativa}`,
   );
 
   return Object.entries(agrupados).map(([key, grupo], index) => {
@@ -43,12 +44,10 @@ export const agruparDdjjsPorPeriodo = (ddjjs) => {
 };
 
 export const fetchEmpresaData = async (
-  editar,
+  isEditar,
   isVer,
-  empresa,
-  ID_EMPRESA,
+  empresaId,
   ENTIDAD,
-  axiosGestionDeudas,
   setDetalleConvenio,
   setFechaIntencion,
   setIntereses,
@@ -64,27 +63,23 @@ export const fetchEmpresaData = async (
   setTotalDeuda,
   setLoadAllEmpresas,
   setMedioPago,
-  rol
 ) => {
   setLoadAllEmpresas(true);
 
   try {
     let response;
-    if (!editar && !isVer) {
-      empresa = empresa || ID_EMPRESA;
-
-      console.log('fetchEmpresaData - empresa:', empresa);
+    if (!isEditar && !isVer) {
+      console.log('fetchEmpresaData - empresa:', empresaId);
       response = await axiosGestionDeudas.getDeclaracionesJuradas(
-        empresa,
+        empresaId,
         ENTIDAD,
       );
-
     } else {
       const parts = window.location.hash.split('/');
       const CONVENIOID = parts[parts.indexOf('convenio') + 1];
       response = await axiosGestionDeudas.getDeclaracionesJuradasEditar(
-        empresa ? empresa : ID_EMPRESA,
-        CONVENIOID
+        empresaId,
+        CONVENIOID,
       );
       if (response.lstCuotas) {
         setDetalleConvenio(response.lstCuotas);
@@ -102,8 +97,14 @@ export const fetchEmpresaData = async (
       setLoadAllEmpresas(false);
       return;
     }
-    if (response.intencionPago && response.intencionPago !== null && response.intencionPago !== undefined) {
-      setFechaIntencion(response.intencionPago ? moment(response.intencionPago) : null);
+    if (
+      response.intencionPago &&
+      response.intencionPago !== null &&
+      response.intencionPago !== undefined
+    ) {
+      setFechaIntencion(
+        response.intencionPago ? moment(response.intencionPago) : null,
+      );
     }
     if (response.interes) {
       setIntereses(response.interes);
@@ -120,51 +121,77 @@ export const fetchEmpresaData = async (
       setCuotas(1);
     }
 
-    console.log('Response declaracionesJuradas:', response['declaracionesJuradas']);
+    console.log(
+      'Response declaracionesJuradas:',
+      response['declaracionesJuradas'],
+    );
     setDeclaracionesJuradas(response['declaracionesJuradas']);
     setActas(response['actas']);
     setConvenios(response['convenios']);
-    setSaldosAFavor(response['saldosAFavor'])
+    setSaldosAFavor(response['saldosAFavor']);
     const idsActas = response['actas'].map((objeto) => objeto.id);
     setSelectedActas(idsActas);
-    if (editar) {
+    if (isEditar) {
       const preselectedActas = response['actas']
         .filter((item) => item.convenioActaId !== null)
         .map((item) => item.id);
       setSelectedActas(preselectedActas);
 
       const preselected = response['declaracionesJuradas']
-        .filter((item) => item.convenioDdjjId !== null && item.convenioDdjjId !== undefined)
+        .filter(
+          (item) =>
+            item.convenioDdjjId !== null && item.convenioDdjjId !== undefined,
+        )
         .map((item) => item.id);
 
       setSelectedDeclaracionesJuradas((prev) => {
-        if (preselected.length > 0 && preselected.some(id => !prev.includes(id))) {
+        if (
+          preselected.length > 0 &&
+          preselected.some((id) => !prev.includes(id))
+        ) {
           return Array.from(new Set([...prev, ...preselected]));
         }
         return prev;
       });
 
       const preselectedAjustes = response['saldosAFavor']
-        .filter((item) => item.convenioAjusteId !== null && item.convenioAjusteId !== undefined)
+        .filter(
+          (item) =>
+            item.convenioAjusteId !== null &&
+            item.convenioAjusteId !== undefined,
+        )
         .map((item) => item.id);
 
       setSelectedSaldosAFavor((prev) => {
-        if (preselectedAjustes.length > 0 && preselectedAjustes.some(id => !prev.includes(id))) {
+        if (
+          preselectedAjustes.length > 0 &&
+          preselectedAjustes.some((id) => !prev.includes(id))
+        ) {
           return Array.from(new Set([...prev, ...preselectedAjustes]));
         }
         return prev;
       });
     } else {
-      const idsdeclaracionesJuradas = response['declaracionesJuradas'].map((objeto) => objeto.id);
+      const idsdeclaracionesJuradas = response['declaracionesJuradas'].map(
+        (objeto) => objeto.id,
+      );
       setSelectedDeclaracionesJuradas(idsdeclaracionesJuradas);
-      const idSelectedSaldosAFavor = response['saldosAFavor'].map((objeto) => objeto.id);
+      const idSelectedSaldosAFavor = response['saldosAFavor'].map(
+        (objeto) => objeto.id,
+      );
       setSelectedSaldosAFavor(idSelectedSaldosAFavor);
     }
     setMedioPago(response.medioPago || null);
 
     const totalDeudaCalculada =
-      response['declaracionesJuradas'].reduce((acc, dj) => acc + (dj.importeTotal || 0), 0) +
-      response['actas'].reduce((acc, acta) => acc + (acta.importeTotal || 0), 0);
+      response['declaracionesJuradas'].reduce(
+        (acc, dj) => acc + (dj.importeTotal || 0),
+        0,
+      ) +
+      response['actas'].reduce(
+        (acc, acta) => acc + (acta.importeTotal || 0),
+        0,
+      );
     setTotalDeuda(totalDeudaCalculada);
     setLoadAllEmpresas(false);
   } catch (error) {
@@ -176,10 +203,9 @@ export const fetchEmpresaData = async (
 export const buscarEmpresaPorCuit = async ({
   valor,
   empresas,
-  axiosGestionDeudas,
   setEmpresaId,
   setNombreEmpresa,
-  fetchData
+  fetchData,
 }) => {
   const empresaID = await axiosGestionDeudas.getEmpresaByCuit(valor, empresas);
   if (empresaID === null) {
@@ -192,7 +218,7 @@ export const buscarEmpresaPorCuit = async ({
     return;
   }
 
-  const empresa = empresas.find(e => e.cuit === valor);
+  const empresa = empresas.find((e) => e.cuit === valor);
   console.log('Empresa encontrada:', empresa);
   setNombreEmpresa(empresa?.razonSocial);
   setEmpresaId(empresaID);
@@ -202,12 +228,14 @@ export const buscarEmpresaPorCuit = async ({
 export const buscarEmpresaPorNombre = async ({
   valor,
   empresas,
-  axiosGestionDeudas,
   setEmpresaId,
   setCuitInput,
-  fetchData
+  fetchData,
 }) => {
-  const empresaID = await axiosGestionDeudas.getEmpresaByNombre(valor, empresas);
+  const empresaID = await axiosGestionDeudas.getEmpresaByNombre(
+    valor,
+    empresas,
+  );
   if (empresaID === null) {
     Swal.fire({
       icon: 'error',
@@ -218,57 +246,72 @@ export const buscarEmpresaPorNombre = async ({
     return;
   }
 
-  const empresa = empresas.find(e => e.razonSocial === valor);
+  const empresa = empresas.find((e) => e.razonSocial === valor);
   setCuitInput(empresa?.cuit);
   setEmpresaId(empresaID);
   fetchData(false, empresaID);
 };
 // Crear convenio
-export const generarConvenio = async (ID_EMPRESA, bodyConvenio, axiosGestionDeudas, swal, setShowLoading) => {
+export const generarConvenio = async (
+  ID_EMPRESA,
+  bodyConvenio,
+  setShowLoading,
+) => {
   try {
-
     console.log('Generando convenio con los siguientes datos:', bodyConvenio);
     console.log('ID_EMPRESA:', ID_EMPRESA);
-    const response = await axiosGestionDeudas.generarConvenio(ID_EMPRESA, bodyConvenio);
+    const response = await axiosGestionDeudas.generarConvenio(
+      ID_EMPRESA,
+      bodyConvenio,
+    );
     console.log('Respuesta del servidor:', response);
     setShowLoading(false);
     if (response === true) {
-      await swal.fire({
+      await Swal.fire({
         icon: 'success',
         title: 'Convenio generado correctamente',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
       return true;
     } else {
-      await swal.fire({
+      await Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: (response && response.descripcion) ? response.descripcion : 'No se pudo generar el convenio.',
-        confirmButtonText: 'Aceptar'
+        text:
+          response && response.descripcion
+            ? response.descripcion
+            : 'No se pudo generar el convenio.',
+        confirmButtonText: 'Aceptar',
       });
       return false;
     }
   } catch (error) {
     setShowLoading(false);
     console.error('Error al generar convenio:', error?.response || error);
-    await swal.fire({
+    await Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: error?.response?.data?.message || error.message || 'Ocurrió un error al generar el convenio.',
-      confirmButtonText: 'Aceptar'
+      text:
+        error?.response?.data?.message ||
+        error.message ||
+        'Ocurrió un error al generar el convenio.',
+      confirmButtonText: 'Aceptar',
     });
     return false;
   }
 };
 
-
-export const actualizarConvenio = async (ID_EMPRESA, convenioId, bodyConvenio, axiosGestionDeudas, swal) => {
+export const actualizarConvenio = async (
+  ID_EMPRESA,
+  convenioId,
+  bodyConvenio,
+) => {
   console.log('Actualizando convenio con los siguientes datos:', bodyConvenio);
   const camposNulos = Object.entries(bodyConvenio)
     .filter(([clave, valor]) => valor === null)
     .map(([clave]) => clave);
   if (camposNulos.length > 0) {
-    await swal.fire({
+    await Swal.fire({
       icon: 'error',
       title: 'Error',
       text: `Por favor, complete todos los campos requeridos: ${camposNulos.join(', ')}`,
@@ -277,12 +320,16 @@ export const actualizarConvenio = async (ID_EMPRESA, convenioId, bodyConvenio, a
     return false;
   }
   try {
-    const response = await axiosGestionDeudas.putActualizarConvenio(ID_EMPRESA, convenioId, bodyConvenio);
+    const response = await axiosGestionDeudas.putActualizarConvenio(
+      ID_EMPRESA,
+      convenioId,
+      bodyConvenio,
+    );
 
-    await swal.fire({
+    await Swal.fire({
       icon: 'success',
       title: 'Convenio actualizado correctamente',
-      confirmButtonText: 'Aceptar'
+      confirmButtonText: 'Aceptar',
     });
     return true;
   } catch (error) {
@@ -297,3 +344,14 @@ export const actualizarConvenio = async (ID_EMPRESA, convenioId, bodyConvenio, a
     return false;
   }
 };
+
+export const empresaHelper = {
+  agruparDdjjsPorPeriodo: agruparDdjjsPorPeriodo,
+  fetchEmpresaData: fetchEmpresaData,
+  buscarEmpresaPorCuit: buscarEmpresaPorCuit,
+  buscarEmpresaPorNombre: buscarEmpresaPorNombre,
+  generarConvenio: generarConvenio,
+  actualizarConvenio: actualizarConvenio,
+};
+
+export default empresaHelper;
