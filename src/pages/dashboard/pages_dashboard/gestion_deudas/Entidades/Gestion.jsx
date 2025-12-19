@@ -587,6 +587,7 @@ export const Gestion = ({ ENTIDAD }) => {
           importeDeDeuda={importeDeDeuda}
           setImporteDeDeuda={setImporteDeDeuda}
           detalleConvenio={detalleConvenio}
+          setDetalleConvenio={setDetalleConvenio}
           saldoAFavorUtilizado={totalSaldosAFavorSelected}
           handleGenerarConvenio={handleGenerarConvenio}
           handleActualizarConvenio={handleActualizarConvenio}

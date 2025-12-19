@@ -26,6 +26,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import { axiosGestionDeudas } from './../Entidades/GestionApi';
+import Tooltip from '@mui/material/Tooltip';
 
 //moment.locale('es');
 
@@ -38,6 +39,7 @@ export const OpcionesDePago = ({
   medioPago,
   setMedioPago,
   detalleConvenio,
+  setDetalleConvenio,
   importeDeDeuda,
   setImporteDeDeuda,
   intereses,
@@ -89,6 +91,26 @@ export const OpcionesDePago = ({
     console.log('Parametros de convenios:', parametrosConvenios);
   }, []);
 
+  const convenioParametriaFechaPagoMax = () => {
+    if (parametrosConvenios) {
+      if (
+        parametrosConvenios.diasIntencion &&
+        parametrosConvenios.diasIntencion > 0
+      ) {
+        var fHasta = dayjs().add(parametrosConvenios.diasIntencion, 'day');
+        return fHasta;
+      }
+    }
+    return null;
+  };
+
+  var dynamicTitle = 'Debe ingresar una fecha futura ';
+  if (convenioParametriaFechaPagoMax()) {
+    dynamicTitle =
+      dynamicTitle +
+      ` hasta el dia ${convenioParametriaFechaPagoMax().format('DD/MM/YYYY')} `;
+  }
+
   const theme = useTheme();
   const themeWithLocale = useMemo(() => createTheme(theme, esES), [theme]);
   console.log('detalleConvenio:', detalleConvenio);
@@ -128,43 +150,84 @@ export const OpcionesDePago = ({
               </Grid>
               <Grid item xs={12} sm={5} md={4}>
                 <FormControl fullWidth>
-                  <FormLabel>Fecha de intención de pago de cuota 1</FormLabel>
+                  <Tooltip title={dynamicTitle}>
+                    <FormLabel>Fecha de intención de pago de cuota 1</FormLabel>
 
-                  <LocalizationProvider
-                    dateAdapter={AdapterDayjs}
-                    adapterLocale="es"
-                    localeText={
-                      esES.components.MuiLocalizationProvider.defaultProps
-                        .localeText
-                    }
-                  >
-                    <DatePicker
-                      format="DD/MM/YYYY"
-                      value={fechaIntencion ? dayjs(fechaIntencion) : null}
-                      onChange={(newValue) => {
-                        if (newValue) {
-                          setFechaIntencion(dayjs(newValue));
-                        }
-                      }}
-                      disabled={isVer}
-                      minDate={dayjs()}
-                      maxDate={
-                        parametrosConvenios
-                          ? dayjs().add(
-                              parametrosConvenios.diasIntencion,
-                              'day',
-                            )
-                          : undefined
+                    <LocalizationProvider
+                      dateAdapter={AdapterDayjs}
+                      adapterLocale="es"
+                      localeText={
+                        esES.components.MuiLocalizationProvider.defaultProps
+                          .localeText
                       }
-                      slotProps={{
-                        textField: {
-                          inputProps: {
-                            placeholder: 'DD/MM/YYYY',
+                    >
+                      <DatePicker
+                        format="DD/MM/YYYY"
+                        value={fechaIntencion ? dayjs(fechaIntencion) : null}
+                        onChange={(newValue) => {
+                          console.log('Fecha de intención de pago:', newValue);
+                          console.log(
+                            'parametrosConvenios:',
+                            parametrosConvenios,
+                          );
+
+                          if (newValue) {
+                            if (newValue.isValid()) {
+                              if (!dayjs().isAfter(newValue)) {
+                                console.log(
+                                  'OK-newValue.year(): ',
+                                  newValue.year(),
+                                );
+                                console.log('OK-newValue: ', newValue);
+
+                                var fHasta = convenioParametriaFechaPagoMax();
+                                if (fHasta) {
+                                  console.log('OK-CON fHasta: ', fHasta);
+                                  if (!newValue.isAfter(fHasta)) {
+                                    console.log(
+                                      'OK-fHasta - EJECUTA setFechaIntencion',
+                                    );
+                                    setFechaIntencion(dayjs(newValue));
+                                  } else {
+                                    setDetalleConvenio({});
+                                  }
+                                } else {
+                                  setFechaIntencion(dayjs(newValue));
+                                }
+                              } else {
+                                setDetalleConvenio({});
+                              }
+                            } else {
+                              console.log('newValue.year(): ', newValue.year());
+                              console.log('dayjs().year(): ', dayjs().year());
+                              console.log(
+                                '*** OJO - NO EJECUTO setFechaIntencion(dayjs(newValue));',
+                              );
+                              setDetalleConvenio({});
+                            }
+                            //setFechaIntencion(dayjs(newValue));
+                          }
+                        }}
+                        disabled={isVer}
+                        minDate={dayjs()}
+                        maxDate={
+                          parametrosConvenios
+                            ? dayjs().add(
+                                parametrosConvenios.diasIntencion,
+                                'day',
+                              )
+                            : undefined
+                        }
+                        slotProps={{
+                          textField: {
+                            inputProps: {
+                              placeholder: 'DD/MM/YYYY',
+                            },
                           },
-                        },
-                      }}
-                    />
-                  </LocalizationProvider>
+                        }}
+                      />
+                    </LocalizationProvider>
+                  </Tooltip>
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={2} md={4}>
