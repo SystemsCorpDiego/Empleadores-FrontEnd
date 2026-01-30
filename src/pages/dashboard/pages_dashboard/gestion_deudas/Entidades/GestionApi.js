@@ -61,8 +61,8 @@ export const getGestionDeuda = async (empresa_id, entidad) => {
   ) {
     Swal.fire({
       icon: 'info',
-      title: 'Sin Deuda',
-      text: 'No se registra deuda al día de la fecha',
+      title: 'Sin Datos',
+      text: 'No se registra datos para calcular',
     });
   }
   return response;
@@ -110,10 +110,10 @@ export const getDetalleConvenio = async (empresa_id, body) => {
     ) {
       console.log('body', body);
       const response = await axiosCrud.crear(URL, body);
-      if (response && response.ticket) { //Pregunto por ticket porque no tiene id la respuesta
+      if (response && response.ticket) {
+        //Pregunto por ticket porque no tiene id la respuesta
         console.log('response', response);
-        swal.showErrorBackEnd(response.descripcion)
-
+        swal.showErrorBackEnd(response.descripcion);
       }
       return response;
     }
@@ -125,7 +125,6 @@ export const getDetalleConvenio = async (empresa_id, body) => {
       importeInteresTotal: 0,
     };
   } catch (error) {
-
     swal.showErrorBackEnd(
       HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.descripcion})`,
       error,
@@ -211,7 +210,9 @@ const getEmpresaByCuit = async (cuit, empresas) => {
       const empresaEncontrada = response.find((e) => e.cuit == cuit);
       console.log('empresaEncontrada', empresaEncontrada);
       if (!empresaEncontrada) {
-        swal.showErrorBusiness('No se encontró la empresa con el CUIT proporcionado.');
+        swal.showErrorBusiness(
+          'No se encontró la empresa con el CUIT proporcionado.',
+        );
         throw new Error('No se encontró la empresa con el CUIT proporcionado.');
       }
       return empresaEncontrada.id ? empresaEncontrada.id : null;
@@ -235,7 +236,9 @@ const getEmpresaByNombre = async (nombreEmpresa, empresas) => {
       );
       console.log('empresaEncontrada', empresaEncontrada);
       if (!empresaEncontrada) {
-        swal.showErrorBusiness('No se encontró la empresa con el CUIT proporcionado.');
+        swal.showErrorBusiness(
+          'No se encontró la empresa con el CUIT proporcionado.',
+        );
         throw new Error('No se encontró la empresa con el CUIT proporcionado.');
       }
       return empresaEncontrada.id ? empresaEncontrada.id : null;
@@ -424,13 +427,13 @@ export const getParametrosConvenio = async (CUIT_EMPRESA) => {
   const mockParametros = {
     cuotas: 6,
     diasIntencion: 30,
-    mediosDePago: [
-      'CHEQUE'
-    ],
-  }
+    mediosDePago: ['CHEQUE'],
+  };
   try {
     if (CUIT_EMPRESA) {
-      const response = await axiosCrud.consultar(`/convenio-seteo/cuit/${CUIT_EMPRESA}`);
+      const response = await axiosCrud.consultar(
+        `/convenio-seteo/cuit/${CUIT_EMPRESA}`,
+      );
 
       console.log('Parametros de convenio:', response);
 
@@ -443,11 +446,10 @@ export const getParametrosConvenio = async (CUIT_EMPRESA) => {
         swal.showErrorBusiness(
           'El cuit no tiene parámetros de convenio configurados.',
         );
-        return null
+        return null;
       }
       return response;
     }
-
   } catch (error) {
     console.error('Error capturado en getParametrosConvenio:', error);
     const HTTP_MSG =
@@ -469,5 +471,5 @@ export const axiosGestionDeudas = {
   generarConvenio,
   downloadDeuda,
   downloadExcel,
-  getParametrosConvenio
+  getParametrosConvenio,
 };
