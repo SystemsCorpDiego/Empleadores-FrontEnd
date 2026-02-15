@@ -114,19 +114,24 @@ export const Boletas = () => {
       setBoletas(response['con_ddjj']);
 
       //console.log('response.con_ddjj: ', response['con_ddjj']);
-      const auxBoletasVisibles = response['con_ddjj'].flatMap((boleta) => ({
-        ...boleta,
-      }));
-      //console.log('auxBoletasVisibles: ', auxBoletasVisibles);
 
-      setBoletasVisibles(auxBoletasVisibles);
-      setBoletasSinDDJJ(response['sin_ddjj']);
-      setBoletasSinAfiliados(
-        response['sin_ddjj'].flatMap((boleta) => {
-          const { afiliados, ...rest } = boleta;
-          return { ...rest };
-        }),
-      );
+      if (response['con_ddjj'] != null && response['con_ddjj'].length > 0) {
+        const auxBoletasVisibles = response['con_ddjj'].flatMap((boleta) => ({
+          ...boleta,
+        }));
+        setBoletasVisibles(auxBoletasVisibles);
+        //console.log('auxBoletasVisibles: ', auxBoletasVisibles);
+      }
+
+      if (response['sin_ddjj'] != null && response['sin_ddjj'].length > 0) {
+        setBoletasSinDDJJ(response['sin_ddjj']);
+        setBoletasSinAfiliados(
+          response['sin_ddjj'].flatMap((boleta) => {
+            const { afiliados, ...rest } = boleta;
+            return { ...rest };
+          }),
+        );
+      }
       setShowLoading(false);
     } catch (error) {
       console.error('Error al obtener las boletas:', error);
@@ -454,7 +459,7 @@ export const Boletas = () => {
                   toolbarDensityStandard: 'Estándar',
                   toolbarDensityComfortable: 'Cómodo',
                   footerRowsPerPage: 'Filas por página',
-                  noRowsLabel: 'Sin filas'
+                  noRowsLabel: 'Sin filas',
                 }}
               />
             </Box>
@@ -569,7 +574,7 @@ export const Boletas = () => {
                   toolbarDensityStandard: 'Estándar',
                   toolbarDensityComfortable: 'Cómodo',
                   footerRowsPerPage: 'Filas por página',
-                  noRowsLabel: 'Sin filas'
+                  noRowsLabel: 'Sin filas',
                 }}
               />
             </Box>

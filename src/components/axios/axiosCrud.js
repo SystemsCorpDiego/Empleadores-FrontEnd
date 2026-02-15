@@ -45,6 +45,9 @@ export const axiosConsultar = async (UrlApi) => {
     const data = response.data || {};
     return data;
   } catch (error) {
+    if (error && error.response && error.response.status === 401) {
+      return {};
+    }
     console.log(`axiosCrud.consultar() - ERROR - UrlApi: ${UrlApi} `);
     throw error;
   }
@@ -69,6 +72,11 @@ export const axiosCrear = async (UrlApi, oEntidad) => {
     return response.data || {};
   } catch (error) {
     console.log('axiosCrud.crear() - catch() - ');
+
+    if (error && error.response && error.response.status === 401) {
+      return {};
+    }
+
     if (error && error.response && error.response.data) {
       console.log('Este es el error : ', error);
       return error.response.data;
@@ -99,6 +107,10 @@ export const axiosCrearFormData = async (UrlApi, oEntidad) => {
     return response.data || {};
   } catch (error) {
     console.log('axiosCrud.crear() - catch() - ');
+    if (error && error.response && error.response.status === 401) {
+      return {};
+    }
+
     if (error && error.response && error.response.data) {
       console.log('Este es el error : ', error);
       return error.response.data;
@@ -132,6 +144,11 @@ export const axiosCrearN = async (UrlApi, oEntidad) => {
     return false;
   } catch (error) {
     console.log('axiosCrud.axiosCrearN() - catch() - ');
+
+    if (error && error.response && error.response.status === 401) {
+      return false;
+    }
+
     if (error && error.response && error.response.data) {
       return error.response.data;
     } else {
@@ -179,6 +196,11 @@ export const axiosActualizar = async (UrlApi, oEntidad, ID) => {
       `axiosCrud.actualizar() - UrlApi: ${UrlApi} - catch() - error`,
       error,
     );
+
+    if (error && error.response && error.response.status === 401) {
+      return false;
+    }
+
     if (error && error.response && error.response.data) {
       return error.response.data;
     } else {
@@ -207,6 +229,11 @@ export const axiosPatch = async (UrlApi, oEntidad) => {
     console.log(
       'axiosCrud.patch() - catch() - error: ' + JSON.stringify(error),
     );
+
+    if (error && error.response && error.response.status === 401) {
+      return false;
+    }
+
     if (error && error.response && error.response.data) {
       return error.response.data;
     } else {
@@ -233,6 +260,11 @@ export const axiosEliminar = async (UrlApi, id) => {
     return true;
   } catch (error) {
     console.log(`axiosCrud.eliminar() - UrlApi: ${UrlApi} - catch() - `);
+
+    if (error && error.response && error.response.status === 401) {
+      return false;
+    }
+
     if (error && error.response && error.response.data) {
       return error.response.data;
     } else {

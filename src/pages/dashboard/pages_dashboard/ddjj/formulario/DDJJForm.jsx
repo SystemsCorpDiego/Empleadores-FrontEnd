@@ -1021,11 +1021,15 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
   useEffect(() => {
     const ObtenerCamaras = async () => {
       const data = await axiosDDJJ.getCamaras();
-      setCamaras(data.map((item, index) => ({ id: index + 1, ...item })));
+      if (data && data.length > 0) {
+        setCamaras(data.map((item, index) => ({ id: index + 1, ...item })));
+      }
     };
     const ObtenerCategorias = async () => {
       const data = await axiosDDJJ.getCategorias();
-      setCategorias(data.map((item, index) => ({ id: index + 1, ...item })));
+      if (data && data.length > 0) {
+        setCategorias(data.map((item, index) => ({ id: index + 1, ...item })));
+      }
     };
     const ObtenerPlantaEmpresas = async () => {
       if (!ID_EMPRESA) {
@@ -1034,7 +1038,9 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
       }
 
       const data = await axiosDDJJ.getPlantas(ID_EMPRESA);
-      setPlantas(data.map((item) => ({ id: item, ...item })));
+      if (data && data.length > 0) {
+        setPlantas(data.map((item) => ({ id: item, ...item })));
+      }
     };
 
     ObtenerCamaras();
@@ -1086,7 +1092,7 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
     console.log('*useEffect - !habiModif:', !habiModif);
     console.log(
       'gridApiRef.current.getRowModels():',
-   //   gridApiRef.current.getRowModels(),
+      //   gridApiRef.current.getRowModels(),
     );
   }, [someRowInEditMode]);
   // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -1878,7 +1884,7 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
                 </Box>
               ) : (
                 <ThemeProvider theme={themeWithLocale}>
-                   <StripedDataGrid
+                  <StripedDataGrid
                     rows={rows || []}
                     columns={columns}
                     disableColumnSelector
@@ -1947,7 +1953,7 @@ export const DDJJForm = ({ idDDJJ, mostrarConsultaMissDDJJ, initFormDDJJ }) => {
                     }}
                     getCellClassName={getCellClassName}
                   />
-                 {/* <StripedDataGrid
+                  {/* <StripedDataGrid
                     apiRef={gridApiRef}
                     rows={rows || []}
                     getCellClassName={getCellClassName}
