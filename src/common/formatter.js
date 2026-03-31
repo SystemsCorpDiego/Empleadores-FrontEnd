@@ -58,11 +58,13 @@ const formatDate = (value) => {
 const dateObject = (strValue) => {
   //castea "YYYY-MM-DD" => Date object
   try {
-    if (strValue && strValue !== '' && strValue !== null)
-      return new dayjs(strValue);
+    if (strValue && strValue !== '' && strValue !== null) {
+      var day = new dayjs(strValue);
+      if (day.isValid()) return day;
+    }
     return null;
   } catch (error) {
-    console.log('castDateString - error:', error);
+    console.log('formatter.dateObject() - ' + strValue + ' - error:', error);
     return null;
   }
 };
