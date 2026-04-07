@@ -25,3 +25,5 @@ export const backendUrl = () => {
     return 'ERROR-BACKEND_URL';
   }
 };
+
+export default backendUrl;
