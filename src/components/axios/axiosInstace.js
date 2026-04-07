@@ -1,7 +1,25 @@
 import axios from 'axios';
 import localStorageService from '@/components/localStorage/localStorageService';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+const FRONTEND_LOGIN_URL = import.meta.env.VITE_FRONTEND_LOGIN_URL;
+
+//IE Polyfill
+if (!window.location.origin) {
+  console.log('IE Polyfill - RUN');
+  window.location.origin = window.location.protocol + "//" + 
+                           window.location.hostname + 
+                           (window.location.port ? ':' + window.location.port : '');
+}
+var BACKEND_URL = window.location.origin +  import.meta.env.VITE_BACKEND_URL;
+if ( import.meta.env.VITE_ES_LOCALHOST == "1") {
+  BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+}
+
+//console.log('Axios.interceptors.request.use - window.location.hostname: ', window.location.hostname);
+//console.log('Axios.interceptors.request.use - window.location.host: ', window.location.host);
+//console.log('Axios.interceptors.request.use - window.location.origin: ', window.location.origin);
+//console.log('Axios.interceptors.request.use - VITE_BACKEND_URL: ',  import.meta.env.VITE_BACKEND_URL);
 
 // Set config defaults when creating the instance
 const oAxios = axios.create({
@@ -17,6 +35,10 @@ oAxios.defaults.headers.common['Content-Type'] = 'application/json';
 
 oAxios.interceptors.request.use(
   (req) => {
+    //console.log('Axios.interceptors.request.use - VITE_BACKEND_URL: ',  import.meta.env.VITE_BACKEND_URL);
+    //console.log('Axios.interceptors.request.use - window.location.hostname: ', window.location.hostname);
+    //console.log('Axios.interceptors.request.use - window.location.host: ', window.location.host);
+    //console.log('Axios.interceptors.request.use - window.location.origin: ', window.location.origin);
     req.headers = {
       ...req.headers,
       Authorization: localStorageService.getToken(),
@@ -67,7 +89,7 @@ oAxios.interceptors.response.use(
           return rta;
         }
         console.log('oAxios.interceptors.response - GO LOGIN');
-        window.location.href = '/empleadores/#/login';
+        window.location.href = FRONTEND_LOGIN_URL; // '/empleadores/#/login';
         return error;
       }
 
@@ -119,7 +141,7 @@ const execTokenRefresh = async () => {
         console.log(
           '** oAxios.interceptors.response - token/refresh:ERROR - VOY AL LOGUIN',
         );
-        window.location.href = '/empleadores/#/login';
+        window.location.href = FRONTEND_LOGIN_URL; // '/empleadores/#/login'; 
         return false;
       });
     return rta;
