@@ -8,8 +8,9 @@ import { axiosDDJJ } from './DDJJApi';
 import DownloadForOffline from '@mui/icons-material/DownloadForOffline';
 import Icon from '@mui/material/Icon';
 import localStorageService from '@/components/localStorage/localStorageService';
+import backendUrl from '@/common/backendUrl';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = backendUrl();
 
 import LinearProgress from '@mui/material/LinearProgress';
 

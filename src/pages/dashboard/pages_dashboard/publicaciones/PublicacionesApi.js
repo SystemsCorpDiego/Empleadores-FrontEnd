@@ -1,5 +1,6 @@
 import { axiosCrud } from '@components/axios/axiosCrud';
 import swal from '@/components/swal/swal';
+import backendUrl from '@/common/backendUrl';
 
 const HTTP_MSG_ALTA = import.meta.env.VITE_HTTP_MSG_ALTA;
 const HTTP_MSG_MODI = import.meta.env.VITE_HTTP_MSG_MODI;
@@ -8,7 +9,7 @@ const HTTP_MSG_ALTA_ERROR = import.meta.env.VITE_HTTP_MSG_ALTA_ERROR;
 const HTTP_MSG_MODI_ERROR = import.meta.env.VITE_HTTP_MSG_MODI_ERROR;
 const HTTP_MSG_BAJA_ERROR = import.meta.env.VITE_HTTP_MSG_BAJA_ERROR;
 const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = backendUrl();
 const URL_ENTITY = '/publicaciones';
 
 export const axiosPublicaciones = {
@@ -128,7 +129,7 @@ export const tieneImagenCargada = async (ID) => {
       const response = await fetch(`${BACKEND_URL}${URL_ENTITY}/${ID}/archivo`);
       return response.status === 200;
     } catch (error) {
-      console.error("Error al verificar si la imagen está cargada:", error);
+      console.error('Error al verificar si la imagen está cargada:', error);
       return false;
     }
   }

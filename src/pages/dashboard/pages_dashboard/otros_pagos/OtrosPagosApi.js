@@ -2,8 +2,9 @@ import axios from 'axios';
 import { axiosCrud } from '@components/axios/axiosCrud';
 import swal from '@/components/swal/swal';
 import { boletaPdfDownload } from '@/common/api/BoletaCommonApi';
+import backendUrl from '@/common/backendUrl';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = backendUrl();
 const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
 const HTTP_MSG_ALTA = import.meta.env.VITE_HTTP_MSG_ALTA;
 const HTTP_MSG_ALTA_ERROR = import.meta.env.VITE_HTTP_MSG_ALTA_ERROR;

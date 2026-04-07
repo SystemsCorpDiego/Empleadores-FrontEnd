@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { errorBackendResponse } from '../../errors/errorBackendResponse';
 import localStorageService from '@/components/localStorage/localStorageService';
+import backendUrl from '@/common/backendUrl';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = backendUrl();
 
 export const logon = async (usuario, clave) => {
   const URL = `${BACKEND_URL}/auth/login`;

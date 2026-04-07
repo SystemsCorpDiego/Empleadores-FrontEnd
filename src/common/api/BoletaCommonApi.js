@@ -1,8 +1,9 @@
 import oAxios from '@components/axios/axiosInstace';
 import swal from '@/components/swal/swal';
+import backendUrl from '@/common/backendUrl';
 
 const MSG_IMPRESION_ERROR = import.meta.env.VITE_HTTP_MSG_IMPRESION_ERROR;
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = backendUrl();
 
 export const boletaPdfDownload = async (empresa_id, id, secuencia) => {
   const URL = `/empresa/${empresa_id}/boletas/${id}/imprimir`;

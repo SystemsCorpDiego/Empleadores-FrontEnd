@@ -1,25 +1,9 @@
 import axios from 'axios';
 import localStorageService from '@/components/localStorage/localStorageService';
-
+import backendUrl from '@/common/backendUrl';
 
 const FRONTEND_LOGIN_URL = import.meta.env.VITE_FRONTEND_LOGIN_URL;
-
-//IE Polyfill
-if (!window.location.origin) {
-  console.log('IE Polyfill - RUN');
-  window.location.origin = window.location.protocol + "//" + 
-                           window.location.hostname + 
-                           (window.location.port ? ':' + window.location.port : '');
-}
-var BACKEND_URL = window.location.origin +  import.meta.env.VITE_BACKEND_URL;
-if ( import.meta.env.VITE_ES_LOCALHOST == "1") {
-  BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-}
-
-//console.log('Axios.interceptors.request.use - window.location.hostname: ', window.location.hostname);
-//console.log('Axios.interceptors.request.use - window.location.host: ', window.location.host);
-//console.log('Axios.interceptors.request.use - window.location.origin: ', window.location.origin);
-//console.log('Axios.interceptors.request.use - VITE_BACKEND_URL: ',  import.meta.env.VITE_BACKEND_URL);
+const BACKEND_URL = backendUrl();
 
 // Set config defaults when creating the instance
 const oAxios = axios.create({
@@ -74,7 +58,7 @@ oAxios.interceptors.response.use(
       //if (window.location.pathname.includes('#/login')) {
       //  console.log('No intento refresh porque estoy en /login');
       //  return Promise.reject(error);
-     // }
+      // }
 
       if (error.response.status && error.response.status == 401) {
         console.log(
@@ -141,7 +125,7 @@ const execTokenRefresh = async () => {
         console.log(
           '** oAxios.interceptors.response - token/refresh:ERROR - VOY AL LOGUIN',
         );
-        window.location.href = FRONTEND_LOGIN_URL; // '/empleadores/#/login'; 
+        window.location.href = FRONTEND_LOGIN_URL; // '/empleadores/#/login';
         return false;
       });
     return rta;
