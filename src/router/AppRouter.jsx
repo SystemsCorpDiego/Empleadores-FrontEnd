@@ -27,6 +27,8 @@ import { Feriados } from '../pages/dashboard/pages_dashboard/feriados/Feriados';
 import { UsuarioInterno } from '../pages/dashboard/pages_dashboard/usuarioInterno/usuarioInterno';
 import { RegistroEmpresa } from '../pages/registro_empresa/RegistroEmpresa';
 import { CuitsRestringidos } from '../pages/dashboard/pages_dashboard/cuits-restringidos/CuitsRestringidos';
+import { CuitsRestringidosMail } from '../pages/dashboard/pages_dashboard/cuits-restringidos-mail/CuitsRestringidosMail';
+import { GestionDeudaMailConfig } from '../pages/dashboard/pages_dashboard/gestion-deuda-mail-config/GestionDeudaMailConfig';
 import { Boletas } from '../pages/dashboard/pages_dashboard/boletas/Boletas';
 
 import { BoletaEmpleadoFiltro } from '../pages/dashboard/pages_dashboard/boletas/consultas/empleado/BoletaEmpleadoFiltro';
@@ -260,6 +262,26 @@ const AppRouter = () => {
           element={
             rolFuncionalidades.CUITS_RESTRINGIDOS ? (
               <CuitsRestringidos />
+            ) : (
+              <Navigate to="/dashboard/inicio" replace />
+            )
+          }
+        />
+        <Route
+          path="cuitsrestringidosmail"
+          element={
+            rolFuncionalidades.CUITS_RESTRINGIDOS_MAIL ? (
+              <CuitsRestringidosMail />
+            ) : (
+              <Navigate to="/dashboard/inicio" replace />
+            )
+          }
+        />
+        <Route
+          path="gestiondeuda-mail-config"
+          element={
+            rolFuncionalidades.GESTION_DEUDA_MAIL_CONFIG ? (
+              <GestionDeudaMailConfig />
             ) : (
               <Navigate to="/dashboard/inicio" replace />
             )

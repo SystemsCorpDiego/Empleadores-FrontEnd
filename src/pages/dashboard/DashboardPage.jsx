@@ -9,6 +9,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import PersonIcon from '@mui/icons-material/Person';
 import CoPresentIcon from '@mui/icons-material/CoPresent';
 import NetworkLockedIcon from '@mui/icons-material/NetworkLocked';
+import EmailIcon from '@mui/icons-material/Email';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import PreviewIcon from '@mui/icons-material/Preview';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -292,6 +293,28 @@ const DashboardPage = () => {
                     <NetworkLockedIcon className="icon-link" />{' '}
                     {open && (
                       <span className="icon-link">Cuits Restringidos</span>
+                    )}
+                  </NavLink>
+                )}
+                {rolFuncionalidades.CUITS_RESTRINGIDOS_MAIL && (
+                  <NavLink
+                    to="./cuitsrestringidosmail"
+                    className="icon-container"
+                  >
+                    <NetworkLockedIcon className="icon-link" />{' '}
+                    {open && (
+                      <span className="icon-link">Mails Restringidos</span>
+                    )}
+                  </NavLink>
+                )}
+                {rolFuncionalidades.GESTION_DEUDA_MAIL_CONFIG && (
+                  <NavLink
+                    to="./gestiondeuda-mail-config"
+                    className="icon-container"
+                  >
+                    <EmailIcon className="icon-link" />{' '}
+                    {open && (
+                      <span className="icon-link">Config. Mail Deuda</span>
                     )}
                   </NavLink>
                 )}
