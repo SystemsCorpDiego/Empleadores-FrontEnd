@@ -3,8 +3,10 @@ import swal from '@/components/swal/swal';
 
 const HTTP_MSG_ALTA = import.meta.env.VITE_HTTP_MSG_ALTA;
 const HTTP_MSG_MODI = import.meta.env.VITE_HTTP_MSG_MODI;
+const HTTP_MSG_BAJA = import.meta.env.VITE_HTTP_MSG_BAJA;
 const HTTP_MSG_ALTA_ERROR = import.meta.env.VITE_HTTP_MSG_ALTA_ERROR;
 const HTTP_MSG_MODI_ERROR = import.meta.env.VITE_HTTP_MSG_MODI_ERROR;
+const HTTP_MSG_BAJA_ERROR = import.meta.env.VITE_HTTP_MSG_BAJA_ERROR;
 const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
 
 const URL_ENTITY = '/gestionDeuda/mail/config';
@@ -12,6 +14,8 @@ const URL_ENTITY = '/gestionDeuda/mail/config';
 export const consultar = async () => {
   try {
     const data = await axiosCrud.consultar(URL_ENTITY);
+    console.log('consultar - data:');
+    console.log(data);
     return data || null;
   } catch (error) {
     swal.showErrorBackEnd(
@@ -46,6 +50,20 @@ export const actualizar = async (reg) => {
     throw response;
   } catch (error) {
     swal.showErrorBackEnd(HTTP_MSG_MODI_ERROR, error);
+    return false;
+  }
+};
+
+export const eliminar = async (id) => {
+  try {
+    const response = await axiosCrud.eliminar(URL_ENTITY, id);
+    if (response === true) {
+      swal.showSuccess(HTTP_MSG_BAJA);
+      return true;
+    }
+    throw response;
+  } catch (error) {
+    swal.showErrorBackEnd(HTTP_MSG_BAJA_ERROR, error);
     return false;
   }
 };

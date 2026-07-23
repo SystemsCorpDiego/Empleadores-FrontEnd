@@ -36,8 +36,8 @@ export const axiosCrud = {
   },
 };
 
-try {
-    export const axiosConsultar = async (UrlApi) => {
+export const axiosConsultar = async (UrlApi) => {
+  try {
     const response = await oAxios.get(UrlApi);
     if (response.status != 200 && response.status != 204) {
       throw response;
