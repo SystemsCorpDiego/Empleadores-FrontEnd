@@ -145,6 +145,14 @@ const TerminosYCondiciones = ({ open, setOpen, rowTyC, setRowTyC, fetchData }) =
 
   // 🔴 clave para que NO se cierre antes de imprimir
   preDeny: () => {
+    // Marca body para que el CSS "imprimir solo el modal" de este componente
+    // no quede afectando impresiones de otras pantallas (ver TerminosYCondiciones.css)
+    document.body.classList.add('tyc-printing');
+    const quitarMarca = () => {
+      document.body.classList.remove('tyc-printing');
+      window.removeEventListener('afterprint', quitarMarca);
+    };
+    window.addEventListener('afterprint', quitarMarca);
     window.print();
     return false; // evita que swal se cierre
   }

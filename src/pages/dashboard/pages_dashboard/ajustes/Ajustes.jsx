@@ -17,6 +17,7 @@ import {
   GridActionsCellItem,
   GridRowEditStopReasons,
   useGridApiRef,
+  gridExpandedSortedRowIdsSelector,
 } from '@mui/x-data-grid';
 import { axiosAjustes } from './AjustesApi';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
@@ -66,6 +67,15 @@ const handleClearFilters = (apiRef) => {
   apiRef.current.setFilterModel({ items: [] });
 };
 
+// La grilla usa un paginationModel controlado (compartido entre pantallas vía
+// UserContext), por lo que el intento interno de MUI de expandir la paginación
+// para imprimir todas las filas es descartado silenciosamente (el prop
+// controlado siempre gana), y el PDF sale en blanco. Forzar acá las filas a
+// exportar evita depender de esa expansión de paginación.
+const printOptions = {
+  getRowsToExport: ({ apiRef }) => gridExpandedSortedRowIdsSelector(apiRef),
+};
+
 const crearNuevoRegistro = (props) => {
   const {
     setRows,
@@ -75,6 +85,7 @@ const crearNuevoRegistro = (props) => {
     showQuickFilter,
     themeWithLocale,
     gridApiRef,
+    printOptions,
   } = props;
 
   const altaHandleClick = () => {
@@ -125,7 +136,7 @@ const crearNuevoRegistro = (props) => {
       <Button color="primary" startIcon={<AddIcon />} onClick={altaHandleClick}>
         Nuevo Registro
       </Button>
-      <GridToolbar showQuickFilter={showQuickFilter} />
+      <GridToolbar showQuickFilter={showQuickFilter} printOptions={printOptions} />
     </GridToolbarContainer>
   );
 };
@@ -764,6 +775,7 @@ export const Ajustes = () => {
                 showColumnMenu: true,
                 themeWithLocale,
                 gridApiRef,
+                printOptions,
               },
             }}
             paginationModel={paginationModel}

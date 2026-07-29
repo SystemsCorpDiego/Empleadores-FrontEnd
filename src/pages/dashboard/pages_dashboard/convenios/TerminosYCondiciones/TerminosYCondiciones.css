@@ -2,18 +2,26 @@
  body {
      margin: 0
  }
+/*
+ * Estas reglas de impresión están ancladas a body.tyc-printing (agregada/quitada
+ * en TerminosYCondiciones.jsx alrededor del window.print()) porque este CSS se
+ * importa sin scope y queda cargado para toda la SPA (AppRouter importa Convenios
+ * de forma estática). Sin el ancla, "body *" ocultaba cualquier impresión/export
+ * de PDF en el resto del sistema (ej. imprimir un DataGrid) que se ejecutara
+ * mientras este archivo estuviera cargado.
+ */
 @media print {
-  body * {
+  body.tyc-printing * {
     visibility: hidden !important;
   }
   /* Esta es la clase que vos pusiste en customClass.popup */
-  .swal2-modal-tyc, 
-  .swal2-modal-tyc * {
+  body.tyc-printing .swal2-modal-tyc,
+  body.tyc-printing .swal2-modal-tyc * {
     visibility: visible !important;
   }
 
   /* Que el modal quede en posición normal para imprimir */
-  .swal2-modal-tyc {
+  body.tyc-printing .swal2-modal-tyc {
     position: absolute !important;
     left: 0 !important;
     top: 0 !important;
