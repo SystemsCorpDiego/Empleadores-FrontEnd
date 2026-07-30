@@ -214,13 +214,6 @@ export const GestionDeudaMailConfig = () => {
           onClick={handleEditClick(row)}
           color="inherit"
         />,
-        <GridActionsCellItem
-          icon={<DeleteIcon />}
-          label="Eliminar"
-          className="textPrimary"
-          onClick={handleDeleteClick(row)}
-          color="inherit"
-        />,
       ],
     },
   ];
