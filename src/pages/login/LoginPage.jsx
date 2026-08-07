@@ -6,7 +6,7 @@ import {
 } from './LoginApi.js';
 import { useContext } from 'react';
 import { UserContext } from '@/context/userContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useFormLoginInternalUser } from '../../hooks/useFormLoginInternalUser.js';
 import { ButtonComponent } from '@components/ButtonComponent.jsx';
@@ -33,6 +33,11 @@ export const LoginPage = () => {
   console.log('LoginPage - INIT ');
 
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectParam = searchParams.get('redirect');
+  const redirectPathAfterLogin = redirectParam
+    ? `/dashboard/${redirectParam}`
+    : '/dashboard/inicio';
   const [showSpinner, setShowSpinner] = useState(true);
   const [showInternalUserForm, setShowInternalUserForm] = useState(true);
   const [showVerificationForm, setShowVerificationForm] = useState(false);
@@ -180,7 +185,7 @@ export const LoginPage = () => {
       usuarioLogueado.usuario.tokenRefresco = refreshToken;
       triggerSessionRefresh();
       console.log(usuarioLogueado);
-      navigate('/dashboard/inicio', {
+      navigate(redirectPathAfterLogin, {
         replace: true,
         state: {
           logged: true,
