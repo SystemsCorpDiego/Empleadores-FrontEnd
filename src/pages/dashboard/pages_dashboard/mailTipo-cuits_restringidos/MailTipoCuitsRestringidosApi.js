@@ -9,20 +9,37 @@ const HTTP_MSG_MODI_ERROR = import.meta.env.VITE_HTTP_MSG_MODI_ERROR;
 const HTTP_MSG_BAJA_ERROR = import.meta.env.VITE_HTTP_MSG_BAJA_ERROR;
 const HTTP_MSG_CONSUL_ERROR = import.meta.env.VITE_HTTP_MSG_CONSUL_ERROR;
 
-const URL_ENTITY = '/gestionDeuda/mail/config';
+const URL_ENTITY = '/mail-tipos/deshabilitar-cuit';
 
-export const consultar = async () => {
+export const axiosCuitsRestringidosMail = {
+  consultar: async function (mailId) {
+    return consultar(mailId);
+  },
+
+  crear: async function (UrlApi, oEntidad) {
+    return crear(UrlApi, oEntidad);
+  },
+
+  actualizar: async function (UrlApi, oEntidad) {
+    return actualizar(UrlApi, oEntidad);
+  },
+
+  eliminar: async function (UrlApi, id) {
+    return eliminar(UrlApi, id);
+  },
+};
+
+export const consultar = async (mailId) => {
+  const URL = mailId ? `${URL_ENTITY}?mailId=${mailId}` : URL_ENTITY;
   try {
-    const data = await axiosCrud.consultar(URL_ENTITY);
-    console.log('consultar - data:');
-    console.log(data);
-    return data || null;
+    const data = await axiosCrud.consultar(URL);
+    return data || [];
   } catch (error) {
     swal.showErrorBackEnd(
-      HTTP_MSG_CONSUL_ERROR + ` (${URL_ENTITY} - status: ${error.status})`,
+      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`,
       error,
     );
-    return null;
+    return [];
   }
 };
 
@@ -36,14 +53,14 @@ export const crear = async (nuevoReg) => {
     throw data;
   } catch (error) {
     swal.showErrorBackEnd(HTTP_MSG_ALTA_ERROR, error);
-    return null;
+    return {};
   }
 };
 
 export const actualizar = async (reg) => {
   try {
     const response = await axiosCrud.actualizar(URL_ENTITY, reg);
-    if (response === true) {
+    if (response == true) {
       swal.showSuccess(HTTP_MSG_MODI);
       return true;
     }
@@ -57,7 +74,7 @@ export const actualizar = async (reg) => {
 export const eliminar = async (id) => {
   try {
     const response = await axiosCrud.eliminar(URL_ENTITY, id);
-    if (response === true) {
+    if (response == true) {
       swal.showSuccess(HTTP_MSG_BAJA);
       return true;
     }

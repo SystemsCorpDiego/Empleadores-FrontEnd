@@ -9,13 +9,22 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-import { TextField, Box, Button } from '@mui/material';
+import {
+  TextField,
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
-import { axiosCuitsRestringidosMail } from './CuitsRestringidosMailApi';
+import { axiosCuitsRestringidosMail } from './MailTipoCuitsRestringidosApi';
+import { axiosMailTipo } from '@/common/api/MailTipoApi';
 import Swal from 'sweetalert2';
 import { StripedDataGrid, dataGridStyle } from '@/common/dataGridStyle';
 import '../cuits-restringidos/CuitsRestringidos.css';
@@ -30,13 +39,14 @@ function EditToolbar(props) {
     volverPrimerPagina,
     showQuickFilter,
     themeWithLocale,
+    mailId,
   } = props;
 
   const altaHandleClick = () => {
     if (rows) {
       const editRow = rows.find((row) => !row.id);
       if (typeof editRow === 'undefined' || editRow.id) {
-        const newReg = { cuit: '', observacion: '' };
+        const newReg = { cuit: '', observacion: '', mailId };
         volverPrimerPagina();
         setRows((oldRows) => [newReg, ...oldRows]);
         setRowModesModel((oldModel) => ({
@@ -60,11 +70,13 @@ function EditToolbar(props) {
   );
 }
 
-export const CuitsRestringidosMail = () => {
+export const MailTipoCuitsRestringidos = () => {
   const gridApiRef = useGridApiRef();
   const [rowModesModel, setRowModesModel] = useState({});
   const [locale, setLocale] = useState('esES');
   const [rows, setRows] = useState([]);
+  const [tiposMail, setTiposMail] = useState([]);
+  const [mailId, setMailId] = useState('');
 
   const volverPrimerPagina = () => {
     setPaginationModel((prevPaginationModel) => ({
@@ -104,12 +116,27 @@ export const CuitsRestringidosMail = () => {
   };
 
   useEffect(() => {
+    const ObtenerTiposMail = async () => {
+      const response = await axiosMailTipo.consultar();
+      setTiposMail(response);
+      if (response && response.length > 0) {
+        setMailId(response[0].id);
+      }
+    };
+    ObtenerTiposMail();
+  }, []);
+
+  useEffect(() => {
+    if (!mailId) {
+      setRows([]);
+      return;
+    }
     const ObtenerCuitsRestringidosMail = async () => {
-      const response = await axiosCuitsRestringidosMail.consultar();
+      const response = await axiosCuitsRestringidosMail.consultar(mailId);
       setRows(response);
     };
     ObtenerCuitsRestringidosMail();
-  }, []);
+  }, [mailId]);
 
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -360,6 +387,23 @@ export const CuitsRestringidosMail = () => {
       <h1>
         Administración de Cuits con restricción para envio de Mail de Deuda
       </h1>
+      <Box sx={{ width: 300, mb: 2 }}>
+        <FormControl fullWidth size="small">
+          <InputLabel id="tipo-mail-label">Tipo de Mail</InputLabel>
+          <Select
+            labelId="tipo-mail-label"
+            label="Tipo de Mail"
+            value={mailId}
+            onChange={(event) => setMailId(event.target.value)}
+          >
+            {tiposMail.map((tipo) => (
+              <MenuItem key={tipo.id} value={tipo.id}>
+                {tipo.descripcion}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
       <Box
         sx={{
           height: '600px',
@@ -394,6 +438,7 @@ export const CuitsRestringidosMail = () => {
                 volverPrimerPagina,
                 showQuickFilter: true,
                 themeWithLocale,
+                mailId,
               },
             }}
             sx={{

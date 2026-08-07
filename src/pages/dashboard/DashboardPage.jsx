@@ -296,9 +296,9 @@ const DashboardPage = () => {
                     )}
                   </NavLink>
                 )}
-                {rolFuncionalidades.CUITS_RESTRINGIDOS_MAIL && (
+                {rolFuncionalidades.MAIL_TIPO_CUITS_RESTRINGIDOS && (
                   <NavLink
-                    to="./cuitsrestringidosmail"
+                    to="./MailTipoCuitsRestringidos"
                     className="icon-container"
                   >
                     <NetworkLockedIcon className="icon-link" />{' '}
@@ -307,15 +307,10 @@ const DashboardPage = () => {
                     )}
                   </NavLink>
                 )}
-                {rolFuncionalidades.GESTION_DEUDA_MAIL_CONFIG && (
-                  <NavLink
-                    to="./gestiondeuda-mail-config"
-                    className="icon-container"
-                  >
+                {rolFuncionalidades.MAIL_TIPO_CONFIG && (
+                  <NavLink to="./mailTipo-config" className="icon-container">
                     <EmailIcon className="icon-link" />{' '}
-                    {open && (
-                      <span className="icon-link">Config. Mail Deuda</span>
-                    )}
+                    {open && <span className="icon-link">Mails Config.</span>}
                   </NavLink>
                 )}
                 {rolFuncionalidades.INTERESES && (

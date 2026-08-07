@@ -7,8 +7,11 @@ import {
   Paper,
   FormControlLabel,
   Switch,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 import SaveIcon from '@mui/icons-material/Save';
 import AddIcon from '@mui/icons-material/Add';
@@ -17,17 +20,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import dayjs from 'dayjs';
 import Swal from 'sweetalert2';
-import {
-  consultar,
-  crear,
-  actualizar,
-  eliminar,
-} from './GestionDeudaMailConfigApi';
+import { consultar, crear, actualizar, eliminar } from './MailTipoConfigApi';
+import { axiosMailTipo } from '@/common/api/MailTipoApi';
 import { StripedDataGrid, dataGridStyle } from '@/common/dataGridStyle';
-import formatter from '@/common/formatter';
 import { UserContext } from '@/context/userContext';
+
+const DIAS_PROCESO = Array.from({ length: 31 }, (_, index) => index + 1);
 
 const QUILL_MODULES = {
   toolbar: [
@@ -43,31 +42,50 @@ const QUILL_MODULES = {
 
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, '') : '');
 
-export const GestionDeudaMailConfig = () => {
+export const MailTipoConfig = () => {
   const [rows, setRows] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-  const [fechaProceso, setfechaProceso] = useState(null);
+  const [diaProceso, setDiaProceso] = useState('');
   const [cuerpoMail, setCuerpoMail] = useState('');
   const [habilitado, setHabilitado] = useState(true);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [tiposMail, setTiposMail] = useState([]);
+  const [mailId, setMailId] = useState('');
 
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
 
-  const cargarFilas = async () => {
-    const data = await consultar();
+  const cargarFilas = async (idMail) => {
+    const data = await consultar(idMail);
     setRows(Array.isArray(data) ? data : data ? [data] : []);
   };
 
   useEffect(() => {
-    cargarFilas().then(() => setLoading(false));
+    const ObtenerTiposMail = async () => {
+      const response = await axiosMailTipo.consultar();
+      setTiposMail(response);
+      if (response && response.length > 0) {
+        setMailId(response[0].id);
+      } else {
+        setLoading(false);
+      }
+    };
+    ObtenerTiposMail();
   }, []);
+
+  useEffect(() => {
+    if (!mailId) {
+      setRows([]);
+      return;
+    }
+    cargarFilas(mailId).then(() => setLoading(false));
+  }, [mailId]);
 
   const handleEditClick = (row) => () => {
     setSelectedId(row.id);
-    setfechaProceso(row.fechaProceso ? dayjs(row.fechaProceso) : null);
+    setDiaProceso(row.diaProceso || '');
     setCuerpoMail(row.cuerpoMail || '');
     setHabilitado(!!row.habilitado);
     setShowForm(true);
@@ -75,7 +93,7 @@ export const GestionDeudaMailConfig = () => {
 
   const handleNuevo = () => {
     setSelectedId(null);
-    setfechaProceso(null);
+    setDiaProceso('');
     setCuerpoMail('');
     setHabilitado(true);
     setShowForm(true);
@@ -111,9 +129,10 @@ export const GestionDeudaMailConfig = () => {
   const handleGuardar = async () => {
     setSaving(true);
     const payload = {
-      fechaProceso: fechaProceso ? fechaProceso.toISOString() : null,
+      diaProceso: diaProceso ? Number(diaProceso) : null,
       cuerpoMail,
       habilitado,
+      mailId,
     };
 
     let success = false;
@@ -156,16 +175,12 @@ export const GestionDeudaMailConfig = () => {
 
   const columnas = [
     {
-      field: 'fechaProceso',
-      headerName: 'Fecha Proceso',
+      field: 'diaProceso',
+      headerName: 'Día Proceso',
       flex: 1,
       headerAlign: 'center',
       align: 'center',
       headerClassName: 'header--cell',
-      valueFormatter: ({ value }) => {
-        console.log('value: {}', value);
-        return formatter.dateString(value);
-      },
     },
     {
       field: 'cuerpoMail',
@@ -230,6 +245,23 @@ export const GestionDeudaMailConfig = () => {
     <div className="container">
       <h1>Configuración de Mail por Aviso de Deuda</h1>
       <Box sx={{ p: 3, maxWidth: 960, mx: 'auto' }}>
+        <Box sx={{ width: 300, mb: 2 }}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="tipo-mail-label">Tipo de Mail</InputLabel>
+            <Select
+              labelId="tipo-mail-label"
+              label="Tipo de Mail"
+              value={mailId}
+              onChange={(event) => setMailId(event.target.value)}
+            >
+              {tiposMail.map((tipo) => (
+                <MenuItem key={tipo.id} value={tipo.id}>
+                  {tipo.descripcion}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
         {showForm && (
           <Paper sx={{ p: 3, mb: 3 }}>
             <Typography
@@ -242,13 +274,22 @@ export const GestionDeudaMailConfig = () => {
                 : 'Nuevo registro'}
             </Typography>
 
-            <Box sx={{ mb: 3 }}>
-              <DatePicker
-                label="Fecha de Proceso"
-                value={fechaProceso}
-                onChange={(newValue) => setfechaProceso(newValue)}
-                slotProps={{ textField: { size: 'small' } }}
-              />
+            <Box sx={{ mb: 3, width: 200 }}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="dia-proceso-label">Día de Proceso</InputLabel>
+                <Select
+                  labelId="dia-proceso-label"
+                  label="Día de Proceso"
+                  value={diaProceso}
+                  onChange={(event) => setDiaProceso(event.target.value)}
+                >
+                  {DIAS_PROCESO.map((dia) => (
+                    <MenuItem key={dia} value={dia}>
+                      {dia}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Box>
 
             <Box sx={{ mb: 3 }}>
