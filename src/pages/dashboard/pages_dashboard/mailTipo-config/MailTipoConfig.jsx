@@ -11,6 +11,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  TextField,
 } from '@mui/material';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 import SaveIcon from '@mui/icons-material/Save';
@@ -47,6 +48,7 @@ export const MailTipoConfig = () => {
   const [showForm, setShowForm] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [diaProceso, setDiaProceso] = useState('');
+  const [asuntoMail, setAsuntoMail] = useState('');
   const [cuerpoMail, setCuerpoMail] = useState('');
   const [habilitado, setHabilitado] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -86,6 +88,7 @@ export const MailTipoConfig = () => {
   const handleEditClick = (row) => () => {
     setSelectedId(row.id);
     setDiaProceso(row.diaProceso || '');
+    setAsuntoMail(row.asuntoMail || '');
     setCuerpoMail(row.cuerpoMail || '');
     setHabilitado(!!row.habilitado);
     setShowForm(true);
@@ -94,6 +97,7 @@ export const MailTipoConfig = () => {
   const handleNuevo = () => {
     setSelectedId(null);
     setDiaProceso('');
+    setAsuntoMail('');
     setCuerpoMail('');
     setHabilitado(true);
     setShowForm(true);
@@ -130,6 +134,7 @@ export const MailTipoConfig = () => {
     setSaving(true);
     const payload = {
       diaProceso: diaProceso ? Number(diaProceso) : null,
+      asuntoMail,
       cuerpoMail,
       habilitado,
       mailId,
@@ -175,11 +180,25 @@ export const MailTipoConfig = () => {
 
   const columnas = [
     {
+      field: 'id',
+      headerName: 'ID',
+      flex: 1,
+      headerAlign: 'center',
+      align: 'center',
+      headerClassName: 'header--cell',
+    },
+    {
       field: 'diaProceso',
       headerName: 'Día Proceso',
       flex: 1,
       headerAlign: 'center',
       align: 'center',
+      headerClassName: 'header--cell',
+    },
+    {
+      field: 'asuntoMail',
+      headerName: 'Asunto del Mail',
+      flex: 2,
       headerClassName: 'header--cell',
     },
     {
@@ -245,6 +264,15 @@ export const MailTipoConfig = () => {
     <div className="container">
       <h1>Configuración de Mail por Aviso de Deuda</h1>
       <Box sx={{ p: 3, maxWidth: 960, mx: 'auto' }}>
+        {showForm && selectedId && (
+          <Typography sx={{ mb: 4 }}>
+            <strong>
+              {selectedId
+                ? `Editando registro #${selectedId}`
+                : 'Nuevo registro'}
+            </strong>
+          </Typography>
+        )}
         <Box sx={{ width: 300, mb: 2 }}>
           <FormControl fullWidth size="small">
             <InputLabel id="tipo-mail-label">Tipo de Mail</InputLabel>
@@ -264,16 +292,6 @@ export const MailTipoConfig = () => {
         </Box>
         {showForm && (
           <Paper sx={{ p: 3, mb: 3 }}>
-            <Typography
-              variant="subtitle1"
-              color="text.secondary"
-              sx={{ mb: 2 }}
-            >
-              {selectedId
-                ? `Editando registro #${selectedId}`
-                : 'Nuevo registro'}
-            </Typography>
-
             <Box sx={{ mb: 3, width: 200 }}>
               <FormControl fullWidth size="small">
                 <InputLabel id="dia-proceso-label">Día de Proceso</InputLabel>
@@ -301,6 +319,16 @@ export const MailTipoConfig = () => {
                   />
                 }
                 label="Habilitado"
+              />
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Asunto del Mail"
+                value={asuntoMail}
+                onChange={(event) => setAsuntoMail(event.target.value)}
               />
             </Box>
 
