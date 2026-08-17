@@ -22,7 +22,13 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Swal from 'sweetalert2';
-import { consultar, crear, actualizar, eliminar } from './MailTipoConfigApi';
+import {
+  consultar,
+  crear,
+  actualizar,
+  eliminar,
+  consultarVariables,
+} from './MailTipoConfigApi';
 import { axiosMailTipo } from '@/common/api/MailTipoApi';
 import { StripedDataGrid, dataGridStyle } from '@/common/dataGridStyle';
 import { UserContext } from '@/context/userContext';
@@ -55,6 +61,7 @@ export const MailTipoConfig = () => {
   const [saving, setSaving] = useState(false);
   const [tiposMail, setTiposMail] = useState([]);
   const [mailId, setMailId] = useState('');
+  const [variablesDescripcion, setVariablesDescripcion] = useState('');
 
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
@@ -83,6 +90,18 @@ export const MailTipoConfig = () => {
       return;
     }
     cargarFilas(mailId).then(() => setLoading(false));
+  }, [mailId]);
+
+  useEffect(() => {
+    if (!mailId) {
+      setVariablesDescripcion('');
+      return;
+    }
+    const ObtenerVariables = async () => {
+      const data = await consultarVariables(mailId);
+      setVariablesDescripcion(data?.descripcion || '');
+    };
+    ObtenerVariables();
   }, [mailId]);
 
   const handleEditClick = (row) => () => {
@@ -273,6 +292,7 @@ export const MailTipoConfig = () => {
             </strong>
           </Typography>
         )}
+
         <Box sx={{ width: 300, mb: 2 }}>
           <FormControl fullWidth size="small">
             <InputLabel id="tipo-mail-label">Tipo de Mail</InputLabel>
@@ -289,6 +309,12 @@ export const MailTipoConfig = () => {
               ))}
             </Select>
           </FormControl>
+        </Box>
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="body2" color="text.secondary">
+            <strong>Variables Cuerpo del Mail: </strong>
+            {variablesDescripcion}
+          </Typography>
         </Box>
         {showForm && (
           <Paper sx={{ p: 3, mb: 3 }}>

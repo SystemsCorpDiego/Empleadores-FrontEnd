@@ -27,6 +27,20 @@ export const consultar = async (mailId) => {
   }
 };
 
+export const consultarVariables = async (mailId) => {
+  const URL = `${URL_ENTITY}/${mailId}/variables`;
+  try {
+    const data = await axiosCrud.consultar(URL);
+    return data || null;
+  } catch (error) {
+    swal.showErrorBackEnd(
+      HTTP_MSG_CONSUL_ERROR + ` (${URL} - status: ${error.status})`,
+      error,
+    );
+    return null;
+  }
+};
+
 export const crear = async (nuevoReg) => {
   try {
     const data = await axiosCrud.crear(URL_ENTITY, nuevoReg);
