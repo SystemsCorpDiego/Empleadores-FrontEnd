@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react';
 import { useFormLoginInternalUser } from '../../hooks/useFormLoginInternalUser.js';
 import { ButtonComponent } from '@components/ButtonComponent.jsx';
 import { showSwalSuccess } from './LoginShowAlert.js';
+import localStorageService from '@/components/localStorage/localStorageService';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import './LoginPage.css';
@@ -134,10 +135,9 @@ export const LoginPage = () => {
         //OnResetFormLoginInternalUser();
 
         const usuarioLogueado = await consultarUsuarioLogueado(loginDto.token);
-        console.log('usuarioLogueado: ');
-        console.log(usuarioLogueado);
+        console.log('usuarioLogueado: ', usuarioLogueado);
 
-        getUsuarioLogueadoInfo(
+        navigatePaginaInicio(
           usuarioLogueado,
           loginDto.token,
           loginDto.tokenRefresco,
@@ -171,26 +171,34 @@ export const LoginPage = () => {
 
       const usuarioLogueado = await consultarUsuarioLogueado(token);
 
-      getUsuarioLogueadoInfo(usuarioLogueado, token, refreshToken);
+      navigatePaginaInicio(usuarioLogueado, token, refreshToken);
     }
   };
 
-  //Consulta Datos Usuario Logueado
-  const getUsuarioLogueadoInfo = (usuarioLogueado, token, refreshToken) => {
+  // Valida que usuarioLogueado{usuario, empresa, persona} tenga usuario
+  // y navega a pagina INICIO (usa paramentro redirectPathAfterLogin )
+  const navigatePaginaInicio = (usuarioLogueado, token, refreshToken) => {
     console.log('usuarioInfoFinal - init');
-    console.log(usuarioLogueado);
+    console.log(
+      'getUsuarioLogueadoInfo() - usuarioLogueado: ',
+      usuarioLogueado,
+    );
     //setSesionToken(token); // Esto disparará el useEffect del AppRouter
     if (usuarioLogueado.hasOwnProperty('usuario')) {
       usuarioLogueado.usuario.token = token;
       usuarioLogueado.usuario.tokenRefresco = refreshToken;
       triggerSessionRefresh();
-      console.log(usuarioLogueado);
+      let estado = {
+        logged: true,
+        usuarioLogueado,
+      };
+
+      //triggerSessionRefresh();
+      console.log('usuarioLogueado: ', usuarioLogueado);
+      console.log('redirectPathAfterLogin: ', redirectPathAfterLogin);
       navigate(redirectPathAfterLogin, {
         replace: true,
-        state: {
-          logged: true,
-          usuarioLogueado,
-        },
+        state: estado,
       });
       console.log('HIZO navigate() !! ');
     } else {
@@ -209,6 +217,8 @@ export const LoginPage = () => {
       return () => clearTimeout(timer);
     }
   }, [showVerificationForm]); // useEffect se ejecutará cuando showVerificationForm cambie
+
+  console.log('redirectPathAfterLogin: ', redirectPathAfterLogin);
 
   return (
     <div className="container_login_page">

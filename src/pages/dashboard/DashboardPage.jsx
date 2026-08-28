@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useNavigate, Outlet, NavLink } from 'react-router-dom';
 import './DashboardPage.css';
-import afipIcon from '../../assets/afip.svg';
+import { UserContext } from '@/context/userContext';
 import HomeIcon from '@mui/icons-material/Home';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import StyleIcon from '@mui/icons-material/Style';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import PersonIcon from '@mui/icons-material/Person';
 import CoPresentIcon from '@mui/icons-material/CoPresent';
 import NetworkLockedIcon from '@mui/icons-material/NetworkLocked';
@@ -32,15 +31,8 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import localStorageService from '@/components/localStorage/localStorageService';
-import { getFuncionalidadesByRol } from './DashboardPageApi';
-import logo2 from '../../assets/logo_2.svg';
 import { styled } from '@mui/material/styles';
 import { ClaveComponent } from '@/components/ClaveComponent';
-import AMTIMA from '../../assets/Logos_PNG_azul/AMTIMA_AZUL.png';
-import OSPIM from '../../assets/Logos_PNG_azul/OSPIM_AZUL.png';
-import UOMA from '../../assets/Logos_PNG_azul/UOMA_AZUL.png';
-import { width } from '@mui/system';
-import Hidden from '@mui/material/Hidden';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { useMediaQuery } from '@mui/material';
 import HandshakeIcon from '@mui/icons-material/Handshake';
@@ -107,29 +99,31 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
+const getRolFuncionalidades = () => {
+  const rolFuncionalidades = {};
+  localStorageService.getFuncionalidades().forEach((funcionalidad) => {
+    rolFuncionalidades[funcionalidad.descripcion] = true;
+  });
+  return rolFuncionalidades;
+};
+
 const DashboardPage = () => {
   const navigate = useNavigate();
-  const [rolFuncionalidades, setRolFuncionalidades] = useState({});
-  const rol = localStorageService.getRol();
+  const { sessionVersion } = useContext(UserContext);
+  //const [rolFuncionalidades, setRolFuncionalidades] = useState({});
+  //const rol = localStorageService.getRol();
   const [showModal, setShowModal] = useState(false);
-  const nombre = localStorageService.getNombre();
+  //const nombre = localStorageService.getNombre();
   const isLargeScreen = useMediaQuery('(min-width:1045px)');
 
+  const [rolFuncionalidades, setRolFuncionalidades] = useState(() =>
+    getRolFuncionalidades(),
+  );
   useEffect(() => {
-    const fetchData = async () => {
-      const { funcionalidades } = await getFuncionalidadesByRol(rol);
-      //console.log('DashboardPage - funcionalidades:', funcionalidades);
-      const roles = {};
-      funcionalidades.forEach((funcionalidad) => {
-        roles[funcionalidad.descripcion] = funcionalidad.activo;
-      });
-      console.log(roles);
-      setRolFuncionalidades(roles);
-      console.log('DashboardPage - roles: ', roles);
-    };
+    setRolFuncionalidades(getRolFuncionalidades());
+  }, [sessionVersion]);
 
-    fetchData();
-  }, []);
+  console.log('DashboardPage() - rolFuncionalidades:', rolFuncionalidades);
 
   const onLogout = () => {
     navigate('/login', { replace: true });

@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { errorBackendResponse } from '../../errors/errorBackendResponse';
-import localStorageService from '@/components/localStorage/localStorageService';
 import backendUrl from '@/common/backendUrl';
 
 const BACKEND_URL = backendUrl();
@@ -50,8 +49,7 @@ export const logonDFA = async (token, codigo) => {
   const codigoVerificacion = {
     codigo: codigo,
   };
-  console.log('** logonDFA - localStorageService.getToken(): token');
-  console.log(token);
+  console.log('** loginApi.logonDFA() - token: ', token);
   try {
     const response = await axios.post(URL, codigoVerificacion, {
       headers: {

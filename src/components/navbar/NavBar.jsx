@@ -7,6 +7,7 @@ import OSPIM from '../../assets/Logos_PNG_azul/OSPIM_AZUL.png';
 import UOMA from '../../assets/Logos_PNG_azul/UOMA_AZUL.png';
 import Hidden from '@mui/material/Hidden';
 import { useMediaQuery } from '@mui/material';
+import localStorageService from '@/components/localStorage/localStorageService';
 
 import './NavBar.css';
 
@@ -14,7 +15,7 @@ const NavBar = ({ estilos, estilosLogo, mostrarBtn }) => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const isLargeScreen = useMediaQuery('(min-width:1045px)');
-  if (state) localStorage.setItem('stateLogin', JSON.stringify(state));
+  if (state) localStorageService.setLoguin(state);
 
   console.log('NavBar - state: %', state);
 

@@ -153,7 +153,6 @@ export const generarConvenio = async (idEmpresa, bodyConvenio) => {
 
 const getDeclaracionesJuradasEditar = async (empresa_id, convenioId) => {
   try {
-    //const empresa_id = localStorage.getItem('empresaId');
     const response = await getGestionEditar(empresa_id, convenioId);
     console.log('response', response);
 

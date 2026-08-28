@@ -1,31 +1,33 @@
 const VITE_BACKEND_ID_EMPRESA_TEST = import.meta.env
   .VITE_BACKEND_ID_EMPRESA_TEST;
 
-export const getToken = () => {
+export const getStateLogin = () => {
   let auxStateLogin = localStorage.getItem('stateLogin');
-  let TOKEN = null;
-
   if (auxStateLogin != null) {
     auxStateLogin = JSON.parse(localStorage.getItem('stateLogin'));
-    if (auxStateLogin.hasOwnProperty('usuarioLogueado')) {
-      TOKEN = auxStateLogin.usuarioLogueado.usuario.token;
-      return TOKEN;
-    }
+  }
+  return auxStateLogin;
+};
+
+export const getToken = () => {
+  let auxStateLogin = getStateLogin();
+  let TOKEN = null;
+
+  if (auxStateLogin && auxStateLogin.hasOwnProperty('usuarioLogueado')) {
+    TOKEN = auxStateLogin.usuarioLogueado.usuario.token;
+    return TOKEN;
   }
   return {};
 };
 
 export const getTokenRefresh = () => {
   try {
-    let auxStateLogin = localStorage.getItem('stateLogin');
+    let auxStateLogin = getStateLogin();
     let tokenRefresh = null;
 
-    if (auxStateLogin != null) {
-      auxStateLogin = JSON.parse(localStorage.getItem('stateLogin'));
-      if (auxStateLogin.hasOwnProperty('usuarioLogueado')) {
-        tokenRefresh = auxStateLogin.usuarioLogueado.usuario.tokenRefresco;
-        return tokenRefresh;
-      }
+    if (auxStateLogin && auxStateLogin.hasOwnProperty('usuarioLogueado')) {
+      tokenRefresh = auxStateLogin.usuarioLogueado.usuario.tokenRefresco;
+      return tokenRefresh;
     }
   } catch (error) {
     console.log('localStorageService - getTokenRefresh - error:', error);
@@ -35,9 +37,8 @@ export const getTokenRefresh = () => {
 
 export const setLoguinRefresh = (token, tokenRefresh) => {
   try {
-    let auxStateLogin = localStorage.getItem('stateLogin');
+    let auxStateLogin = getStateLogin();
     if (auxStateLogin != null) {
-      auxStateLogin = JSON.parse(auxStateLogin);
       auxStateLogin.usuarioLogueado.usuario.token = token;
       auxStateLogin.usuarioLogueado.usuario.tokenRefresco = tokenRefresh;
 
@@ -45,34 +46,37 @@ export const setLoguinRefresh = (token, tokenRefresh) => {
     }
   } catch (error) {}
 };
+export const setLoguin = (state) => {
+  try {
+    if (state) {
+      localStorage.setItem('stateLogin', JSON.stringify(state));
+    } else {
+      localStorage.setItem('stateLogin', 'null');
+    }
+  } catch (error) {}
+};
 
 export const getEmpresaId = () => {
-  let auxStateLogin = localStorage.getItem('stateLogin');
-  if (auxStateLogin != null) {
-    auxStateLogin = JSON.parse(localStorage.getItem('stateLogin'));
-    if (auxStateLogin.hasOwnProperty('usuarioLogueado')) {
-      auxStateLogin = auxStateLogin.usuarioLogueado;
-      if (auxStateLogin?.hasOwnProperty('empresa')) {
-        auxStateLogin = auxStateLogin.empresa;
-        if (auxStateLogin?.hasOwnProperty('id')) {
-          return auxStateLogin.id;
-        }
+  let auxStateLogin = getStateLogin();
+  if (auxStateLogin && auxStateLogin.hasOwnProperty('usuarioLogueado')) {
+    auxStateLogin = auxStateLogin.usuarioLogueado;
+    if (auxStateLogin?.hasOwnProperty('empresa')) {
+      auxStateLogin = auxStateLogin.empresa;
+      if (auxStateLogin?.hasOwnProperty('id')) {
+        return auxStateLogin.id;
       }
     }
   }
 };
 
 export const getEmpresaCuit = () => {
-  let auxStateLogin = localStorage.getItem('stateLogin');
-  if (auxStateLogin != null) {
-    auxStateLogin = JSON.parse(localStorage.getItem('stateLogin'));
-    if (auxStateLogin.hasOwnProperty('usuarioLogueado')) {
-      auxStateLogin = auxStateLogin.usuarioLogueado;
-      if (auxStateLogin?.hasOwnProperty('empresa')) {
-        auxStateLogin = auxStateLogin.empresa;
-        if (auxStateLogin?.hasOwnProperty('cuit')) {
-          return auxStateLogin.cuit;
-        }
+  let auxStateLogin = getStateLogin();
+  if (auxStateLogin && auxStateLogin.hasOwnProperty('usuarioLogueado')) {
+    auxStateLogin = auxStateLogin.usuarioLogueado;
+    if (auxStateLogin?.hasOwnProperty('empresa')) {
+      auxStateLogin = auxStateLogin.empresa;
+      if (auxStateLogin?.hasOwnProperty('cuit')) {
+        return auxStateLogin.cuit;
       }
     }
   }
@@ -85,85 +89,73 @@ export const getEmpresaCuit = () => {
 };
 
 export const getRol = () => {
-  let auxStateLogin = localStorage.getItem('stateLogin');
-  if (auxStateLogin != null) {
-    auxStateLogin = JSON.parse(localStorage.getItem('stateLogin'));
-    if (auxStateLogin.hasOwnProperty('usuarioLogueado')) {
-      auxStateLogin = auxStateLogin.usuarioLogueado;
-      if (auxStateLogin.hasOwnProperty('usuario')) {
-        auxStateLogin = auxStateLogin.usuario;
-        return auxStateLogin.rol[0].descripcion;
-      }
+  let auxStateLogin = getStateLogin();
+  if (auxStateLogin && auxStateLogin.hasOwnProperty('usuarioLogueado')) {
+    auxStateLogin = auxStateLogin.usuarioLogueado;
+    if (auxStateLogin.hasOwnProperty('usuario')) {
+      auxStateLogin = auxStateLogin.usuario;
+      return auxStateLogin.rol[0].descripcion;
     }
   }
   return null;
 };
 
 export const getUsuario = () => {
-  let auxStateLogin = localStorage.getItem('stateLogin');
+  let auxStateLogin = getStateLogin();
   let USUARIO = null;
 
-  if (auxStateLogin != null) {
-    auxStateLogin = JSON.parse(localStorage.getItem('stateLogin'));
-    if (auxStateLogin.hasOwnProperty('usuarioLogueado')) {
-      USUARIO = auxStateLogin.usuarioLogueado.usuario.nombre;
-      return USUARIO;
-    }
+  if (auxStateLogin && auxStateLogin.hasOwnProperty('usuarioLogueado')) {
+    USUARIO = auxStateLogin.usuarioLogueado.usuario.nombre;
+    return USUARIO;
   }
 
   return null;
 };
+
 export const getApellido = () => {
-  let auxStateLogin = localStorage.getItem('stateLogin');
+  let auxStateLogin = getStateLogin();
   let USUARIO = null;
 
-  if (auxStateLogin != null) {
-    auxStateLogin = JSON.parse(localStorage.getItem('stateLogin'));
-    if (auxStateLogin.hasOwnProperty('usuarioLogueado')) {
-      USUARIO = auxStateLogin.usuarioLogueado.persona?.apellido;
-      return USUARIO;
-    }
+  if (auxStateLogin && auxStateLogin.hasOwnProperty('usuarioLogueado')) {
+    USUARIO = auxStateLogin.usuarioLogueado.persona?.apellido;
+    return USUARIO;
   }
 
   return null;
 };
+
 export const getNombre = () => {
-  let auxStateLogin = localStorage.getItem('stateLogin');
+  let auxStateLogin = getStateLogin();
 
-  if (auxStateLogin != null) {
-    auxStateLogin = JSON.parse(localStorage.getItem('stateLogin'));
-    //console.log('auxStateLogin: ', auxStateLogin);
-    if (auxStateLogin.hasOwnProperty('usuarioLogueado')) {
-      if (
-        auxStateLogin.usuarioLogueado.persona &&
-        auxStateLogin.usuarioLogueado.persona.hasOwnProperty('nombre')
-      ) {
-        //if (auxStateLogin.usuarioLogueado.persona.hasOwnProperty('nombre')) {
-        return auxStateLogin.usuarioLogueado.persona.nombre;
-        //}
-      }
+  //console.log('auxStateLogin: ', auxStateLogin);
+  if (auxStateLogin && auxStateLogin.hasOwnProperty('usuarioLogueado')) {
+    if (
+      auxStateLogin.usuarioLogueado.persona &&
+      auxStateLogin.usuarioLogueado.persona.hasOwnProperty('nombre')
+    ) {
+      //if (auxStateLogin.usuarioLogueado.persona.hasOwnProperty('nombre')) {
+      return auxStateLogin.usuarioLogueado.persona.nombre;
+      //}
+    }
 
-      if (
-        auxStateLogin.usuarioLogueado.empresa &&
-        auxStateLogin.usuarioLogueado.empresa.hasOwnProperty('razonSocial')
-      ) {
-        return auxStateLogin.usuarioLogueado.empresa.razonSocial;
-      }
+    if (
+      auxStateLogin.usuarioLogueado.empresa &&
+      auxStateLogin.usuarioLogueado.empresa.hasOwnProperty('razonSocial')
+    ) {
+      return auxStateLogin.usuarioLogueado.empresa.razonSocial;
     }
   }
+
   return null;
 };
 
 export const getMail = () => {
-  let auxStateLogin = localStorage.getItem('stateLogin');
+  let auxStateLogin = getStateLogin();
   let USUARIO = null;
 
-  if (auxStateLogin != null) {
-    auxStateLogin = JSON.parse(localStorage.getItem('stateLogin'));
-    if (auxStateLogin.hasOwnProperty('usuarioLogueado')) {
-      USUARIO = auxStateLogin.usuarioLogueado.persona.email;
-      return USUARIO;
-    }
+  if (auxStateLogin && auxStateLogin.hasOwnProperty('usuarioLogueado')) {
+    USUARIO = auxStateLogin.usuarioLogueado.persona.email;
+    return USUARIO;
   }
 
   return null;
@@ -176,20 +168,27 @@ export const isRolEmpleador = () => {
   return false;
 };
 
+export const isLogged = () => {
+  let auxStateLogin = getStateLogin();
+  if (auxStateLogin && auxStateLogin.hasOwnProperty('logged')) {
+    return auxStateLogin.logged;
+  }
+
+  return false;
+};
+
 const getFuncionalidades = () => {
-  let auxStateLogin = localStorage.getItem('stateLogin');
-  if (auxStateLogin != null) {
-    auxStateLogin = JSON.parse(localStorage.getItem('stateLogin'));
-    if (auxStateLogin.hasOwnProperty('usuarioLogueado')) {
-      auxStateLogin = auxStateLogin.usuarioLogueado;
-      if (auxStateLogin.hasOwnProperty('usuario')) {
-        auxStateLogin = auxStateLogin.usuario;
-        if (auxStateLogin.hasOwnProperty('funcionalidad')) {
-          return auxStateLogin.funcionalidad;
-        }
+  let auxStateLogin = getStateLogin();
+  if (auxStateLogin && auxStateLogin.hasOwnProperty('usuarioLogueado')) {
+    auxStateLogin = auxStateLogin.usuarioLogueado;
+    if (auxStateLogin.hasOwnProperty('usuario')) {
+      auxStateLogin = auxStateLogin.usuario;
+      if (auxStateLogin.hasOwnProperty('funcionalidad')) {
+        return auxStateLogin.funcionalidad;
       }
     }
   }
+
   return [];
 };
 
@@ -250,11 +249,17 @@ const localStorageService = {
   isRolEmpleador: function () {
     return isRolEmpleador();
   },
+  isLogged: function () {
+    return isLogged();
+  },
   getTokenRefresh: function () {
     return getTokenRefresh();
   },
   setLoguinRefresh: function (token, tokenRefresh) {
     setLoguinRefresh(token, tokenRefresh);
+  },
+  setLoguin: function (state) {
+    setLoguin(state);
   },
   getNombre: function () {
     return getNombre();
@@ -267,6 +272,9 @@ const localStorageService = {
   },
   funcionEmpresaDatosModiHabilitada: function () {
     return funcionEmpresaDatosModiHabilitada();
+  },
+  getFuncionalidades: function () {
+    return getFuncionalidades();
   },
 };
 

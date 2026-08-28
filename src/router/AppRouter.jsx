@@ -1,20 +1,12 @@
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-  Navigate,
-  useLocation,
-} from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
-import { getRol } from '@/components/localStorage/localStorageService';
-import { getFuncionalidadesByRol } from '@/pages/dashboard/DashboardPageApi';
 
 import { useEffect, useState, useContext } from 'react';
 import localStorageService from '@/components/localStorage/localStorageService';
 
 import { UserContext } from '@/context/userContext';
 import { Inicio } from '../pages/dashboard/pages_dashboard/inicio/Inicio';
-import NavBar from '../components/navbar/NavBar';
+
 import { DatosEmpresa } from '../pages/dashboard/pages_dashboard/datos_empresa/DatosEmpresa';
 import { DatosPerfil } from '@/pages/dashboard/pages_dashboard/datosPerfil/DatosPerfil';
 import { Publicaciones } from '../pages/dashboard/pages_dashboard/publicaciones/Publicaciones';
@@ -45,66 +37,37 @@ import { GestionRoles } from '@/pages/dashboard/pages_dashboard/gestionRoles/ges
 import { UsuaEmpreActivacion } from '@/pages/dashboard/pages_dashboard/usuarioEmpresa/usuaEmpreActivacion';
 import { Aportes } from '@/pages/dashboard/pages_dashboard/aportes/Aportes';
 import { DDJJTabs } from '@/pages/dashboard/pages_dashboard/ddjj/DDJJTabs';
-import { UserProvider } from '@/context/userProvider';
+
 import { GestionDeudas } from '@/pages/dashboard/pages_dashboard/gestion_deudas/GestionDeudas';
 import { Convenios } from '@/pages/dashboard/pages_dashboard/convenios/Convenios';
 import { Cuotas } from '@/pages/dashboard/pages_dashboard/convenios/cuotas/Cuotas';
 import { ParametrosConvenios } from '@/pages/dashboard/pages_dashboard/ParametrosConvenios/ParametrosConvenios';
 
-const PagosPage = () => (
-  <div className="otros_pagos_container">Contenido de la página de pagos</div>
-);
+const getRolFuncionalidades = () => {
+  const rolFuncionalidades = {};
+  localStorageService.getFuncionalidades().forEach((funcionalidad) => {
+    rolFuncionalidades[funcionalidad.descripcion] = true;
+  });
+  return rolFuncionalidades;
+};
 
 const AppRouter = () => {
-  const [rol, setRol] = useState(null);
-
-  const [rolFuncionalidades, setRolFuncionalidades] = useState({});
   const { sessionVersion } = useContext(UserContext);
-  const location = useLocation();
 
+  const [rolFuncionalidades, setRolFuncionalidades] = useState(() =>
+    getRolFuncionalidades(),
+  );
+
+  // PrivateRoute persiste stateLogin (y su funcionalidad) recien cuando
+  // se renderiza /dashboard, luego de que AppRouter ya se ejecuto. Por eso
+  // se recalcula en un efecto (post-commit) disparado por sessionVersion,
+  // que LoginPage incrementa despues de cada logueo.
   useEffect(() => {
-    console.log('Se dispara el useEffect de AppRouter');
+    setRolFuncionalidades(getRolFuncionalidades());
+  }, [sessionVersion]);
 
-    console.log('useEffect de AppRouter - location: ', location);
-    console.log(
-      'useEffect de AppRouter - location.pathname: ',
-      location.pathname,
-    );
+  console.log('AppRouter() - rolFuncionalidades:', rolFuncionalidades);
 
-    const fetchData = async () => {
-      const nuevoRol = localStorageService.getRol();
-
-      const aux = '/usuario/recuperar-clave';
-      if (location && location != null && location.pathname) {
-        console.log(
-          'location.pathname.indexOf(aux): ',
-          location.pathname.indexOf(aux),
-        );
-        if (location.pathname.indexOf(aux) > -1) {
-          console.log('useEffect de AppRouter - SALIDA !');
-          return;
-        }
-      }
-
-      if (nuevoRol === rol) return;
-      setRol(nuevoRol);
-      if (nuevoRol !== null && nuevoRol !== undefined) {
-        console.log(
-          'useEffect de AppRouter - getFuncionalidadesByRol() - nuevoRol:' +
-            nuevoRol +
-            ' - INIT',
-        );
-        const { funcionalidades } = await getFuncionalidadesByRol(nuevoRol);
-        const roles = {};
-        funcionalidades.forEach((f) => {
-          roles[f.descripcion] = f.activo;
-        });
-        setRolFuncionalidades(roles);
-      }
-    };
-
-    fetchData();
-  }, [sessionVersion, rol]);
   return (
     <Routes>
       <Route path="login" element={<LoginPage />} />
