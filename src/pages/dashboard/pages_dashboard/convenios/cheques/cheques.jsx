@@ -261,7 +261,10 @@ const Cheques = ({
   const todayStr = `${yyyy}-${mm}-${dd}`;
 
   // Validar que la fecha sea mayor o igual a hoy
-  const isFechaInvalida = !!newCheque.fecha && newCheque.fecha < todayStr;
+  let isFechaInvalida = !!newCheque.fecha && newCheque.fecha < todayStr;
+  if (localStorageService.funcionHabilitada('CONVENIO_CHEQUE_VENCIDO')) {
+    isFechaInvalida = false;
+  }
 
   return (
     <Modal open={open} onClose={handleClose}>
@@ -343,7 +346,14 @@ const Cheques = ({
               value={newCheque.fecha || ''}
               onChange={handleInputChange}
               InputLabelProps={{ shrink: true }}
-              inputProps={{ min: todayStr, lang: 'es' }}
+              inputProps={{
+                ...(localStorageService.funcionHabilitada(
+                  'CONVENIO_CHEQUE_VENCIDO',
+                )
+                  ? {}
+                  : { min: todayStr }),
+                lang: 'es',
+              }}
               error={isFechaInvalida}
               helperText={
                 isFechaInvalida ? 'La fecha no puede ser menor a hoy' : ''
