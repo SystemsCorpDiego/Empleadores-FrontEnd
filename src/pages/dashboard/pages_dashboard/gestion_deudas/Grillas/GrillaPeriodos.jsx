@@ -17,7 +17,8 @@ export const GrillaPeriodo = ({
   declaracionesJuradas,
   selectedDeclaracionesJuradas,
   setSelectedDeclaracionesJuradas,
-  isVer, cuit
+  isVer,
+  cuit,
 }) => {
   const { paginationModel, setPaginationModel, pageSizeOptions } =
     useContext(UserContext);
@@ -48,6 +49,15 @@ export const GrillaPeriodo = ({
   ];
 
   const COLUMNAS_NUMERICAS_FINALES = [
+    {
+      field: 'pago',
+      headerName: 'Pagos',
+      flex: 1,
+      headerAlign: 'right',
+      align: 'right',
+      valueFormatter: (params) =>
+        formatter.currencyString(params?.value) || 0.0,
+    },
     {
       field: 'intereses',
       headerName: 'Intereses',
@@ -117,14 +127,13 @@ export const GrillaPeriodo = ({
       <DataGrid
         rows={agrupados}
         columns={generarColumnasDinamicas(declaracionesJuradas || [])}
-
         checkboxSelection
         disableSelectionOnClick
-
         rowSelectionModel={agrupados
-          .filter((item) => item.ids.every((id) => selectedDeclaracionesJuradas.includes(id)))
-          .map((item) => item.id)
-        }
+          .filter((item) =>
+            item.ids.every((id) => selectedDeclaracionesJuradas.includes(id)),
+          )
+          .map((item) => item.id)}
         onRowSelectionModelChange={(newSelectedGroupIds) => {
           // 🔁 Mapear IDs agrupados a todos los IDs reales
           const nuevosIds = newSelectedGroupIds.flatMap((idAgrupado) => {
@@ -155,8 +164,9 @@ export const GrillaPeriodo = ({
               <GridToolbarExport
                 csvOptions={{
                   fileName: `${cuit}_periodos`,
-                  utf8WithBom: true
-                }} />
+                  utf8WithBom: true,
+                }}
+              />
             </GridToolbarContainer>
           ),
         }}

@@ -16,6 +16,7 @@ export const agruparDdjjsPorPeriodo = (ddjjs) => {
       periodo: grupo[0].periodo,
       rectificativa: grupo[0].rectificativa,
       ids: grupo.map((item) => item.id), // 👈 Guarda todos los ids
+      pago: grupo.reduce((acc, i) => acc + (i.pago || 0), 0),
       intereses: grupo.reduce((acc, i) => acc + (i.intereses || 0), 0),
       importeTotal: grupo.reduce((acc, i) => acc + (i.importeTotal || 0), 0),
     };
@@ -31,6 +32,7 @@ export const agruparDdjjsPorPeriodo = (ddjjs) => {
             'rectificativa',
             'importeTotal',
             'intereses',
+            'pago',
           ].includes(key)
         ) {
           if (!valores[key]) valores[key] = 0;
