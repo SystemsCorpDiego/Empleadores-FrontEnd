@@ -82,6 +82,7 @@ export const GrillaPeriodo = ({
       'periodo',
       'rectificativa',
       'intereses',
+      'pago',
       'importeTotal',
       'convenioDdjjId',
     ]);

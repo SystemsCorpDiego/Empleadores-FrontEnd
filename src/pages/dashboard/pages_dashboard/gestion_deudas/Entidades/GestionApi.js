@@ -28,6 +28,7 @@ const ordenaGrillaPeriodo = (response) => {
       acc[clave].importeTotal =
         (acc[clave].importeTotal || 0) + curr.importeTotal;
       acc[clave].intereses = (acc[clave].intereses || 0) + curr.intereses;
+      acc[clave].pago = (acc[clave].pago || 0) + (curr.pago || 0);
       return acc;
     }, {});
 
