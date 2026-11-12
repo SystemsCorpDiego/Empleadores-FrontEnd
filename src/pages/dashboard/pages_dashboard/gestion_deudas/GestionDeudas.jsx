@@ -103,17 +103,17 @@ export const GestionDeudas = () => {
             >
               <Tabs value={tabState} onChange={handleChangeTabState}>
                 <Tab
-                  label="UOMA"
+                  label="UOMA - 30531143856"
                   {...a11yProps(0)}
                   sx={{ fontSize: '1.2rem' }}
                 />
                 <Tab
-                  label="OSPIM"
+                  label="OSPIM - 30629138567"
                   {...a11yProps(1)}
                   sx={{ fontSize: '1.2rem' }}
                 />
                 <Tab
-                  label="AMTIMA"
+                  label="AMTIMA - 30604119568"
                   {...a11yProps(3)}
                   sx={{ fontSize: '1.2rem' }}
                 />
